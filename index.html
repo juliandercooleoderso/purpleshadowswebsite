@@ -68,6 +68,7 @@ select,input {
   border: 1px solid #7d2aff;
   border-radius: 8px;
   padding: 8px;
+  box-sizing: border-box;
 }
 button.fancy {
   background: linear-gradient(90deg, #7d2aff, #d18eff);
@@ -93,11 +94,13 @@ button.fancy:hover {
   background:#2b0030; padding:30px; border-radius:20px; width:300px;
   box-shadow:0 0 20px #7d2aff;
 }
-#login-box input {
-  display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none;
-}
-#login-box button {
-  width:100%; padding:10px; border-radius:8px; border:none; cursor:pointer; background:#7d2aff; color:#fff;
+#login-box input, #login-box button {
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
 }
 #popup {
   display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8);
@@ -124,6 +127,31 @@ button.fancy:hover {
 
 <section id="home" class="active">
 <h2>💜 Willkommen bei Purple Shadows 💜</h2>
+
+<h3>Meetings</h3>
+<table>
+<thead><tr><th>Datum</th><th>Thema</th></tr></thead>
+<tbody id="meetings-table">
+<tr><td>01.01.2025</td><td>Jahresplanung</td></tr>
+</tbody>
+</table>
+
+<h3>Veränderungen</h3>
+<table>
+<thead><tr><th>Datum</th><th>Beschreibung</th></tr></thead>
+<tbody id="changes-table">
+<tr><td>02.01.2025</td><td>Neue Crewmitglieder</td></tr>
+</tbody>
+</table>
+
+<h3>Kriege</h3>
+<table>
+<thead><tr><th>Datum</th><th>Gegner</th></tr></thead>
+<tbody id="wars-table">
+<tr><td>03.01.2025</td><td>Rival Crew</td></tr>
+</tbody>
+</table>
+
 </section>
 
 <section id="shop">
@@ -247,3 +275,4 @@ function addMember(){
 </script>
 </body>
 </html>
+
