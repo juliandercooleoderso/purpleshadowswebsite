@@ -131,12 +131,12 @@ button.fancy:hover {
 <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
 <div style="background:#1a0033;border-radius:15px;padding:15px;">
 <h3>Shirt (Variante 1):</h3>
-<img src="https://cdn.discordapp.com/attachments/1408601322378236065/1408601322579689502/noFilter.png" width="150">
+<img src="https://cdn.discordapp.com/attachments/1408601322378236065/1408601322579689502/noFilter.png?ex=68e8f4f5&is=68e7a375&hm=9ca1b7e214d9db759160e6fac8484e64ed1987075fab292f9762197a2c2b04ee&" width="150">
 <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
 </div>
 <div style="background:#1a0033;border-radius:15px;padding:15px;">
 <h3>Shirt (Variante 2):</h3>
-<img src="https://cdn.discordapp.com/attachments/1408601202194780181/1408601202362679416/image.png" width="150">
+<img src="https://cdn.discordapp.com/attachments/1408601202194780181/1408601202362679416/image.png?ex=68e8f4d9&is=68e7a359&hm=1b5d04769281d242e344334952fdbf60a6f4032868af5fe02b9c1fa583477260&" width="150">
 <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
 </div>
 <div style="background:#1a0033;border-radius:15px;padding:15px;">
@@ -192,57 +192,56 @@ button.fancy:hover {
 <script>
 const socket = io();
 let currentUser = null;
-const allowedUsers = ["Julian","Max"]; // Julian & Max dürfen hinzufügen/löschen
 
 function showTab(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
 
 function renderMembers(members){
-  const table=document.getElementById("members-table");
-  table.innerHTML="";
-  members.forEach(m=>{
-    const row=document.createElement("tr");
-    row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;
-    const actionsCell=document.createElement("td");
-    if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
-      delBtn.className="fancy";
-      delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteMember",m.username);
-      actionsCell.appendChild(delBtn);
-    }
-    row.appendChild(actionsCell);
-    table.appendChild(row);
-  });
+const table=document.getElementById("members-table");
+table.innerHTML="";
+members.forEach(m=>{
+const row=document.createElement("tr");
+row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;
+const actionsCell=document.createElement("td");
+if(currentUser==="Julian"){
+const delBtn=document.createElement("button");
+delBtn.className="fancy";
+delBtn.textContent="❌";
+delBtn.onclick=()=>socket.emit("deleteMember",m.username);
+actionsCell.appendChild(delBtn);
+}
+row.appendChild(actionsCell);
+table.appendChild(row);
+});
 }
 
 socket.on("updateMembers", members=>renderMembers(members));
 
 async function login(){
-  const username=document.getElementById("login-username").value;
-  const password=document.getElementById("login-password").value;
-  const res=await axios.post("/login",{username,password});
-  if(res.data.success){
-    currentUser=username;
-    document.getElementById("login-container").style.display="none";
-    document.getElementById("logged-in").innerText="Eingeloggt als: "+currentUser;
-    if(allowedUsers.includes(username)) document.getElementById("add-btn").style.display="inline-block";
-    axios.get("/members").then(r=>renderMembers(r.data));
-  }else{
-    document.getElementById("login-error").innerText="Falscher Benutzer oder Passwort!";
-  }
+const username=document.getElementById("login-username").value;
+const password=document.getElementById("login-password").value;
+const res=await axios.post("/login",{username,password});
+if(res.data.success){
+currentUser=username;
+document.getElementById("login-container").style.display="none";
+document.getElementById("logged-in").innerText="Eingeloggt als: "+currentUser;
+if(username==="Julian")document.getElementById("add-btn").style.display="inline-block";
+axios.get("/members").then(r=>renderMembers(r.data));
+}else{
+document.getElementById("login-error").innerText="Falscher Benutzer oder Passwort!";
+}
 }
 
 document.getElementById("add-btn").onclick=()=>document.getElementById("popup").style.display="flex";
 function closePopup(){document.getElementById("popup").style.display="none";}
 function addMember(){
-  const username=document.getElementById("usernameInput").value.trim();
-  if(!username) return alert("⚠️ Username darf nicht leer sein!");
-  const rank=document.getElementById("rankSelect").value;
-  socket.emit("addMember",{username,rank});
-  closePopup();
+const username=document.getElementById("usernameInput").value.trim();
+if(!username)return alert("⚠️ Username darf nicht leer sein!");
+const rank=document.getElementById("rankSelect").value;
+socket.emit("addMember",{username,rank});
+closePopup();
 }
 </script>
 </body>
