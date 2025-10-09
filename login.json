@@ -1,5 +1,7 @@
 [
   { "username": "ShadowKing", "password": "1234" },
   { "username": "NightSoul", "password": "elitepass" },
-  { "username": "Julian", "password": "juliancool"}
+  { "username": "Julian", "password": "juliancool"},
+    { "username": "max", "password": "max123"}
 ]
+
