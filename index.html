@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Purple Shadows</title>
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+body {
+  background: radial-gradient(circle at top left, #2b0030, #000);
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  margin: 0;
+}
+header {
+  background: #3b0066;
+  padding: 15px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  position: relative;
+}
+#logged-in {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 1rem;
+  color: #fff;
+}
+nav {
+  margin: 15px;
+}
+nav button {
+  background: #5a00a3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+nav button:hover {
+  background: #9b00ff;
+}
+section { display: none; margin-top: 20px; }
+section.active { display: block; }
+table {
+  width: 70%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: rgba(60,0,90,0.5);
+  border-radius: 12px;
+  overflow: hidden;
+}
+th, td {
+  border: 1px solid #7d2aff;
+  padding: 10px;
+  text-align: center;
+}
+th {
+  background: #5a00a3;
+}
+select,input {
+  background: #3b0066;
+  color: #fff;
+  border: 1px solid #7d2aff;
+  border-radius: 8px;
+  padding: 8px;
+}
+button.fancy {
+  background: linear-gradient(90deg, #7d2aff, #d18eff);
+  border: none;
+  color: #fff;
+  padding: 8px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button.fancy:hover {
+  background: linear-gradient(90deg, #d18eff, #7d2aff);
+}
+#login-container {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.9);
+  display:flex; justify-content:center; align-items:center;
+  z-index:10;
+}
+#login-box {
+  background:#2b0030; padding:30px; border-radius:20px; width:300px;
+  box-shadow:0 0 20px #7d2aff;
+}
+#login-box input {
+  display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none;
+}
+#login-box button {
+  width:100%; padding:10px; border-radius:8px; border:none; cursor:pointer; background:#7d2aff; color:#fff;
+}
+#popup {
+  display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8);
+  justify-content:center; align-items:center; z-index:15;
+}
+#popup-content {
+  background:#2b0030; padding:20px; border-radius:20px; box-shadow:0 0 20px #9b00ff; text-align:center;
+}
+#popup-content input,#popup-content select{ margin:10px 0; width:200px; padding:8px; border-radius:8px; border:none;}
+#add-btn{margin-bottom:20px;}
+</style>
+</head>
+<body>
+<header>
+💜 Purple Shadows 💜
+<div id="logged-in"></div>
+</header>
+
+<nav>
+<button onclick="showTab('home')">Startseite</button>
+<button onclick="showTab('shop')">Shop</button>
+<button onclick="showTab('members')">Mitgliederliste</button>
+</nav>
+
+<section id="home" class="active">
+<h2>💜 Willkommen bei Purple Shadows 💜</h2>
+</section>
+
+<section id="shop">
+<h2>💜 Purple Shadows - Shop 💜</h2>
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Shirt (Variante 1):</h3>
+<img src="https://cdn.discordapp.com/attachments/1408601322378236065/1408601322579689502/noFilter.png?ex=68e8f4f5&is=68e7a375&hm=9ca1b7e214d9db759160e6fac8484e64ed1987075fab292f9762197a2c2b04ee&" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+</div>
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Shirt (Variante 2):</h3>
+<img src="https://cdn.discordapp.com/attachments/1408601202194780181/1408601202362679416/image.png?ex=68e8f4d9&is=68e7a359&hm=1b5d04769281d242e344334952fdbf60a6f4032868af5fe02b9c1fa583477260&" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+</div>
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Unsere Weste:</h3>
+<img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+</div>
+</div>
+</section>
+
+<section id="members">
+<h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
+<button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
+<table>
+<thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
+<tbody id="members-table"></tbody>
+</table>
+</section>
+
+<div id="popup">
+<div id="popup-content">
+<h3>Mitglied hinzufügen</h3>
+<input id="usernameInput" placeholder="Username">
+<br>
+<select id="rankSelect">
+<option value="👑 Boss">👑 Boss</option>
+<option value="👑 Underboss">👑 Underboss</option>
+<option value="💜 Crew Leader">💜 Crew Leader</option>
+<option value="💜 Captain">💜 Captain</option>
+<option value="💜 Gangster">💜 Gangster</option>
+<option value="💜 Shadow">💜 Shadow</option>
+<option value="💜 Vollstrecker">💜 Vollstrecker</option>
+<option value="💜 Capo">💜 Capo</option>
+<option value="💜 Soldier">💜 Soldier</option>
+<option value="💜 Probation">💜 Probation</option>
+</select>
+<br>
+<button class="fancy" onclick="addMember()">Hinzufügen</button>
+<button class="fancy" onclick="closePopup()">Abbrechen</button>
+</div>
+</div>
+
+<div id="login-container">
+<div id="login-box">
+<h2>Login</h2>
+<input id="login-username" placeholder="Username">
+<input id="login-password" type="password" placeholder="Passwort">
+<button onclick="login()">Login</button>
+<p id="login-error" style="color:red;"></p>
+</div>
+</div>
+
+<script>
+const socket = io();
+let currentUser = null;
+
+function showTab(id){
+document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function renderMembers(members){
+const table=document.getElementById("members-table");
+table.innerHTML="";
+members.forEach(m=>{
+const row=document.createElement("tr");
+row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;
+const actionsCell=document.createElement("td");
+if(currentUser==="Julian"){
+const delBtn=document.createElement("button");
+delBtn.className="fancy";
+delBtn.textContent="❌";
+delBtn.onclick=()=>socket.emit("deleteMember",m.username);
+actionsCell.appendChild(delBtn);
+}
+row.appendChild(actionsCell);
+table.appendChild(row);
+});
+}
+
+socket.on("updateMembers", members=>renderMembers(members));
+
+async function login(){
+const username=document.getElementById("login-username").value;
+const password=document.getElementById("login-password").value;
+const res=await axios.post("/login",{username,password});
+if(res.data.success){
+currentUser=username;
+document.getElementById("login-container").style.display="none";
+document.getElementById("logged-in").innerText="Eingeloggt als: "+currentUser;
+if(username==="Julian")document.getElementById("add-btn").style.display="inline-block";
+axios.get("/members").then(r=>renderMembers(r.data));
+}else{
+document.getElementById("login-error").innerText="Falscher Benutzer oder Passwort!";
+}
+}
+
+document.getElementById("add-btn").onclick=()=>document.getElementById("popup").style.display="flex";
+function closePopup(){document.getElementById("popup").style.display="none";}
+function addMember(){
+const username=document.getElementById("usernameInput").value.trim();
+if(!username)return alert("⚠️ Username darf nicht leer sein!");
+const rank=document.getElementById("rankSelect").value;
+socket.emit("addMember",{username,rank});
+closePopup();
+}
+</script>
+</body>
+</html>
