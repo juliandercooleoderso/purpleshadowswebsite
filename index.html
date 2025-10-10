@@ -6,141 +6,393 @@
 <script src="/socket.io/socket.io.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
-body{margin:0;padding:0;font-family:"Poppins",sans-serif;background:radial-gradient(circle at top left,#2b0030,#000);color:#fff;text-align:center;}
-header{background:#3b0066;padding:15px;font-size:1.8rem;font-weight:bold;letter-spacing:2px;position:relative;}
-#logged-in{position:absolute;right:20px;top:15px;font-size:1rem;color:#fff;}
-nav{margin:15px;}
-nav button{background:#5a00a3;color:white;border:none;padding:10px 20px;margin:5px;border-radius:12px;cursor:pointer;transition:0.3s;}
-nav button:hover{background:#9b00ff;}
-section{display:none;margin-top:20px;}
-section.active{display:block;}
-table{width:90%;margin:20px auto;border-collapse:collapse;background: rgba(60,0,90,0.5);border-radius:12px;overflow:hidden;}
-th,td{border:1px solid #7d2aff;padding:12px 15px;text-align:center;}
-th{background:#5a00a3;}
-button.fancy{background:linear-gradient(90deg,#7d2aff,#d18eff);border:none;color:#fff;padding:8px 15px;border-radius:10px;cursor:pointer;transition:0.3s;}
-button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
-.plus-btn{background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px;color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;transition:0.3s;}
-.plus-btn:hover{transform: scale(1.1);}
-#login-container{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10;}
-#login-box{background:#2b0030;padding:30px;border-radius:20px;width:300px;box-shadow:0 0 20px #7d2aff;}
-#login-box input,#login-box button{display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none;}
-#popup,#item-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:15;}
-#popup-content,#item-popup-content{background:#2b0030;padding:20px;border-radius:20px;box-shadow:0 0 20px #9b00ff;text-align:center;}
-#viewer{position:absolute;top:20px;left:20px;font-size:1.1rem;text-shadow:0 0 8px #fff;}
-.card{background: rgba(60,0,90,0.6);border-radius:25px;padding:25px;min-width:320px;max-width:400px;box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;text-align:center;transition: transform 0.3s, box-shadow 0.3s;}
-.card:hover{transform: translateY(-5px);box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;}
-.card h3{display:flex;justify-content:space-between;align-items:center;background: linear-gradient(90deg,#7d2aff,#d18eff);padding:12px 18px;border-radius:15px;color:white;margin-bottom:20px;box-shadow:0 0 15px #9b00ff inset;}
+body {
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
+  background: radial-gradient(circle at top left, #2b0030, #000);
+  color:#fff;
+  text-align:center;
+}
+
+header {
+  background:#3b0066;
+  padding:15px;
+  font-size:1.8rem;
+  font-weight:bold;
+  letter-spacing:2px;
+  position:relative;
+}
+
+#logged-in {
+  position:absolute;
+  right:20px;
+  top:15px;
+  font-size:1rem;
+  color:#fff;
+}
+
+nav {
+  margin:15px;
+}
+
+nav button {
+  background:#5a00a3;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  margin:5px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+nav button:hover {
+  background:#9b00ff;
+}
+
+section {
+  display:none;
+  margin-top:20px;
+}
+
+section.active {
+  display:block;
+}
+
+table {
+  width:90%;
+  margin:20px auto;
+  border-collapse:collapse;
+  background: rgba(60,0,90,0.5);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+th, td {
+  border:1px solid #7d2aff;
+  padding:12px 15px;
+  text-align:center;
+}
+
+th {
+  background:#5a00a3;
+}
+
+select, input {
+  background:#3b0066;
+  color:#fff;
+  border:1px solid #7d2aff;
+  border-radius:8px;
+  padding:8px;
+  box-sizing:border-box;
+}
+
+button.fancy {
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  border:none;
+  color:#fff;
+  padding:8px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button.fancy:hover {
+  background:linear-gradient(90deg,#d18eff,#7d2aff);
+}
+
+/* Login */
+#login-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+#login-box{
+  background:#2b0030;
+  padding:30px;
+  border-radius:20px;
+  width:300px;
+  box-shadow:0 0 20px #7d2aff;
+}
+
+#login-box input,#login-box button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+
+/* Popups */
+#popup, .popup-item {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  z-index:15;
+}
+
+#popup-content, .popup-item-content {
+  background:#2b0030;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 20px #9b00ff;
+  text-align:center;
+}
+
+#popup-content input,#popup-content select,
+.popup-item-content input,.popup-item-content select{
+  margin:10px 0;
+  width:200px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+}
+
+/* Neon Cards */
+.card {
+  background: rgba(60,0,90,0.6);
+  border-radius:25px;
+  padding:25px;
+  min-width:320px;
+  max-width:400px;
+  box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;
+  text-align:center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;
+}
+
+.card h3 {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: linear-gradient(90deg,#7d2aff,#d18eff);
+  padding:12px 18px;
+  border-radius:15px;
+  color:white;
+  margin-bottom:20px;
+  box-shadow:0 0 15px #9b00ff inset;
+}
+
+.card h3 button.plus-btn {
+  background: linear-gradient(45deg,#ff6fff,#7d2aff);
+  border:none;
+  border-radius:50%;
+  width:35px;
+  height:35px;
+  font-size:1.5rem;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card h3 button.plus-btn:hover {
+  transform: scale(1.2);
+  box-shadow:0 0 20px #ff6fff, 0 0 30px #7d2aff inset;
+}
+
+/* Plus-Buttons */
+.plus-btn {
+  background: linear-gradient(45deg,#ff6fff,#7d2aff);
+  border:none;
+  border-radius:50%;
+  width:40px;
+  height:40px;
+  color:white;
+  font-weight:bold;
+  font-size:1.3rem;
+  cursor:pointer;
+  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
+  transition: 0.3s;
+}
+
+.plus-btn:hover {
+  transform: scale(1.1);
+  box-shadow:0 0 20px #ff6fff,0 0 30px #7d2aff inset;
+}
+
+/* Logo Animiert */
+.logo-float {
+  animation: floatLogo 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px #9b00ff);
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Viewer */
+#viewer {
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:1.1rem;
+  text-shadow:0 0 8px #fff;
+}
 </style>
 </head>
 <body>
-<header>💜 Purple Shadows 💜<div id="logged-in"></div></header>
+<header>
+💜 Purple Shadows 💜
+<div id="logged-in"></div>
+</header>
+
 <nav>
-<button onclick="showTab('home')">Startseite</button>
-<button onclick="showTab('shop')">Shop</button>
-<button onclick="showTab('members')">Mitgliederliste</button>
-<button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
+  <button onclick="showTab('home')">Startseite</button>
+  <button onclick="showTab('shop')">Shop</button>
+  <button onclick="showTab('members')">Mitgliederliste</button>
+  <!-- 🔥 NEU -->
+  <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
+
 <div id="viewer">👁️ 0</div>
 
-<!-- HOME -->
 <section id="home" class="active">
-<h2>💜 Willkommen bei Purple Shadows 💜</h2>
-<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
-<div class="card">
-<h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
-<table id="meetings-table"><thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-</div>
-<div class="card">
-<h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
-<table id="changes-table"><thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-</div>
-<div class="card">
-<h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
-<table id="wars-table"><thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-</div>
-</div>
+  <h2>💜 Willkommen bei Purple Shadows 💜</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&" width="220" style="margin:25px auto;display:block;">
+
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+    <div class="card">
+      <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead>
+        <tbody id="meetings-table"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead>
+        <tbody id="changes-table"></tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead>
+        <tbody id="wars-table"></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
-<!-- SHOP -->
 <section id="shop">
-<h2>💜 Shop 💜</h2>
-<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Shirt (Variante 1)</h3>
-<img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
-</div>
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Shirt (Variante 2)</h3>
-<img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
-</div>
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Unsere Weste</h3>
-<img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
-</div>
-</div>
+  <h2>💜 Purple Shadows - Shop 💜</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Shirt (Variante 1):</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+    </div>
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Shirt (Variante 2):</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+    </div>
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Unsere Weste:</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+    </div>
+  </div>
 </section>
 
-<!-- MITGLIEDER -->
 <section id="members">
-<h2>💜 Mitgliederliste 💜</h2>
-<button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
-<table id="members-table"><thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
+  <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
+  <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
+  <table>
+    <thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
+    <tbody id="members-table"></tbody>
+  </table>
 </section>
 
-<!-- STATISTIK -->
+<!-- 🔥 NEU -->
 <section id="stats">
-<h2>📊 Statistiken</h2>
-<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
-<div class="card">
-<h3>🟢 Online User</h3>
-<div id="online-users-box" style="max-height:300px;overflow-y:auto;text-align:left;background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;">
-<p style="opacity:0.6;">Niemand online</p>
-</div>
-</div>
-<div class="card">
-<h3>📜 Audit Logs</h3>
-<div id="audit-log-box" style="max-height:300px;overflow-y:auto;text-align:left;background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;">
-<p style="opacity:0.6;">Noch keine Logs...</p>
-</div>
-</div>
-</div>
+  <h2>📊 Statistiken</h2>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+    <div class="card">
+      <h3>📜 Audit Logs</h3>
+      <div id="audit-log-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Noch keine Logs...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🟢 Online User</h3>
+      <div id="online-users-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Niemand online</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<!-- POPUPS -->
+<!-- Popups -->
 <div id="popup">
-<div id="popup-content">
-<h3>Mitglied hinzufügen</h3>
-<input id="usernameInput" placeholder="Username"><br>
-<select id="rankSelect">
-<option>👑 Boss</option><option>👑 Underboss</option><option>💜 Crew Leader</option><option>💜 Captain</option><option>💜 Gangster</option><option>💜 Shadow</option><option>💜 Vollstrecker</option><option>💜 Capo</option><option>💜 Soldier</option><option>💜 Probation</option>
-</select><br>
-<button class="fancy" onclick="addMember()">Hinzufügen</button>
-<button class="fancy" onclick="closePopup()">Abbrechen</button>
-</div>
+  <div id="popup-content">
+    <h3>Mitglied hinzufügen</h3>
+    <input id="usernameInput" placeholder="Username"><br>
+    <select id="rankSelect">
+      <option value="👑 Boss">👑 Boss</option>
+      <option value="👑 Underboss">👑 Underboss</option>
+      <option value="💜 Crew Leader">💜 Crew Leader</option>
+      <option value="💜 Captain">💜 Captain</option>
+      <option value="💜 Gangster">💜 Gangster</option>
+      <option value="💜 Shadow">💜 Shadow</option>
+      <option value="💜 Vollstrecker">💜 Vollstrecker</option>
+      <option value="💜 Capo">💜 Capo</option>
+      <option value="💜 Soldier">💜 Soldier</option>
+      <option value="💜 Probation">💜 Probation</option>
+    </select><br>
+    <button class="fancy" onclick="addMember()">Hinzufügen</button>
+    <button class="fancy" onclick="closePopup()">Abbrechen</button>
+  </div>
 </div>
 
-<div id="item-popup">
-<div id="item-popup-content">
-<h3 id="item-popup-title"></h3>
-<input id="item-date" type="date">
-<input id="item-text" placeholder="Text"><br>
-<button class="fancy" id="item-add-btn">Speichern</button>
-<button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
-</div>
+<div id="item-popup" class="popup-item">
+  <div class="popup-item-content">
+    <h3 id="item-popup-title"></h3>
+    <input id="item-date" type="date" placeholder="Datum">
+    <input id="item-text" placeholder="Thema/Beschreibung/Gegner"><br>
+    <button class="fancy" id="item-add-btn">Akzeptieren</button>
+    <button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
+  </div>
 </div>
 
-<!-- LOGIN -->
 <div id="login-container">
-<div id="login-box">
-<h2>Login</h2>
-<input id="login-username" placeholder="Username">
-<input id="login-password" type="password" placeholder="Passwort">
-<button onclick="login()">Login</button>
-<p id="login-error" style="color:red;"></p>
-</div>
+  <div id="login-box">
+    <h2>Login</h2>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Passwort">
+    <button onclick="login()">Login</button>
+    <p id="login-error" style="color:red;"></p>
+  </div>
 </div>
 
 <script>
@@ -149,69 +401,94 @@ let currentUser = null;
 const allowedUsers = ["Julian","Max"];
 
 // Tabs
-function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function showTab(id){
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
 // Mitglieder
 function renderMembers(members){
-  const tbody=document.querySelector("#members-table tbody");
-  tbody.innerHTML="";
+  const table = document.getElementById("members-table");
+  table.innerHTML = "";
   members.forEach(m=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td></td>`;
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td>`;
+    const actionsCell = document.createElement("td");
     if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
-      delBtn.className="fancy";delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteMember",m.username);
-      tr.querySelector("td:last-child").appendChild(delBtn);
+      const delBtn = document.createElement("button");
+      delBtn.className = "fancy";
+      delBtn.textContent = "❌";
+      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
+      actionsCell.appendChild(delBtn);
     }
-    tbody.appendChild(tr);
+    row.appendChild(actionsCell);
+    table.appendChild(row);
   });
 }
 
 // Items
-function renderItems(tableId,items){
-  const tbody=document.querySelector(`#${tableId} tbody`);
-  tbody.innerHTML="";
+function renderItems(tableId, items){
+  const table = document.getElementById(tableId);
+  table.innerHTML = "";
   items.forEach(item=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${item.date}</td><td>${item.text}</td><td></td>`;
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.date}</td><td>${item.text}</td>`;
+    const actionsCell = document.createElement("td");
     if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
-      delBtn.className="fancy";delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
-      tr.querySelector("td:last-child").appendChild(delBtn);
+      const delBtn = document.createElement("button");
+      delBtn.className = "fancy";
+      delBtn.textContent = "❌";
+      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
+      actionsCell.appendChild(delBtn);
     }
-    tbody.appendChild(tr);
+    row.appendChild(actionsCell);
+    table.appendChild(row);
   });
 }
 
-// Online & Logs
+// 🔥 NEU: Online Users + Logs
 function updateOnlineUsers(users){
-  const box=document.getElementById("online-users-box");
-  box.innerHTML="";
-  if(users.length===0){box.innerHTML="<p style='opacity:0.6;'>Niemand online</p>";return;}
-  users.forEach(u=>{const p=document.createElement("p");p.textContent="• "+u;box.appendChild(p);});
+  const box = document.getElementById("online-users-box");
+  box.innerHTML = "";
+  if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
+  users.forEach(u=>{
+    const p = document.createElement("p");
+    p.textContent = "• " + u;
+    box.appendChild(p);
+  });
 }
+
 function addAuditLog(entry){
-  const box=document.getElementById("audit-log-box");
+  const box = document.getElementById("audit-log-box");
   if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
-  const time=new Date().toLocaleTimeString();
-  const p=document.createElement("p");p.textContent=`[${time}] ${entry}`;
-  box.appendChild(p);box.scrollTop=box.scrollHeight;
+  const time = new Date().toLocaleTimeString();
+  const p = document.createElement("p");
+  p.textContent = `[${time}] ${entry}`;
+  box.appendChild(p);
+  box.scrollTop = box.scrollHeight;
 }
+
+// Socket Events
+socket.on("updateMembers", members => renderMembers(members));
+socket.on("updateItems", data => renderItems(data.table, data.items));
+socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
+socket.on("updateOnlineUsers", users => updateOnlineUsers(users));
+socket.on("newAuditLog", log => addAuditLog(log));
 
 // Login
 async function login(){
-  const username=document.getElementById("login-username").value.trim();
-  const password=document.getElementById("login-password").value.trim();
-  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+
+  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+
   try{
-    const res=await axios.post("/login",{username,password});
+    const res = await axios.post("/login",{username,password});
     if(res.data.success){
-      currentUser=username;
+      currentUser = username;
       document.getElementById("login-container").style.display="none";
-      document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
-      socket.emit("userOnline",username);
+      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
+      socket.emit("userOnline", username);
       if(allowedUsers.includes(username)){
         document.getElementById("add-btn").style.display="inline-block";
         document.getElementById("add-meeting-btn").style.display="inline-block";
@@ -219,45 +496,44 @@ async function login(){
         document.getElementById("add-war-btn").style.display="inline-block";
         document.getElementById("stats-btn").style.display="inline-block";
       }
-    } else {document.getElementById("login-error").innerText="Login fehlgeschlagen!";}
-  } catch(e){document.getElementById("login-error").innerText="Serverfehler!";}
+    } else {
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+    }
+  } catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
+  }
 }
 
 // Popups
 function openPopup(){document.getElementById("popup").style.display="flex";}
 function closePopup(){document.getElementById("popup").style.display="none";}
 function addMember(){
-  const username=document.getElementById("usernameInput").value;
-  const rank=document.getElementById("rankSelect").value;
+  const username = document.getElementById("usernameInput").value;
+  const rank = document.getElementById("rankSelect").value;
   if(username.trim()!=="") socket.emit("addMember",{username,rank});
   closePopup();
 }
-function openItemPopup(title,table){
+
+function openItemPopup(tableTitle, tableName){
   document.getElementById("item-popup").style.display="flex";
-  document.getElementById("item-popup-title").innerText=title;
-  document.getElementById("item-add-btn").onclick=()=>{
+  document.getElementById("item-popup-title").innerText=tableTitle;
+  document.getElementById("item-add-btn").onclick=function(){
     const date=document.getElementById("item-date").value;
     const text=document.getElementById("item-text").value;
     if(date.trim()!==""&&text.trim()!==""){
-      socket.emit("addItem",{table,date,text});
-      closeItemPopup();
+      socket.emit("addItem",{table:tableName,date,text});
     }
-  };
+    closeItemPopup();
+  }
 }
 function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
 
-// Buttons
+// Button Events
 document.getElementById("add-btn").onclick=openPopup;
 document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
 document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
 document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
-
-// Socket Events
-socket.on("updateMembers",members=>renderMembers(members));
-socket.on("updateItems",data=>renderItems(data.table,data.items));
-socket.on("updateOnlineUsers",users=>updateOnlineUsers(users));
-socket.on("newAuditLog",log=>addAuditLog(log));
-socket.on("updateViewers",count=>document.getElementById("viewer").innerText=`👁️ ${count}`);
 </script>
 </body>
 </html>
+
