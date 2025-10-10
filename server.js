@@ -42,6 +42,10 @@ let wars = loadJSON(warsFile);
 // Live-Viewer Zähler
 let viewers = 0;
 
+// 🔥 NEU: Online-User und Audit-Logs
+let onlineUsers = [];
+let auditLogs = [];
+
 // ================= ROUTES =================
 
 // Login prüfen
@@ -75,18 +79,30 @@ io.on("connection", socket => {
   socket.emit("updateItems", { table: "changes-table", items: changes });
   socket.emit("updateItems", { table: "wars-table", items: wars });
 
+  // 🔥 NEU: Login-Event von Client
+  socket.on("userOnline", username => {
+    if (!onlineUsers.includes(username)) {
+      onlineUsers.push(username);
+      io.emit("updateOnlineUsers", onlineUsers);
+      addAuditLog(`🟢 ${username} ist online gekommen.`);
+    }
+    socket.username = username;
+  });
+
   // ================= MEMBERS =================
   socket.on("addMember", data => {
     if (!data.username) return;
     members.push(data);
     saveJSON(membersFile, members);
     io.emit("updateMembers", members);
+    addAuditLog(`➕ Mitglied hinzugefügt: ${data.username} (${data.rank})`);
   });
 
   socket.on("deleteMember", username => {
     members = members.filter(m => m.username !== username);
     saveJSON(membersFile, members);
     io.emit("updateMembers", members);
+    addAuditLog(`❌ Mitglied gelöscht: ${username}`);
   });
 
   // ================= ITEMS =================
@@ -98,6 +114,8 @@ io.on("connection", socket => {
 
     const items = table === "meetings-table" ? meetings : table === "changes-table" ? changes : wars;
     io.emit("updateItems", { table, items });
+
+    addAuditLog(`📝 Neuer Eintrag in ${table}: "${text}" (${date})`);
   });
 
   socket.on("deleteItem", ({ table, date, text }) => {
@@ -107,6 +125,8 @@ io.on("connection", socket => {
 
     const items = table === "meetings-table" ? meetings : table === "changes-table" ? changes : wars;
     io.emit("updateItems", { table, items });
+
+    addAuditLog(`🗑️ Eintrag gelöscht aus ${table}: "${text}"`);
   });
 
   // ================= DISCONNECT =================
@@ -114,8 +134,30 @@ io.on("connection", socket => {
     viewers--;
     io.emit("updateViewers", viewers);
     console.log(`❌ Client getrennt, Viewer: ${viewers}`);
+
+    // 🔥 NEU: Entfernen aus Online-User-Liste
+    if (socket.username) {
+      onlineUsers = onlineUsers.filter(u => u !== socket.username);
+      io.emit("updateOnlineUsers", onlineUsers);
+      addAuditLog(`🔴 ${socket.username} ist offline gegangen.`);
+    }
   });
+
+  // 🔥 NEU: Beim Verbinden Logs und Online-User senden
+  socket.emit("updateOnlineUsers", onlineUsers);
+  auditLogs.forEach(log => socket.emit("newAuditLog", log));
 });
 
+// 🔥 NEU: Funktion für Logs
+function addAuditLog(text) {
+  const entry = `${text}`;
+  auditLogs.push(entry);
+  if (auditLogs.length > 200) auditLogs.shift(); // Alte löschen
+  io.emit("newAuditLog", entry);
+}
+
 // ================= SERVER START =================
-server.listen(PORT, () => console.log(`💜 Server läuft auf http://localhost:${PORT}`));
+server.listen(PORT, () =>
+  console.log(`💜 Server läuft auf http://localhost:${PORT}`)
+);
+
