@@ -266,21 +266,21 @@ button.fancy:hover {
   <button onclick="showTab('home')">Startseite</button>
   <button onclick="showTab('shop')">Shop</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
+  <!-- 🔥 NEU -->
+  <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
 
 <div id="viewer">👁️ 0</div>
 
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://media.discordapp.net/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&=&format=webp&quality=lossless&width=652&height=652" width="220" style="margin:25px auto;display:block;">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&" width="220" style="margin:25px auto;display:block;">
 
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
     <div class="card">
       <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
       <table>
-        <thead>
-          <tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr>
-        </thead>
+        <thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead>
         <tbody id="meetings-table"></tbody>
       </table>
     </div>
@@ -288,9 +288,7 @@ button.fancy:hover {
     <div class="card">
       <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
       <table>
-        <thead>
-          <tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr>
-        </thead>
+        <thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead>
         <tbody id="changes-table"></tbody>
       </table>
     </div>
@@ -298,9 +296,7 @@ button.fancy:hover {
     <div class="card">
       <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
       <table>
-        <thead>
-          <tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr>
-        </thead>
+        <thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead>
         <tbody id="wars-table"></tbody>
       </table>
     </div>
@@ -332,11 +328,29 @@ button.fancy:hover {
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
   <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
   <table>
-    <thead>
-      <tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr>
-    </thead>
+    <thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
     <tbody id="members-table"></tbody>
   </table>
+</section>
+
+<!-- 🔥 NEU -->
+<section id="stats">
+  <h2>📊 Statistiken</h2>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+    <div class="card">
+      <h3>📜 Audit Logs</h3>
+      <div id="audit-log-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Noch keine Logs...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🟢 Online User</h3>
+      <div id="online-users-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Niemand online</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Popups -->
@@ -382,7 +396,6 @@ button.fancy:hover {
 </div>
 
 <script>
-// Socket & Login
 const socket = io();
 let currentUser = null;
 const allowedUsers = ["Julian","Max"];
@@ -393,7 +406,7 @@ function showTab(id){
   document.getElementById(id).classList.add("active");
 }
 
-// Members
+// Mitglieder
 function renderMembers(members){
   const table = document.getElementById("members-table");
   table.innerHTML = "";
@@ -433,74 +446,94 @@ function renderItems(tableId, items){
   });
 }
 
+// 🔥 NEU: Online Users + Logs
+function updateOnlineUsers(users){
+  const box = document.getElementById("online-users-box");
+  box.innerHTML = "";
+  if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
+  users.forEach(u=>{
+    const p = document.createElement("p");
+    p.textContent = "• " + u;
+    box.appendChild(p);
+  });
+}
+
+function addAuditLog(entry){
+  const box = document.getElementById("audit-log-box");
+  if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
+  const time = new Date().toLocaleTimeString();
+  const p = document.createElement("p");
+  p.textContent = `[${time}] ${entry}`;
+  box.appendChild(p);
+  box.scrollTop = box.scrollHeight;
+}
+
 // Socket Events
 socket.on("updateMembers", members => renderMembers(members));
 socket.on("updateItems", data => renderItems(data.table, data.items));
 socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
+socket.on("updateOnlineUsers", users => updateOnlineUsers(users));
+socket.on("newAuditLog", log => addAuditLog(log));
 
 // Login
 async function login(){
-  const username = document.getElementById("login-username").value;
-  const password = document.getElementById("login-password").value;
-  const res = await axios.post("/login",{username,password});
-  if(res.data.success){
-    currentUser = username;
-    document.getElementById("login-container").style.display="none";
-    document.getElementById("logged-in").innerText = "Eingeloggt als: "+currentUser;
-    if(allowedUsers.includes(username)){
-      document.getElementById("add-btn").style.display="inline-block";
-      document.getElementById("add-meeting-btn").style.display="inline-block";
-      document.getElementById("add-change-btn").style.display="inline-block";
-      document.getElementById("add-war-btn").style.display="inline-block";
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+
+  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+
+  try{
+    const res = await axios.post("/login",{username,password});
+    if(res.data.success){
+      currentUser = username;
+      document.getElementById("login-container").style.display="none";
+      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
+      socket.emit("userOnline", username);
+      if(allowedUsers.includes(username)){
+        document.getElementById("add-btn").style.display="inline-block";
+        document.getElementById("add-meeting-btn").style.display="inline-block";
+        document.getElementById("add-change-btn").style.display="inline-block";
+        document.getElementById("add-war-btn").style.display="inline-block";
+        document.getElementById("stats-btn").style.display="inline-block";
+      }
+    } else {
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
     }
-    axios.get("/members").then(r=>renderMembers(r.data));
-    ["meetings-table","changes-table","wars-table"].forEach(tbl =>
-      axios.get(`/items/${tbl}`).then(r=>renderItems(tbl,r.data))
-    );
-  } else {
-    document.getElementById("login-error").innerText="Falscher Benutzer oder Passwort!";
+  } catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
   }
 }
 
 // Popups
-document.getElementById("add-btn").onclick = ()=>document.getElementById("popup").style.display="flex";
-
+function openPopup(){document.getElementById("popup").style.display="flex";}
 function closePopup(){document.getElementById("popup").style.display="none";}
-
-let currentItemTable = "";
-function openItemPopup(tableId){
-  currentItemTable = tableId;
-  const title = tableId==="meetings-table"?"Meeting hinzufügen":tableId==="changes-table"?"Veränderung hinzufügen":"Krieg hinzufügen";
-  document.getElementById("item-popup-title").innerText = title;
-  document.getElementById("item-date").value="";
-  document.getElementById("item-text").value="";
-  document.getElementById("item-popup").style.display="flex";
-}
-
-function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
-
-document.getElementById("item-add-btn").onclick = ()=>{
-  const date = document.getElementById("item-date").value;
-  const text = document.getElementById("item-text").value.trim();
-  if(!date || !text) return alert("⚠️ Alle Felder ausfüllen!");
-  socket.emit("addItem",{table:currentItemTable,date,text});
-  closeItemPopup();
-};
-
-["add-meeting-btn","add-change-btn","add-war-btn"].forEach(id=>{
-  document.getElementById(id).onclick = ()=>{
-    openItemPopup(id.includes("meeting")?"meetings-table":id.includes("change")?"changes-table":"wars-table");
-  }
-});
-
 function addMember(){
-  const username = document.getElementById("usernameInput").value.trim();
+  const username = document.getElementById("usernameInput").value;
   const rank = document.getElementById("rankSelect").value;
-  if(!username) return alert("⚠️ Username darf nicht leer sein!");
-  socket.emit("addMember",{username,rank});
+  if(username.trim()!=="") socket.emit("addMember",{username,rank});
   closePopup();
 }
-</script>
 
+function openItemPopup(tableTitle, tableName){
+  document.getElementById("item-popup").style.display="flex";
+  document.getElementById("item-popup-title").innerText=tableTitle;
+  document.getElementById("item-add-btn").onclick=function(){
+    const date=document.getElementById("item-date").value;
+    const text=document.getElementById("item-text").value;
+    if(date.trim()!==""&&text.trim()!==""){
+      socket.emit("addItem",{table:tableName,date,text});
+    }
+    closeItemPopup();
+  }
+}
+function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
+
+// Button Events
+document.getElementById("add-btn").onclick=openPopup;
+document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
+document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
+document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
+</script>
 </body>
 </html>
+
