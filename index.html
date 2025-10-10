@@ -7,94 +7,124 @@
 <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
 body {
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
   background: radial-gradient(circle at top left, #2b0030, #000);
-  color: #fff;
-  font-family: "Poppins", sans-serif;
-  text-align: center;
-  margin: 0;
+  color:#fff;
+  text-align:center;
 }
+
 header {
-  background: #3b0066;
-  padding: 15px;
-  font-size: 1.8rem;
-  font-weight: bold;
-  letter-spacing: 2px;
-  position: relative;
+  background:#3b0066;
+  padding:15px;
+  font-size:1.8rem;
+  font-weight:bold;
+  letter-spacing:2px;
+  position:relative;
 }
+
 #logged-in {
-  position: absolute;
-  right: 20px;
-  top: 15px;
-  font-size: 1rem;
-  color: #fff;
+  position:absolute;
+  right:20px;
+  top:15px;
+  font-size:1rem;
+  color:#fff;
 }
+
 nav {
-  margin: 15px;
+  margin:15px;
 }
+
 nav button {
-  background: #5a00a3;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  margin: 5px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s;
+  background:#5a00a3;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  margin:5px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
 }
+
 nav button:hover {
-  background: #9b00ff;
+  background:#9b00ff;
 }
-section { display: none; margin-top: 20px; }
-section.active { display: block; }
+
+section {
+  display:none;
+  margin-top:20px;
+}
+
+section.active {
+  display:block;
+}
+
 table {
-  width: 70%;
-  margin: 20px auto;
-  border-collapse: collapse;
+  width:90%;
+  margin:20px auto;
+  border-collapse:collapse;
   background: rgba(60,0,90,0.5);
-  border-radius: 12px;
-  overflow: hidden;
+  border-radius:12px;
+  overflow:hidden;
 }
+
 th, td {
-  border: 1px solid #7d2aff;
-  padding: 10px;
-  text-align: center;
+  border:1px solid #7d2aff;
+  padding:12px 15px;
+  text-align:center;
 }
+
 th {
-  background: #5a00a3;
+  background:#5a00a3;
 }
-select,input {
-  background: #3b0066;
-  color: #fff;
-  border: 1px solid #7d2aff;
-  border-radius: 8px;
-  padding: 8px;
-  box-sizing: border-box;
+
+select, input {
+  background:#3b0066;
+  color:#fff;
+  border:1px solid #7d2aff;
+  border-radius:8px;
+  padding:8px;
+  box-sizing:border-box;
 }
+
 button.fancy {
-  background: linear-gradient(90deg, #7d2aff, #d18eff);
-  border: none;
-  color: #fff;
-  padding: 8px 15px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: 0.3s;
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  border:none;
+  color:#fff;
+  padding:8px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
 }
+
 button.fancy:hover {
-  background: linear-gradient(90deg, #d18eff, #7d2aff);
+  background:linear-gradient(90deg,#d18eff,#7d2aff);
 }
-#login-container {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
+
+/* Login */
+#login-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
   background: rgba(0,0,0,0.9);
-  display:flex; justify-content:center; align-items:center;
+  display:flex;
+  justify-content:center;
+  align-items:center;
   z-index:10;
 }
-#login-box {
-  background:#2b0030; padding:30px; border-radius:20px; width:300px;
+
+#login-box{
+  background:#2b0030;
+  padding:30px;
+  border-radius:20px;
+  width:300px;
   box-shadow:0 0 20px #7d2aff;
 }
-#login-box input, #login-box button {
+
+#login-box input,#login-box button{
   display:block;
   width:100%;
   margin:10px 0;
@@ -102,15 +132,128 @@ button.fancy:hover {
   border-radius:8px;
   border:none;
 }
-#popup {
-  display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8);
-  justify-content:center; align-items:center; z-index:15;
+
+/* Popups */
+#popup, .popup-item {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.8);
+  justify-content:center;
+  align-items:center;
+  z-index:15;
 }
-#popup-content {
-  background:#2b0030; padding:20px; border-radius:20px; box-shadow:0 0 20px #9b00ff; text-align:center;
+
+#popup-content, .popup-item-content {
+  background:#2b0030;
+  padding:20px;
+  border-radius:20px;
+  box-shadow:0 0 20px #9b00ff;
+  text-align:center;
 }
-#popup-content input,#popup-content select{ margin:10px 0; width:200px; padding:8px; border-radius:8px; border:none;}
-#add-btn{margin-bottom:20px;}
+
+#popup-content input,#popup-content select,
+.popup-item-content input,.popup-item-content select{
+  margin:10px 0;
+  width:200px;
+  padding:8px;
+  border-radius:8px;
+  border:none;
+}
+
+/* Neon Cards */
+.card {
+  background: rgba(60,0,90,0.6);
+  border-radius:25px;
+  padding:25px;
+  min-width:320px;
+  max-width:400px;
+  box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;
+  text-align:center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;
+}
+
+.card h3 {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background: linear-gradient(90deg,#7d2aff,#d18eff);
+  padding:12px 18px;
+  border-radius:15px;
+  color:white;
+  margin-bottom:20px;
+  box-shadow:0 0 15px #9b00ff inset;
+}
+
+.card h3 button.plus-btn {
+  background: linear-gradient(45deg,#ff6fff,#7d2aff);
+  border:none;
+  border-radius:50%;
+  width:35px;
+  height:35px;
+  font-size:1.5rem;
+  font-weight:bold;
+  cursor:pointer;
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card h3 button.plus-btn:hover {
+  transform: scale(1.2);
+  box-shadow:0 0 20px #ff6fff, 0 0 30px #7d2aff inset;
+}
+
+/* Plus-Buttons */
+.plus-btn {
+  background: linear-gradient(45deg,#ff6fff,#7d2aff);
+  border:none;
+  border-radius:50%;
+  width:40px;
+  height:40px;
+  color:white;
+  font-weight:bold;
+  font-size:1.3rem;
+  cursor:pointer;
+  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
+  transition: 0.3s;
+}
+
+.plus-btn:hover {
+  transform: scale(1.1);
+  box-shadow:0 0 20px #ff6fff,0 0 30px #7d2aff inset;
+}
+
+/* Logo Animiert */
+.logo-float {
+  animation: floatLogo 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px #9b00ff);
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Viewer */
+#viewer {
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:1.1rem;
+  text-shadow:0 0 8px #fff;
+}
 </style>
 </head>
 <body>
@@ -120,125 +263,149 @@ button.fancy:hover {
 </header>
 
 <nav>
-<button onclick="showTab('home')">Startseite</button>
-<button onclick="showTab('shop')">Shop</button>
-<button onclick="showTab('members')">Mitgliederliste</button>
+  <button onclick="showTab('home')">Startseite</button>
+  <button onclick="showTab('shop')">Shop</button>
+  <button onclick="showTab('members')">Mitgliederliste</button>
 </nav>
 
+<div id="viewer">👁️ 0</div>
+
 <section id="home" class="active">
-<h2>💜 Willkommen bei Purple Shadows 💜</h2>
+  <h2>💜 Willkommen bei Purple Shadows 💜</h2>
+  <img class="logo-float" src="https://media.discordapp.net/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&=&format=webp&quality=lossless&width=652&height=652" width="220" style="margin:25px auto;display:block;">
 
-<h3>Meetings</h3>
-<table>
-<thead><tr><th>Datum</th><th>Thema</th></tr></thead>
-<tbody id="meetings-table">
-<tr><td>01.01.2025</td><td>Jahresplanung</td></tr>
-</tbody>
-</table>
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+    <div class="card">
+      <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead>
+          <tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr>
+        </thead>
+        <tbody id="meetings-table"></tbody>
+      </table>
+    </div>
 
-<h3>Veränderungen</h3>
-<table>
-<thead><tr><th>Datum</th><th>Beschreibung</th></tr></thead>
-<tbody id="changes-table">
-<tr><td>02.01.2025</td><td>Neue Crewmitglieder</td></tr>
-</tbody>
-</table>
+    <div class="card">
+      <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead>
+          <tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr>
+        </thead>
+        <tbody id="changes-table"></tbody>
+      </table>
+    </div>
 
-<h3>Kriege</h3>
-<table>
-<thead><tr><th>Datum</th><th>Gegner</th></tr></thead>
-<tbody id="wars-table">
-<tr><td>03.01.2025</td><td>Rival Crew</td></tr>
-</tbody>
-</table>
-
+    <div class="card">
+      <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
+      <table>
+        <thead>
+          <tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr>
+        </thead>
+        <tbody id="wars-table"></tbody>
+      </table>
+    </div>
+  </div>
 </section>
 
 <section id="shop">
-<h2>💜 Purple Shadows - Shop 💜</h2>
-<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Shirt (Variante 1):</h3>
-<img src="https://cdn.discordapp.com/attachments/1408601322378236065/1408601322579689502/noFilter.png" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
-</div>
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Shirt (Variante 2):</h3>
-<img src="https://cdn.discordapp.com/attachments/1408601202194780181/1408601202362679416/image.png" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
-</div>
-<div style="background:#1a0033;border-radius:15px;padding:15px;">
-<h3>Unsere Weste:</h3>
-<img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
-<br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
-</div>
-</div>
+  <h2>💜 Purple Shadows - Shop 💜</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Shirt (Variante 1):</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+    </div>
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Shirt (Variante 2):</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+    </div>
+    <div style="background:#1a0033;border-radius:15px;padding:15px;">
+      <h3>Unsere Weste:</h3>
+      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
+      <br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+    </div>
+  </div>
 </section>
 
 <section id="members">
-<h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
-<button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
-<table>
-<thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
-<tbody id="members-table"></tbody>
-</table>
+  <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
+  <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
+  <table>
+    <thead>
+      <tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr>
+    </thead>
+    <tbody id="members-table"></tbody>
+  </table>
 </section>
 
+<!-- Popups -->
 <div id="popup">
-<div id="popup-content">
-<h3>Mitglied hinzufügen</h3>
-<input id="usernameInput" placeholder="Username">
-<br>
-<select id="rankSelect">
-<option value="👑 Boss">👑 Boss</option>
-<option value="👑 Underboss">👑 Underboss</option>
-<option value="💜 Crew Leader">💜 Crew Leader</option>
-<option value="💜 Captain">💜 Captain</option>
-<option value="💜 Gangster">💜 Gangster</option>
-<option value="💜 Shadow">💜 Shadow</option>
-<option value="💜 Vollstrecker">💜 Vollstrecker</option>
-<option value="💜 Capo">💜 Capo</option>
-<option value="💜 Soldier">💜 Soldier</option>
-<option value="💜 Probation">💜 Probation</option>
-</select>
-<br>
-<button class="fancy" onclick="addMember()">Hinzufügen</button>
-<button class="fancy" onclick="closePopup()">Abbrechen</button>
+  <div id="popup-content">
+    <h3>Mitglied hinzufügen</h3>
+    <input id="usernameInput" placeholder="Username"><br>
+    <select id="rankSelect">
+      <option value="👑 Boss">👑 Boss</option>
+      <option value="👑 Underboss">👑 Underboss</option>
+      <option value="💜 Crew Leader">💜 Crew Leader</option>
+      <option value="💜 Captain">💜 Captain</option>
+      <option value="💜 Gangster">💜 Gangster</option>
+      <option value="💜 Shadow">💜 Shadow</option>
+      <option value="💜 Vollstrecker">💜 Vollstrecker</option>
+      <option value="💜 Capo">💜 Capo</option>
+      <option value="💜 Soldier">💜 Soldier</option>
+      <option value="💜 Probation">💜 Probation</option>
+    </select><br>
+    <button class="fancy" onclick="addMember()">Hinzufügen</button>
+    <button class="fancy" onclick="closePopup()">Abbrechen</button>
+  </div>
 </div>
+
+<div id="item-popup" class="popup-item">
+  <div class="popup-item-content">
+    <h3 id="item-popup-title"></h3>
+    <input id="item-date" type="date" placeholder="Datum">
+    <input id="item-text" placeholder="Thema/Beschreibung/Gegner"><br>
+    <button class="fancy" id="item-add-btn">Akzeptieren</button>
+    <button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
+  </div>
 </div>
 
 <div id="login-container">
-<div id="login-box">
-<h2>Login</h2>
-<input id="login-username" placeholder="Username">
-<input id="login-password" type="password" placeholder="Passwort">
-<button onclick="login()">Login</button>
-<p id="login-error" style="color:red;"></p>
-</div>
+  <div id="login-box">
+    <h2>Login</h2>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Passwort">
+    <button onclick="login()">Login</button>
+    <p id="login-error" style="color:red;"></p>
+  </div>
 </div>
 
 <script>
+// Socket & Login
 const socket = io();
 let currentUser = null;
-const allowedUsers = ["Julian","Max"]; // Julian & Max dürfen hinzufügen/löschen
+const allowedUsers = ["Julian","Max"];
 
+// Tabs
 function showTab(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
+// Members
 function renderMembers(members){
-  const table=document.getElementById("members-table");
-  table.innerHTML="";
+  const table = document.getElementById("members-table");
+  table.innerHTML = "";
   members.forEach(m=>{
-    const row=document.createElement("tr");
-    row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;
-    const actionsCell=document.createElement("td");
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td>`;
+    const actionsCell = document.createElement("td");
     if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
-      delBtn.className="fancy";
-      delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteMember",m.username);
+      const delBtn = document.createElement("button");
+      delBtn.className = "fancy";
+      delBtn.textContent = "❌";
+      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
       actionsCell.appendChild(delBtn);
     }
     row.appendChild(actionsCell);
@@ -246,33 +413,94 @@ function renderMembers(members){
   });
 }
 
-socket.on("updateMembers", members=>renderMembers(members));
+// Items
+function renderItems(tableId, items){
+  const table = document.getElementById(tableId);
+  table.innerHTML = "";
+  items.forEach(item=>{
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${item.date}</td><td>${item.text}</td>`;
+    const actionsCell = document.createElement("td");
+    if(allowedUsers.includes(currentUser)){
+      const delBtn = document.createElement("button");
+      delBtn.className = "fancy";
+      delBtn.textContent = "❌";
+      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
+      actionsCell.appendChild(delBtn);
+    }
+    row.appendChild(actionsCell);
+    table.appendChild(row);
+  });
+}
 
+// Socket Events
+socket.on("updateMembers", members => renderMembers(members));
+socket.on("updateItems", data => renderItems(data.table, data.items));
+socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
+
+// Login
 async function login(){
-  const username=document.getElementById("login-username").value;
-  const password=document.getElementById("login-password").value;
-  const res=await axios.post("/login",{username,password});
+  const username = document.getElementById("login-username").value;
+  const password = document.getElementById("login-password").value;
+  const res = await axios.post("/login",{username,password});
   if(res.data.success){
-    currentUser=username;
+    currentUser = username;
     document.getElementById("login-container").style.display="none";
-    document.getElementById("logged-in").innerText="Eingeloggt als: "+currentUser;
-    if(allowedUsers.includes(username)) document.getElementById("add-btn").style.display="inline-block";
+    document.getElementById("logged-in").innerText = "Eingeloggt als: "+currentUser;
+    if(allowedUsers.includes(username)){
+      document.getElementById("add-btn").style.display="inline-block";
+      document.getElementById("add-meeting-btn").style.display="inline-block";
+      document.getElementById("add-change-btn").style.display="inline-block";
+      document.getElementById("add-war-btn").style.display="inline-block";
+    }
     axios.get("/members").then(r=>renderMembers(r.data));
-  }else{
+    ["meetings-table","changes-table","wars-table"].forEach(tbl =>
+      axios.get(`/items/${tbl}`).then(r=>renderItems(tbl,r.data))
+    );
+  } else {
     document.getElementById("login-error").innerText="Falscher Benutzer oder Passwort!";
   }
 }
 
-document.getElementById("add-btn").onclick=()=>document.getElementById("popup").style.display="flex";
+// Popups
+document.getElementById("add-btn").onclick = ()=>document.getElementById("popup").style.display="flex";
+
 function closePopup(){document.getElementById("popup").style.display="none";}
+
+let currentItemTable = "";
+function openItemPopup(tableId){
+  currentItemTable = tableId;
+  const title = tableId==="meetings-table"?"Meeting hinzufügen":tableId==="changes-table"?"Veränderung hinzufügen":"Krieg hinzufügen";
+  document.getElementById("item-popup-title").innerText = title;
+  document.getElementById("item-date").value="";
+  document.getElementById("item-text").value="";
+  document.getElementById("item-popup").style.display="flex";
+}
+
+function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
+
+document.getElementById("item-add-btn").onclick = ()=>{
+  const date = document.getElementById("item-date").value;
+  const text = document.getElementById("item-text").value.trim();
+  if(!date || !text) return alert("⚠️ Alle Felder ausfüllen!");
+  socket.emit("addItem",{table:currentItemTable,date,text});
+  closeItemPopup();
+};
+
+["add-meeting-btn","add-change-btn","add-war-btn"].forEach(id=>{
+  document.getElementById(id).onclick = ()=>{
+    openItemPopup(id.includes("meeting")?"meetings-table":id.includes("change")?"changes-table":"wars-table");
+  }
+});
+
 function addMember(){
-  const username=document.getElementById("usernameInput").value.trim();
+  const username = document.getElementById("usernameInput").value.trim();
+  const rank = document.getElementById("rankSelect").value;
   if(!username) return alert("⚠️ Username darf nicht leer sein!");
-  const rank=document.getElementById("rankSelect").value;
   socket.emit("addMember",{username,rank});
   closePopup();
 }
 </script>
+
 </body>
 </html>
-
