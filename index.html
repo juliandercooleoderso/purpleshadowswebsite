@@ -104,10 +104,6 @@ button.fancy:hover {
   box-shadow:0 0 20px #9b00ff;
   text-align:center;
 }
-#popup-content input,#popup-content select,
-.popup-item-content input,.popup-item-content select{
-  margin:10px 0;width:200px;padding:8px;border-radius:8px;border:none;
-}
 .card {
   background: rgba(60,0,90,0.6);
   border-radius:25px;
@@ -241,11 +237,14 @@ function renderMembers(){
   tbody.innerHTML="";
   members.forEach(m=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td><button class='fancy'>🗑️</button></td>`;
-    tr.querySelector("button").onclick=()=>{
-      members=members.filter(x=>x.username!==m.username);
-      saveData(); renderMembers();
-    };
+    const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
+    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td>${del}</td>`;
+    if(del){
+      tr.querySelector("button").onclick=()=>{
+        members=members.filter(x=>x.username!==m.username);
+        saveData(); renderMembers();
+      };
+    }
     tbody.appendChild(tr);
   });
 }
@@ -255,12 +254,15 @@ function renderItems(tableId,arr){
   tbody.innerHTML="";
   arr.forEach(i=>{
     const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${i.date}</td><td>${i.text}</td><td><button class='fancy'>🗑️</button></td>`;
-    tr.querySelector("button").onclick=()=>{
-      const idx=arr.indexOf(i);
-      if(idx>-1) arr.splice(idx,1);
-      saveData(); renderItems(tableId,arr);
-    };
+    const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
+    tr.innerHTML=`<td>${i.date}</td><td>${i.text}</td><td>${del}</td>`;
+    if(del){
+      tr.querySelector("button").onclick=()=>{
+        const idx=arr.indexOf(i);
+        if(idx>-1) arr.splice(idx,1);
+        saveData(); renderItems(tableId,arr);
+      };
+    }
     tbody.appendChild(tr);
   });
 }
@@ -271,16 +273,39 @@ function login(){
   const p=document.getElementById("pass").value.trim();
   if((u==="Julian"||u==="Max")&&p==="1234"){
     currentUser=u;
-    document.getElementById("login-container").style.display="none";
-    document.getElementById("logged-in").innerText=`Eingeloggt als: ${u}`;
-    document.getElementById("add-btn").style.display="inline-block";
-    document.getElementById("add-meeting-btn").style.display="inline-block";
-    document.getElementById("add-change-btn").style.display="inline-block";
-    document.getElementById("add-war-btn").style.display="inline-block";
+    localStorage.setItem("currentUser", u); // 🔹 Login speichern
+    showAdminUI(u);
   }else{
     document.getElementById("login-error").innerText="Login fehlgeschlagen!";
   }
 }
+
+function showAdminUI(u){
+  document.getElementById("login-container").style.display="none";
+  document.getElementById("logged-in").innerText=`Eingeloggt als: ${u}`;
+  document.getElementById("add-btn").style.display="inline-block";
+  document.getElementById("add-meeting-btn").style.display="inline-block";
+  document.getElementById("add-change-btn").style.display="inline-block";
+  document.getElementById("add-war-btn").style.display="inline-block";
+  renderMembers();
+  renderItems("meetings-table",meetings);
+  renderItems("changes-table",changes);
+  renderItems("wars-table",wars);
+}
+
+// ====== Automatisch wieder einloggen
+window.addEventListener("load", () => {
+  const savedUser = localStorage.getItem("currentUser");
+  if (savedUser === "Julian" || savedUser === "Max") {
+    currentUser = savedUser;
+    showAdminUI(savedUser);
+  } else {
+    renderMembers();
+    renderItems("meetings-table",meetings);
+    renderItems("changes-table",changes);
+    renderItems("wars-table",wars);
+  }
+});
 
 // ====== Member hinzufügen
 function openPopup(){document.getElementById("popup").style.display="flex";}
@@ -318,14 +343,7 @@ document.getElementById("add-btn").onclick=openPopup;
 document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
 document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
 document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
-
-// ====== Initiales Rendering
-renderMembers();
-renderItems("meetings-table",meetings);
-renderItems("changes-table",changes);
-renderItems("wars-table",wars);
 </script>
 </body>
 </html>
-
 
