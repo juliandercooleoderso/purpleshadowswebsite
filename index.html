@@ -26,16 +26,23 @@ button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
 #login-box input,#login-box button{display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none;}
 #popup,#item-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:15;}
 #popup-content,#item-popup-content{background:#2b0030;padding:20px;border-radius:20px;box-shadow:0 0 20px #9b00ff;text-align:center;}
+#viewer{position:absolute;top:20px;left:20px;font-size:1.1rem;text-shadow:0 0 8px #fff;}
+.card{background: rgba(60,0,90,0.6);border-radius:25px;padding:25px;min-width:320px;max-width:400px;box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;text-align:center;transition: transform 0.3s, box-shadow 0.3s;}
+.card:hover{transform: translateY(-5px);box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;}
+.card h3{display:flex;justify-content:space-between;align-items:center;background: linear-gradient(90deg,#7d2aff,#d18eff);padding:12px 18px;border-radius:15px;color:white;margin-bottom:20px;box-shadow:0 0 15px #9b00ff inset;}
 </style>
 </head>
 <body>
 <header>💜 Purple Shadows 💜<div id="logged-in"></div></header>
-
 <nav>
 <button onclick="showTab('home')">Startseite</button>
+<button onclick="showTab('shop')">Shop</button>
 <button onclick="showTab('members')">Mitgliederliste</button>
+<button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
+<div id="viewer">👁️ 0</div>
 
+<!-- HOME -->
 <section id="home" class="active">
 <h2>💜 Willkommen bei Purple Shadows 💜</h2>
 <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
@@ -54,12 +61,55 @@ button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
 </div>
 </section>
 
+<!-- SHOP -->
+<section id="shop">
+<h2>💜 Shop 💜</h2>
+<div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Shirt (Variante 1)</h3>
+<img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+</div>
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Shirt (Variante 2)</h3>
+<img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+</div>
+<div style="background:#1a0033;border-radius:15px;padding:15px;">
+<h3>Unsere Weste</h3>
+<img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
+<br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+</div>
+</div>
+</section>
+
+<!-- MITGLIEDER -->
 <section id="members">
 <h2>💜 Mitgliederliste 💜</h2>
 <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
 <table id="members-table"><thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
 </section>
 
+<!-- STATISTIK -->
+<section id="stats">
+<h2>📊 Statistiken</h2>
+<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
+<div class="card">
+<h3>🟢 Online User</h3>
+<div id="online-users-box" style="max-height:300px;overflow-y:auto;text-align:left;background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;">
+<p style="opacity:0.6;">Niemand online</p>
+</div>
+</div>
+<div class="card">
+<h3>📜 Audit Logs</h3>
+<div id="audit-log-box" style="max-height:300px;overflow-y:auto;text-align:left;background:rgba(0,0,0,0.3);padding:10px;border-radius:10px;">
+<p style="opacity:0.6;">Noch keine Logs...</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- POPUPS -->
 <div id="popup">
 <div id="popup-content">
 <h3>Mitglied hinzufügen</h3>
@@ -82,6 +132,7 @@ button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
 </div>
 </div>
 
+<!-- LOGIN -->
 <div id="login-container">
 <div id="login-box">
 <h2>Login</h2>
@@ -100,40 +151,53 @@ const allowedUsers = ["Julian","Max"];
 // Tabs
 function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
-// Render Members
+// Mitglieder
 function renderMembers(members){
-  const tbody = document.querySelector("#members-table tbody");
-  tbody.innerHTML = "";
+  const tbody=document.querySelector("#members-table tbody");
+  tbody.innerHTML="";
   members.forEach(m=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${m.username}</td><td>${m.rank}</td><td></td>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td></td>`;
     if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className="fancy";
-      delBtn.textContent="❌";
-      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
+      const delBtn=document.createElement("button");
+      delBtn.className="fancy";delBtn.textContent="❌";
+      delBtn.onclick=()=>socket.emit("deleteMember",m.username);
       tr.querySelector("td:last-child").appendChild(delBtn);
     }
     tbody.appendChild(tr);
   });
 }
 
-// Render Items
-function renderItems(tableId, items){
-  const tbody = document.querySelector(`#${tableId} tbody`);
-  tbody.innerHTML = "";
+// Items
+function renderItems(tableId,items){
+  const tbody=document.querySelector(`#${tableId} tbody`);
+  tbody.innerHTML="";
   items.forEach(item=>{
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${item.date}</td><td>${item.text}</td><td></td>`;
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${item.date}</td><td>${item.text}</td><td></td>`;
     if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className="fancy";
-      delBtn.textContent="❌";
-      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
+      const delBtn=document.createElement("button");
+      delBtn.className="fancy";delBtn.textContent="❌";
+      delBtn.onclick=()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
       tr.querySelector("td:last-child").appendChild(delBtn);
     }
     tbody.appendChild(tr);
   });
+}
+
+// Online & Logs
+function updateOnlineUsers(users){
+  const box=document.getElementById("online-users-box");
+  box.innerHTML="";
+  if(users.length===0){box.innerHTML="<p style='opacity:0.6;'>Niemand online</p>";return;}
+  users.forEach(u=>{const p=document.createElement("p");p.textContent="• "+u;box.appendChild(p);});
+}
+function addAuditLog(entry){
+  const box=document.getElementById("audit-log-box");
+  if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
+  const time=new Date().toLocaleTimeString();
+  const p=document.createElement("p");p.textContent=`[${time}] ${entry}`;
+  box.appendChild(p);box.scrollTop=box.scrollHeight;
 }
 
 // Login
@@ -142,24 +206,21 @@ async function login(){
   const password=document.getElementById("login-password").value.trim();
   if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
   try{
-    const res = await axios.post("/login",{username,password});
+    const res=await axios.post("/login",{username,password});
     if(res.data.success){
-      currentUser = username;
+      currentUser=username;
       document.getElementById("login-container").style.display="none";
       document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
-      socket.emit("userOnline", username);
+      socket.emit("userOnline",username);
       if(allowedUsers.includes(username)){
         document.getElementById("add-btn").style.display="inline-block";
         document.getElementById("add-meeting-btn").style.display="inline-block";
         document.getElementById("add-change-btn").style.display="inline-block";
         document.getElementById("add-war-btn").style.display="inline-block";
+        document.getElementById("stats-btn").style.display="inline-block";
       }
-    } else {
-      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
-    }
-  } catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
-  }
+    } else {document.getElementById("login-error").innerText="Login fehlgeschlagen!";}
+  } catch(e){document.getElementById("login-error").innerText="Serverfehler!";}
 }
 
 // Popups
@@ -171,10 +232,10 @@ function addMember(){
   if(username.trim()!=="") socket.emit("addMember",{username,rank});
   closePopup();
 }
-function openItemPopup(title, table){
+function openItemPopup(title,table){
   document.getElementById("item-popup").style.display="flex";
   document.getElementById("item-popup-title").innerText=title;
-  document.getElementById("item-add-btn").onclick = ()=>{
+  document.getElementById("item-add-btn").onclick=()=>{
     const date=document.getElementById("item-date").value;
     const text=document.getElementById("item-text").value;
     if(date.trim()!==""&&text.trim()!==""){
@@ -185,15 +246,18 @@ function openItemPopup(title, table){
 }
 function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
 
-// Button Events
+// Buttons
 document.getElementById("add-btn").onclick=openPopup;
 document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
 document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
 document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
 
 // Socket Events
-socket.on("updateMembers", members => renderMembers(members));
-socket.on("updateItems", data => renderItems(data.table, data.items));
+socket.on("updateMembers",members=>renderMembers(members));
+socket.on("updateItems",data=>renderItems(data.table,data.items));
+socket.on("updateOnlineUsers",users=>updateOnlineUsers(users));
+socket.on("newAuditLog",log=>addAuditLog(log));
+socket.on("updateViewers",count=>document.getElementById("viewer").innerText=`👁️ ${count}`);
 </script>
 </body>
 </html>
