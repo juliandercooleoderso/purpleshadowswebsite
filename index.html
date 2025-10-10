@@ -3,8 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Purple Shadows</title>
-<script src="/socket.io/socket.io.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
 body {
   margin:0;
@@ -14,7 +12,6 @@ body {
   color:#fff;
   text-align:center;
 }
-
 header {
   background:#3b0066;
   padding:15px;
@@ -23,7 +20,6 @@ header {
   letter-spacing:2px;
   position:relative;
 }
-
 #logged-in {
   position:absolute;
   right:20px;
@@ -31,11 +27,7 @@ header {
   font-size:1rem;
   color:#fff;
 }
-
-nav {
-  margin:15px;
-}
-
+nav { margin:15px; }
 nav button {
   background:#5a00a3;
   color:white;
@@ -46,20 +38,9 @@ nav button {
   cursor:pointer;
   transition:0.3s;
 }
-
-nav button:hover {
-  background:#9b00ff;
-}
-
-section {
-  display:none;
-  margin-top:20px;
-}
-
-section.active {
-  display:block;
-}
-
+nav button:hover { background:#9b00ff; }
+section { display:none; margin-top:20px; }
+section.active { display:block; }
 table {
   width:90%;
   margin:20px auto;
@@ -68,26 +49,19 @@ table {
   border-radius:12px;
   overflow:hidden;
 }
-
 th, td {
   border:1px solid #7d2aff;
   padding:12px 15px;
   text-align:center;
 }
-
-th {
-  background:#5a00a3;
-}
-
+th { background:#5a00a3; }
 select, input {
   background:#3b0066;
   color:#fff;
   border:1px solid #7d2aff;
   border-radius:8px;
   padding:8px;
-  box-sizing:border-box;
 }
-
 button.fancy {
   background:linear-gradient(90deg,#7d2aff,#d18eff);
   border:none;
@@ -97,25 +71,15 @@ button.fancy {
   cursor:pointer;
   transition:0.3s;
 }
-
 button.fancy:hover {
   background:linear-gradient(90deg,#d18eff,#7d2aff);
 }
-
-/* Login */
 #login-container{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  position:fixed;top:0;left:0;width:100%;height:100%;
   background: rgba(0,0,0,0.9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
+  display:flex;justify-content:center;align-items:center;
   z-index:10;
 }
-
 #login-box{
   background:#2b0030;
   padding:30px;
@@ -123,30 +87,16 @@ button.fancy:hover {
   width:300px;
   box-shadow:0 0 20px #7d2aff;
 }
-
 #login-box input,#login-box button{
-  display:block;
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:8px;
-  border:none;
+  display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none;
 }
-
-/* Popups */
 #popup, .popup-item {
   display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  position:fixed;top:0;left:0;width:100%;height:100%;
   background: rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
+  justify-content:center;align-items:center;
   z-index:15;
 }
-
 #popup-content, .popup-item-content {
   background:#2b0030;
   padding:20px;
@@ -154,17 +104,10 @@ button.fancy:hover {
   box-shadow:0 0 20px #9b00ff;
   text-align:center;
 }
-
 #popup-content input,#popup-content select,
 .popup-item-content input,.popup-item-content select{
-  margin:10px 0;
-  width:200px;
-  padding:8px;
-  border-radius:8px;
-  border:none;
+  margin:10px 0;width:200px;padding:8px;border-radius:8px;border:none;
 }
-
-/* Neon Cards */
 .card {
   background: rgba(60,0,90,0.6);
   border-radius:25px;
@@ -173,87 +116,19 @@ button.fancy:hover {
   max-width:400px;
   box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;
   text-align:center;
-  transition: transform 0.3s, box-shadow 0.3s;
 }
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;
-}
-
 .card h3 {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  display:flex;justify-content:space-between;align-items:center;
   background: linear-gradient(90deg,#7d2aff,#d18eff);
-  padding:12px 18px;
-  border-radius:15px;
-  color:white;
-  margin-bottom:20px;
-  box-shadow:0 0 15px #9b00ff inset;
+  padding:12px 18px;border-radius:15px;color:white;
 }
-
-.card h3 button.plus-btn {
-  background: linear-gradient(45deg,#ff6fff,#7d2aff);
-  border:none;
-  border-radius:50%;
-  width:35px;
-  height:35px;
-  font-size:1.5rem;
-  font-weight:bold;
-  cursor:pointer;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card h3 button.plus-btn:hover {
-  transform: scale(1.2);
-  box-shadow:0 0 20px #ff6fff, 0 0 30px #7d2aff inset;
-}
-
-/* Plus-Buttons */
 .plus-btn {
   background: linear-gradient(45deg,#ff6fff,#7d2aff);
-  border:none;
-  border-radius:50%;
-  width:40px;
-  height:40px;
-  color:white;
-  font-weight:bold;
-  font-size:1.3rem;
-  cursor:pointer;
+  border:none;border-radius:50%;width:40px;height:40px;
+  color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;
   box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
-  transition: 0.3s;
 }
-
-.plus-btn:hover {
-  transform: scale(1.1);
-  box-shadow:0 0 20px #ff6fff,0 0 30px #7d2aff inset;
-}
-
-/* Logo Animiert */
-.logo-float {
-  animation: floatLogo 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px #9b00ff);
-}
-
-@keyframes floatLogo {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-/* Viewer */
-#viewer {
-  position:absolute;
-  top:20px;
-  left:20px;
-  font-size:1.1rem;
-  text-shadow:0 0 8px #fff;
-}
+.plus-btn:hover { transform: scale(1.1); }
 </style>
 </head>
 <body>
@@ -266,91 +141,30 @@ button.fancy:hover {
   <button onclick="showTab('home')">Startseite</button>
   <button onclick="showTab('shop')">Shop</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
-  <!-- 🔥 NEU -->
-  <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
-
-<div id="viewer">👁️ 0</div>
 
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&" width="220" style="margin:25px auto;display:block;">
-
-  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+  <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
     <div class="card">
       <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead>
-        <tbody id="meetings-table"></tbody>
-      </table>
+      <table id="meetings-table"><thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
     </div>
-
     <div class="card">
       <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead>
-        <tbody id="changes-table"></tbody>
-      </table>
+      <table id="changes-table"><thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
     </div>
-
     <div class="card">
       <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead>
-        <tbody id="wars-table"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section id="shop">
-  <h2>💜 Purple Shadows - Shop 💜</h2>
-  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Shirt (Variante 1):</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
-    </div>
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Shirt (Variante 2):</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
-    </div>
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Unsere Weste:</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+      <table id="wars-table"><thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
     </div>
   </div>
 </section>
 
 <section id="members">
-  <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
+  <h2>💜 Mitgliederliste 💜</h2>
   <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
-  <table>
-    <thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
-    <tbody id="members-table"></tbody>
-  </table>
-</section>
-
-<!-- 🔥 NEU -->
-<section id="stats">
-  <h2>📊 Statistiken</h2>
-  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
-    <div class="card">
-      <h3>📜 Audit Logs</h3>
-      <div id="audit-log-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
-        <p style="opacity:0.6;">Noch keine Logs...</p>
-      </div>
-    </div>
-
-    <div class="card">
-      <h3>🟢 Online User</h3>
-      <div id="online-users-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
-        <p style="opacity:0.6;">Niemand online</p>
-      </div>
-    </div>
-  </div>
+  <table id="members-table"><thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
 </section>
 
 <!-- Popups -->
@@ -359,16 +173,16 @@ button.fancy:hover {
     <h3>Mitglied hinzufügen</h3>
     <input id="usernameInput" placeholder="Username"><br>
     <select id="rankSelect">
-      <option value="👑 Boss">👑 Boss</option>
-      <option value="👑 Underboss">👑 Underboss</option>
-      <option value="💜 Crew Leader">💜 Crew Leader</option>
-      <option value="💜 Captain">💜 Captain</option>
-      <option value="💜 Gangster">💜 Gangster</option>
-      <option value="💜 Shadow">💜 Shadow</option>
-      <option value="💜 Vollstrecker">💜 Vollstrecker</option>
-      <option value="💜 Capo">💜 Capo</option>
-      <option value="💜 Soldier">💜 Soldier</option>
-      <option value="💜 Probation">💜 Probation</option>
+      <option>👑 Boss</option>
+      <option>👑 Underboss</option>
+      <option>💜 Crew Leader</option>
+      <option>💜 Captain</option>
+      <option>💜 Gangster</option>
+      <option>💜 Shadow</option>
+      <option>💜 Vollstrecker</option>
+      <option>💜 Capo</option>
+      <option>💜 Soldier</option>
+      <option>💜 Probation</option>
     </select><br>
     <button class="fancy" onclick="addMember()">Hinzufügen</button>
     <button class="fancy" onclick="closePopup()">Abbrechen</button>
@@ -379,8 +193,8 @@ button.fancy:hover {
   <div class="popup-item-content">
     <h3 id="item-popup-title"></h3>
     <input id="item-date" type="date" placeholder="Datum">
-    <input id="item-text" placeholder="Thema/Beschreibung/Gegner"><br>
-    <button class="fancy" id="item-add-btn">Akzeptieren</button>
+    <input id="item-text" placeholder="Text"><br>
+    <button class="fancy" id="item-add-btn">Speichern</button>
     <button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
   </div>
 </div>
@@ -388,152 +202,130 @@ button.fancy:hover {
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
-    <input id="login-username" placeholder="Username">
-    <input id="login-password" type="password" placeholder="Passwort">
+    <input id="user" placeholder="Username">
+    <input id="pass" type="password" placeholder="Passwort">
     <button onclick="login()">Login</button>
     <p id="login-error" style="color:red;"></p>
   </div>
 </div>
 
 <script>
-const socket = io();
-let currentUser = null;
-const allowedUsers = ["Julian","Max"];
+// ====== Daten (werden aus localStorage geladen oder Standardwerte gesetzt)
+let members = JSON.parse(localStorage.getItem("members")) || [
+  {username:"Julian",rank:"👑 Boss"},
+  {username:"Max",rank:"👑 Underboss"}
+];
+let meetings = JSON.parse(localStorage.getItem("meetings")) || [];
+let changes = JSON.parse(localStorage.getItem("changes")) || [];
+let wars = JSON.parse(localStorage.getItem("wars")) || [];
 
-// Tabs
+let currentUser = null;
+
+// ====== Speichern
+function saveData(){
+  localStorage.setItem("members",JSON.stringify(members));
+  localStorage.setItem("meetings",JSON.stringify(meetings));
+  localStorage.setItem("changes",JSON.stringify(changes));
+  localStorage.setItem("wars",JSON.stringify(wars));
+}
+
+// ====== Tabs
 function showTab(id){
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// Mitglieder
-function renderMembers(members){
-  const table = document.getElementById("members-table");
-  table.innerHTML = "";
+// ====== Rendering
+function renderMembers(){
+  const tbody=document.querySelector("#members-table tbody");
+  tbody.innerHTML="";
   members.forEach(m=>{
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td>`;
-    const actionsCell = document.createElement("td");
-    if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className = "fancy";
-      delBtn.textContent = "❌";
-      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
-      actionsCell.appendChild(delBtn);
-    }
-    row.appendChild(actionsCell);
-    table.appendChild(row);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td><button class='fancy'>🗑️</button></td>`;
+    tr.querySelector("button").onclick=()=>{
+      members=members.filter(x=>x.username!==m.username);
+      saveData(); renderMembers();
+    };
+    tbody.appendChild(tr);
   });
 }
 
-// Items
-function renderItems(tableId, items){
-  const table = document.getElementById(tableId);
-  table.innerHTML = "";
-  items.forEach(item=>{
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.date}</td><td>${item.text}</td>`;
-    const actionsCell = document.createElement("td");
-    if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className = "fancy";
-      delBtn.textContent = "❌";
-      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
-      actionsCell.appendChild(delBtn);
-    }
-    row.appendChild(actionsCell);
-    table.appendChild(row);
+function renderItems(tableId,arr){
+  const tbody=document.querySelector(`#${tableId} tbody`);
+  tbody.innerHTML="";
+  arr.forEach(i=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${i.date}</td><td>${i.text}</td><td><button class='fancy'>🗑️</button></td>`;
+    tr.querySelector("button").onclick=()=>{
+      const idx=arr.indexOf(i);
+      if(idx>-1) arr.splice(idx,1);
+      saveData(); renderItems(tableId,arr);
+    };
+    tbody.appendChild(tr);
   });
 }
 
-// 🔥 NEU: Online Users + Logs
-function updateOnlineUsers(users){
-  const box = document.getElementById("online-users-box");
-  box.innerHTML = "";
-  if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
-  users.forEach(u=>{
-    const p = document.createElement("p");
-    p.textContent = "• " + u;
-    box.appendChild(p);
-  });
-}
-
-function addAuditLog(entry){
-  const box = document.getElementById("audit-log-box");
-  if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
-  const time = new Date().toLocaleTimeString();
-  const p = document.createElement("p");
-  p.textContent = `[${time}] ${entry}`;
-  box.appendChild(p);
-  box.scrollTop = box.scrollHeight;
-}
-
-// Socket Events
-socket.on("updateMembers", members => renderMembers(members));
-socket.on("updateItems", data => renderItems(data.table, data.items));
-socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
-socket.on("updateOnlineUsers", users => updateOnlineUsers(users));
-socket.on("newAuditLog", log => addAuditLog(log));
-
-// Login
-async function login(){
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value.trim();
-
-  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
-
-  try{
-    const res = await axios.post("/login",{username,password});
-    if(res.data.success){
-      currentUser = username;
-      document.getElementById("login-container").style.display="none";
-      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
-      socket.emit("userOnline", username);
-      if(allowedUsers.includes(username)){
-        document.getElementById("add-btn").style.display="inline-block";
-        document.getElementById("add-meeting-btn").style.display="inline-block";
-        document.getElementById("add-change-btn").style.display="inline-block";
-        document.getElementById("add-war-btn").style.display="inline-block";
-        document.getElementById("stats-btn").style.display="inline-block";
-      }
-    } else {
-      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
-    }
-  } catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
+// ====== Login
+function login(){
+  const u=document.getElementById("user").value.trim();
+  const p=document.getElementById("pass").value.trim();
+  if((u==="Julian"||u==="Max")&&p==="1234"){
+    currentUser=u;
+    document.getElementById("login-container").style.display="none";
+    document.getElementById("logged-in").innerText=`Eingeloggt als: ${u}`;
+    document.getElementById("add-btn").style.display="inline-block";
+    document.getElementById("add-meeting-btn").style.display="inline-block";
+    document.getElementById("add-change-btn").style.display="inline-block";
+    document.getElementById("add-war-btn").style.display="inline-block";
+  }else{
+    document.getElementById("login-error").innerText="Login fehlgeschlagen!";
   }
 }
 
-// Popups
+// ====== Member hinzufügen
 function openPopup(){document.getElementById("popup").style.display="flex";}
 function closePopup(){document.getElementById("popup").style.display="none";}
 function addMember(){
-  const username = document.getElementById("usernameInput").value;
-  const rank = document.getElementById("rankSelect").value;
-  if(username.trim()!=="") socket.emit("addMember",{username,rank});
-  closePopup();
+  const name=document.getElementById("usernameInput").value.trim();
+  const rank=document.getElementById("rankSelect").value;
+  if(name!==""){
+    members.push({username:name,rank});
+    saveData(); renderMembers(); closePopup();
+  }
 }
 
-function openItemPopup(tableTitle, tableName){
+// ====== Items hinzufügen
+function openItemPopup(title,tableName){
   document.getElementById("item-popup").style.display="flex";
-  document.getElementById("item-popup-title").innerText=tableTitle;
+  document.getElementById("item-popup-title").innerText=title;
   document.getElementById("item-add-btn").onclick=function(){
     const date=document.getElementById("item-date").value;
     const text=document.getElementById("item-text").value;
     if(date.trim()!==""&&text.trim()!==""){
-      socket.emit("addItem",{table:tableName,date,text});
+      if(tableName==="meetings-table") meetings.push({date,text});
+      else if(tableName==="changes-table") changes.push({date,text});
+      else if(tableName==="wars-table") wars.push({date,text});
+      saveData();
+      renderItems(tableName,eval(tableName.replace("-table","")));
     }
     closeItemPopup();
-  }
+  };
 }
 function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
 
-// Button Events
+// ====== Buttons
 document.getElementById("add-btn").onclick=openPopup;
 document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
 document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
 document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
+
+// ====== Initiales Rendering
+renderMembers();
+renderItems("meetings-table",meetings);
+renderItems("changes-table",changes);
+renderItems("wars-table",wars);
 </script>
 </body>
 </html>
+
 
