@@ -42,7 +42,7 @@ let wars = loadJSON(warsFile);
 // Live-Viewer Zähler
 let viewers = 0;
 
-// Online-User und Audit-Logs
+// 🔥 NEU: Online-User und Audit-Logs
 let onlineUsers = [];
 let auditLogs = [];
 
@@ -71,6 +71,7 @@ app.get("/items/:table", (req, res) => {
 io.on("connection", socket => {
   viewers++;
   io.emit("updateViewers", viewers);
+  console.log(`🔗 Client verbunden, Viewer: ${viewers}`);
 
   // Initial Daten senden
   socket.emit("updateMembers", members);
@@ -78,7 +79,7 @@ io.on("connection", socket => {
   socket.emit("updateItems", { table: "changes-table", items: changes });
   socket.emit("updateItems", { table: "wars-table", items: wars });
 
-  // Online-User
+  // 🔥 NEU: Login-Event von Client
   socket.on("userOnline", username => {
     if (!onlineUsers.includes(username)) {
       onlineUsers.push(username);
@@ -128,10 +129,13 @@ io.on("connection", socket => {
     addAuditLog(`🗑️ Eintrag gelöscht aus ${table}: "${text}"`);
   });
 
-  // Disconnect
+  // ================= DISCONNECT =================
   socket.on("disconnect", () => {
     viewers--;
     io.emit("updateViewers", viewers);
+    console.log(`❌ Client getrennt, Viewer: ${viewers}`);
+
+    // 🔥 NEU: Entfernen aus Online-User-Liste
     if (socket.username) {
       onlineUsers = onlineUsers.filter(u => u !== socket.username);
       io.emit("updateOnlineUsers", onlineUsers);
@@ -139,21 +143,20 @@ io.on("connection", socket => {
     }
   });
 
-  // Logs senden
+  // 🔥 NEU: Beim Verbinden Logs und Online-User senden
   socket.emit("updateOnlineUsers", onlineUsers);
   auditLogs.forEach(log => socket.emit("newAuditLog", log));
 });
 
-// Audit-Log
+// 🔥 NEU: Funktion für Logs
 function addAuditLog(text) {
   const entry = `${text}`;
   auditLogs.push(entry);
-  if (auditLogs.length > 200) auditLogs.shift();
+  if (auditLogs.length > 200) auditLogs.shift(); // Alte löschen
   io.emit("newAuditLog", entry);
 }
 
-// Server starten
-server.listen(PORT, () => console.log(`💜 Server läuft auf http://localhost:${PORT}`));
-
-
-
+// ================= SERVER START =================
+server.listen(PORT, () =>
+  console.log(`💜 Server läuft auf http://localhost:${PORT}`)
+);
