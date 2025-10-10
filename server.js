@@ -16,11 +16,33 @@ const PORT = 3000;
 app.use(express.static(__dirname));
 app.use(express.json());
 
+// JSON-Dateien
 const membersFile = path.join(__dirname, "members.json");
 const loginFile = path.join(__dirname, "login.json");
+const meetingsFile = path.join(__dirname, "meetings.json");
+const changesFile = path.join(__dirname, "aenderungen.json");
+const warsFile = path.join(__dirname, "kriege.json");
 
-let members = JSON.parse(fs.readFileSync(membersFile));
-let logins = JSON.parse(fs.readFileSync(loginFile));
+// JSON Helper
+function loadJSON(file) {
+  if (!fs.existsSync(file)) fs.writeFileSync(file, "[]");
+  return JSON.parse(fs.readFileSync(file));
+}
+function saveJSON(file, data) {
+  fs.writeFileSync(file, JSON.stringify(data, null, 2));
+}
+
+// Daten laden
+let members = loadJSON(membersFile);
+let logins = loadJSON(loginFile);
+let meetings = loadJSON(meetingsFile);
+let changes = loadJSON(changesFile);
+let wars = loadJSON(warsFile);
+
+// Live-Viewer Zähler
+let viewers = 0;
+
+// ================= ROUTES =================
 
 // Login prüfen
 app.post("/login", (req, res) => {
@@ -32,23 +54,68 @@ app.post("/login", (req, res) => {
 // Mitgliederliste holen
 app.get("/members", (req, res) => res.json(members));
 
-// Socket.io
-io.on("connection", socket => {
-  console.log("🔗 Client verbunden");
-  socket.emit("updateMembers", members);
+// Items holen
+app.get("/items/:table", (req, res) => {
+  const table = req.params.table;
+  if (table === "meetings-table") return res.json(meetings);
+  if (table === "changes-table") return res.json(changes);
+  if (table === "wars-table") return res.json(wars);
+  res.json([]);
+});
 
+// ================= SOCKET.IO =================
+io.on("connection", socket => {
+  viewers++;
+  io.emit("updateViewers", viewers);
+  console.log(`🔗 Client verbunden, Viewer: ${viewers}`);
+
+  // Initial Daten senden
+  socket.emit("updateMembers", members);
+  socket.emit("updateItems", { table: "meetings-table", items: meetings });
+  socket.emit("updateItems", { table: "changes-table", items: changes });
+  socket.emit("updateItems", { table: "wars-table", items: wars });
+
+  // ================= MEMBERS =================
   socket.on("addMember", data => {
-    if (!data.username) return; // leerer Name verboten
+    if (!data.username) return;
     members.push(data);
-    fs.writeFileSync(membersFile, JSON.stringify(members, null, 2));
+    saveJSON(membersFile, members);
     io.emit("updateMembers", members);
   });
 
   socket.on("deleteMember", username => {
     members = members.filter(m => m.username !== username);
-    fs.writeFileSync(membersFile, JSON.stringify(members, null, 2));
+    saveJSON(membersFile, members);
     io.emit("updateMembers", members);
+  });
+
+  // ================= ITEMS =================
+  socket.on("addItem", ({ table, date, text }) => {
+    const item = { date, text };
+    if (table === "meetings-table") { meetings.push(item); saveJSON(meetingsFile, meetings); }
+    if (table === "changes-table") { changes.push(item); saveJSON(changesFile, changes); }
+    if (table === "wars-table") { wars.push(item); saveJSON(warsFile, wars); }
+
+    const items = table === "meetings-table" ? meetings : table === "changes-table" ? changes : wars;
+    io.emit("updateItems", { table, items });
+  });
+
+  socket.on("deleteItem", ({ table, date, text }) => {
+    if (table === "meetings-table") { meetings = meetings.filter(i => i.date !== date || i.text !== text); saveJSON(meetingsFile, meetings); }
+    if (table === "changes-table") { changes = changes.filter(i => i.date !== date || i.text !== text); saveJSON(changesFile, changes); }
+    if (table === "wars-table") { wars = wars.filter(i => i.date !== date || i.text !== text); saveJSON(warsFile, wars); }
+
+    const items = table === "meetings-table" ? meetings : table === "changes-table" ? changes : wars;
+    io.emit("updateItems", { table, items });
+  });
+
+  // ================= DISCONNECT =================
+  socket.on("disconnect", () => {
+    viewers--;
+    io.emit("updateViewers", viewers);
+    console.log(`❌ Client getrennt, Viewer: ${viewers}`);
   });
 });
 
+// ================= SERVER START =================
 server.listen(PORT, () => console.log(`💜 Server läuft auf http://localhost:${PORT}`));
