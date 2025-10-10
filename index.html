@@ -4,126 +4,28 @@
 <meta charset="UTF-8">
 <title>Purple Shadows</title>
 <style>
-body {
-  margin:0;
-  padding:0;
-  font-family:"Poppins",sans-serif;
-  background: radial-gradient(circle at top left, #2b0030, #000);
-  color:#fff;
-  text-align:center;
-}
-header {
-  background:#3b0066;
-  padding:15px;
-  font-size:1.8rem;
-  font-weight:bold;
-  letter-spacing:2px;
-  position:relative;
-}
-#logged-in {
-  position:absolute;
-  right:20px;
-  top:15px;
-  font-size:1rem;
-  color:#fff;
-}
+body {margin:0;padding:0;font-family:"Poppins",sans-serif;background: radial-gradient(circle at top left, #2b0030, #000);color:#fff;text-align:center;}
+header {background:#3b0066;padding:15px;font-size:1.8rem;font-weight:bold;letter-spacing:2px;position:relative;}
+#logged-in {position:absolute;right:20px;top:15px;font-size:1rem;color:#fff;}
 nav { margin:15px; }
-nav button {
-  background:#5a00a3;
-  color:white;
-  border:none;
-  padding:10px 20px;
-  margin:5px;
-  border-radius:12px;
-  cursor:pointer;
-  transition:0.3s;
-}
+nav button { background:#5a00a3;color:white;border:none;padding:10px 20px;margin:5px;border-radius:12px;cursor:pointer;transition:0.3s; }
 nav button:hover { background:#9b00ff; }
 section { display:none; margin-top:20px; }
 section.active { display:block; }
-table {
-  width:90%;
-  margin:20px auto;
-  border-collapse:collapse;
-  background: rgba(60,0,90,0.5);
-  border-radius:12px;
-  overflow:hidden;
-}
-th, td {
-  border:1px solid #7d2aff;
-  padding:12px 15px;
-  text-align:center;
-}
+table { width:90%; margin:20px auto; border-collapse:collapse; background: rgba(60,0,90,0.5); border-radius:12px; overflow:hidden; }
+th, td { border:1px solid #7d2aff; padding:12px 15px; text-align:center; }
 th { background:#5a00a3; }
-select, input {
-  background:#3b0066;
-  color:#fff;
-  border:1px solid #7d2aff;
-  border-radius:8px;
-  padding:8px;
-}
-button.fancy {
-  background:linear-gradient(90deg,#7d2aff,#d18eff);
-  border:none;
-  color:#fff;
-  padding:8px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-}
-button.fancy:hover {
-  background:linear-gradient(90deg,#d18eff,#7d2aff);
-}
-#login-container{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background: rgba(0,0,0,0.9);
-  display:flex;justify-content:center;align-items:center;
-  z-index:10;
-}
-#login-box{
-  background:#2b0030;
-  padding:30px;
-  border-radius:20px;
-  width:300px;
-  box-shadow:0 0 20px #7d2aff;
-}
-#login-box input,#login-box button{
-  display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none;
-}
-#popup, .popup-item {
-  display:none;
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background: rgba(0,0,0,0.8);
-  justify-content:center;align-items:center;
-  z-index:15;
-}
-#popup-content, .popup-item-content {
-  background:#2b0030;
-  padding:20px;
-  border-radius:20px;
-  box-shadow:0 0 20px #9b00ff;
-  text-align:center;
-}
-.card {
-  background: rgba(60,0,90,0.6);
-  border-radius:25px;
-  padding:25px;
-  min-width:320px;
-  max-width:400px;
-  box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;
-  text-align:center;
-}
-.card h3 {
-  display:flex;justify-content:space-between;align-items:center;
-  background: linear-gradient(90deg,#7d2aff,#d18eff);
-  padding:12px 18px;border-radius:15px;color:white;
-}
-.plus-btn {
-  background: linear-gradient(45deg,#ff6fff,#7d2aff);
-  border:none;border-radius:50%;width:40px;height:40px;
-  color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;
-  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
-}
+select, input { background:#3b0066; color:#fff; border:1px solid #7d2aff; border-radius:8px; padding:8px; }
+button.fancy { background:linear-gradient(90deg,#7d2aff,#d18eff); border:none; color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; transition:0.3s; }
+button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); }
+#login-container{ position:fixed;top:0;left:0;width:100%;height:100%; background: rgba(0,0,0,0.9); display:flex;justify-content:center;align-items:center; z-index:10; }
+#login-box{ background:#2b0030; padding:30px; border-radius:20px; width:300px; box-shadow:0 0 20px #7d2aff; }
+#login-box input,#login-box button{ display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none; }
+#popup, .popup-item { display:none; position:fixed;top:0;left:0;width:100%;height:100%; background: rgba(0,0,0,0.8); justify-content:center;align-items:center; z-index:15; }
+#popup-content, .popup-item-content { background:#2b0030; padding:20px; border-radius:20px; box-shadow:0 0 20px #9b00ff; text-align:center; }
+.card { background: rgba(60,0,90,0.6); border-radius:25px; padding:25px; min-width:320px; max-width:400px; box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset; text-align:center; }
+.card h3 { display:flex;justify-content:space-between;align-items:center; background: linear-gradient(90deg,#7d2aff,#d18eff); padding:12px 18px;border-radius:15px;color:white; }
+.plus-btn { background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px; color:white;font-weight:bold;font-size:1.3rem;cursor:pointer; box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset; }
 .plus-btn:hover { transform: scale(1.1); }
 </style>
 </head>
@@ -135,7 +37,6 @@ button.fancy:hover {
 
 <nav>
   <button onclick="showTab('home')">Startseite</button>
-  <button onclick="showTab('shop')">Shop</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
 </nav>
 
@@ -206,7 +107,7 @@ button.fancy:hover {
 </div>
 
 <script>
-// ====== Daten (werden aus localStorage geladen oder Standardwerte gesetzt)
+// ====== Daten arrays + localStorage
 let members = JSON.parse(localStorage.getItem("members")) || [
   {username:"Julian",rank:"👑 Boss"},
   {username:"Max",rank:"👑 Underboss"}
@@ -217,7 +118,7 @@ let wars = JSON.parse(localStorage.getItem("wars")) || [];
 
 let currentUser = null;
 
-// ====== Speichern
+// ====== Speicherfunktion
 function saveData(){
   localStorage.setItem("members",JSON.stringify(members));
   localStorage.setItem("meetings",JSON.stringify(meetings));
@@ -231,7 +132,7 @@ function showTab(id){
   document.getElementById(id).classList.add("active");
 }
 
-// ====== Rendering
+// ====== Render Tabellen
 function renderMembers(){
   const tbody=document.querySelector("#members-table tbody");
   tbody.innerHTML="";
@@ -239,12 +140,10 @@ function renderMembers(){
     const tr=document.createElement("tr");
     const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
     tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td>${del}</td>`;
-    if(del){
-      tr.querySelector("button").onclick=()=>{
-        members=members.filter(x=>x.username!==m.username);
-        saveData(); renderMembers();
-      };
-    }
+    if(del) tr.querySelector("button").onclick=()=>{
+      members=members.filter(x=>x.username!==m.username);
+      saveData(); renderMembers();
+    };
     tbody.appendChild(tr);
   });
 }
@@ -256,33 +155,39 @@ function renderItems(tableId,arr){
     const tr=document.createElement("tr");
     const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
     tr.innerHTML=`<td>${i.date}</td><td>${i.text}</td><td>${del}</td>`;
-    if(del){
-      tr.querySelector("button").onclick=()=>{
-        const idx=arr.indexOf(i);
-        if(idx>-1) arr.splice(idx,1);
-        saveData(); renderItems(tableId,arr);
-      };
-    }
+    if(del) tr.querySelector("button").onclick=()=>{
+      const idx=arr.indexOf(i); if(idx>-1) arr.splice(idx,1);
+      saveData(); renderItems(tableId,arr);
+    };
     tbody.appendChild(tr);
   });
 }
 
-// ====== Login
-function login(){
-  const u=document.getElementById("user").value.trim();
-  const p=document.getElementById("pass").value.trim();
-  if((u==="Julian"||u==="Max")&&p==="1234"){
-    currentUser=u;
-    localStorage.setItem("currentUser", u); // 🔹 Login speichern
-    showAdminUI(u);
-  }else{
-    document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+// ====== Login (Server prüft login.json)
+async function login(){
+  const username = document.getElementById("user").value.trim();
+  const password = document.getElementById("pass").value.trim();
+  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
+  try{
+    const res = await fetch("/login.json");
+    const data = await res.json();
+    const user = data.find(u=>u.username===username && u.password===password);
+    if(user){
+      currentUser=username;
+      localStorage.setItem("currentUser",username);
+      showAdminUI();
+    }else{
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+    }
+  }catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
   }
 }
 
-function showAdminUI(u){
+// ====== Admin UI nach Login
+function showAdminUI(){
   document.getElementById("login-container").style.display="none";
-  document.getElementById("logged-in").innerText=`Eingeloggt als: ${u}`;
+  document.getElementById("logged-in").innerText=`Eingeloggt als: ${currentUser}`;
   document.getElementById("add-btn").style.display="inline-block";
   document.getElementById("add-meeting-btn").style.display="inline-block";
   document.getElementById("add-change-btn").style.display="inline-block";
@@ -293,18 +198,11 @@ function showAdminUI(u){
   renderItems("wars-table",wars);
 }
 
-// ====== Automatisch wieder einloggen
-window.addEventListener("load", () => {
-  const savedUser = localStorage.getItem("currentUser");
-  if (savedUser === "Julian" || savedUser === "Max") {
-    currentUser = savedUser;
-    showAdminUI(savedUser);
-  } else {
-    renderMembers();
-    renderItems("meetings-table",meetings);
-    renderItems("changes-table",changes);
-    renderItems("wars-table",wars);
-  }
+// ====== Auto Login
+window.addEventListener("load",()=>{
+  const saved = localStorage.getItem("currentUser");
+  if(saved){currentUser=saved; showAdminUI();}
+  else{renderMembers(); renderItems("meetings-table",meetings); renderItems("changes-table",changes); renderItems("wars-table",wars);}
 });
 
 // ====== Member hinzufügen
@@ -313,10 +211,7 @@ function closePopup(){document.getElementById("popup").style.display="none";}
 function addMember(){
   const name=document.getElementById("usernameInput").value.trim();
   const rank=document.getElementById("rankSelect").value;
-  if(name!==""){
-    members.push({username:name,rank});
-    saveData(); renderMembers(); closePopup();
-  }
+  if(name!==""){members.push({username:name,rank}); saveData(); renderMembers(); closePopup();}
 }
 
 // ====== Items hinzufügen
@@ -346,4 +241,3 @@ document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufü
 </script>
 </body>
 </html>
-
