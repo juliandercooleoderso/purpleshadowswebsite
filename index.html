@@ -3,241 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <title>Purple Shadows</title>
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
-body {margin:0;padding:0;font-family:"Poppins",sans-serif;background: radial-gradient(circle at top left, #2b0030, #000);color:#fff;text-align:center;}
-header {background:#3b0066;padding:15px;font-size:1.8rem;font-weight:bold;letter-spacing:2px;position:relative;}
-#logged-in {position:absolute;right:20px;top:15px;font-size:1rem;color:#fff;}
-nav { margin:15px; }
-nav button { background:#5a00a3;color:white;border:none;padding:10px 20px;margin:5px;border-radius:12px;cursor:pointer;transition:0.3s; }
-nav button:hover { background:#9b00ff; }
-section { display:none; margin-top:20px; }
-section.active { display:block; }
-table { width:90%; margin:20px auto; border-collapse:collapse; background: rgba(60,0,90,0.5); border-radius:12px; overflow:hidden; }
-th, td { border:1px solid #7d2aff; padding:12px 15px; text-align:center; }
-th { background:#5a00a3; }
-select, input { background:#3b0066; color:#fff; border:1px solid #7d2aff; border-radius:8px; padding:8px; }
-button.fancy { background:linear-gradient(90deg,#7d2aff,#d18eff); border:none; color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; transition:0.3s; }
-button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); }
-#login-container{ position:fixed;top:0;left:0;width:100%;height:100%; background: rgba(0,0,0,0.9); display:flex;justify-content:center;align-items:center; z-index:10; }
-#login-box{ background:#2b0030; padding:30px; border-radius:20px; width:300px; box-shadow:0 0 20px #7d2aff; }
-#login-box input,#login-box button{ display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none; }
-#popup, .popup-item { display:none; position:fixed;top:0;left:0;width:100%;height:100%; background: rgba(0,0,0,0.8); justify-content:center;align-items:center; z-index:15; }
-#popup-content, .popup-item-content { background:#2b0030; padding:20px; border-radius:20px; box-shadow:0 0 20px #9b00ff; text-align:center; }
-.card { background: rgba(60,0,90,0.6); border-radius:25px; padding:25px; min-width:320px; max-width:400px; box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset; text-align:center; }
-.card h3 { display:flex;justify-content:space-between;align-items:center; background: linear-gradient(90deg,#7d2aff,#d18eff); padding:12px 18px;border-radius:15px;color:white; }
-.plus-btn { background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px; color:white;font-weight:bold;font-size:1.3rem;cursor:pointer; box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset; }
-.plus-btn:hover { transform: scale(1.1); }
+body{margin:0;padding:0;font-family:"Poppins",sans-serif;background:radial-gradient(circle at top left,#2b0030,#000);color:#fff;text-align:center;}
+header{background:#3b0066;padding:15px;font-size:1.8rem;font-weight:bold;letter-spacing:2px;position:relative;}
+#logged-in{position:absolute;right:20px;top:15px;font-size:1rem;color:#fff;}
+nav{margin:15px;}
+nav button{background:#5a00a3;color:white;border:none;padding:10px 20px;margin:5px;border-radius:12px;cursor:pointer;transition:0.3s;}
+nav button:hover{background:#9b00ff;}
+section{display:none;margin-top:20px;}
+section.active{display:block;}
+table{width:90%;margin:20px auto;border-collapse:collapse;background: rgba(60,0,90,0.5);border-radius:12px;overflow:hidden;}
+th,td{border:1px solid #7d2aff;padding:12px 15px;text-align:center;}
+th{background:#5a00a3;}
+button.fancy{background:linear-gradient(90deg,#7d2aff,#d18eff);border:none;color:#fff;padding:8px 15px;border-radius:10px;cursor:pointer;transition:0.3s;}
+button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
+.plus-btn{background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px;color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;}
+.plus-btn:hover{transform: scale(1.1);}
+#login-container{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10;}
+#login-box{background:#2b0030;padding:30px;border-radius:20px;width:300px;box-shadow:0 0 20px #7d2aff;}
+#login-box input,#login-box button{display:block;width:100%;margin:10px 0;padding:10px;border-radius:8px;border:none;}
+#popup,#item-popup{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background: rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:15;}
+#popup-content,#item-popup-content{background:#2b0030;padding:20px;border-radius:20px;box-shadow:0 0 20px #9b00ff;text-align:center;}
 </style>
 </head>
 <body>
-<header>
-💜 Purple Shadows 💜
-<div id="logged-in"></div>
-</header>
+<header>💜 Purple Shadows 💜<div id="logged-in"></div></header>
 
 <nav>
-  <button onclick="showTab('home')">Startseite</button>
-  <button onclick="showTab('members')">Mitgliederliste</button>
+<button onclick="showTab('home')">Startseite</button>
+<button onclick="showTab('members')">Mitgliederliste</button>
 </nav>
 
 <section id="home" class="active">
-  <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
-    <div class="card">
-      <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table id="meetings-table"><thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-    </div>
-    <div class="card">
-      <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table id="changes-table"><thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-    </div>
-    <div class="card">
-      <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table id="wars-table"><thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
-    </div>
-  </div>
+<h2>💜 Willkommen bei Purple Shadows 💜</h2>
+<div style="display:flex;justify-content:center;flex-wrap:wrap;gap:50px;margin-top:40px;">
+<div class="card">
+<h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
+<table id="meetings-table"><thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
+</div>
+<div class="card">
+<h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
+<table id="changes-table"><thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
+</div>
+<div class="card">
+<h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
+<table id="wars-table"><thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
+</div>
+</div>
 </section>
 
 <section id="members">
-  <h2>💜 Mitgliederliste 💜</h2>
-  <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
-  <table id="members-table"><thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
+<h2>💜 Mitgliederliste 💜</h2>
+<button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
+<table id="members-table"><thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead><tbody></tbody></table>
 </section>
 
-<!-- Popups -->
 <div id="popup">
-  <div id="popup-content">
-    <h3>Mitglied hinzufügen</h3>
-    <input id="usernameInput" placeholder="Username"><br>
-    <select id="rankSelect">
-      <option>👑 Boss</option>
-      <option>👑 Underboss</option>
-      <option>💜 Crew Leader</option>
-      <option>💜 Captain</option>
-      <option>💜 Gangster</option>
-      <option>💜 Shadow</option>
-      <option>💜 Vollstrecker</option>
-      <option>💜 Capo</option>
-      <option>💜 Soldier</option>
-      <option>💜 Probation</option>
-    </select><br>
-    <button class="fancy" onclick="addMember()">Hinzufügen</button>
-    <button class="fancy" onclick="closePopup()">Abbrechen</button>
-  </div>
+<div id="popup-content">
+<h3>Mitglied hinzufügen</h3>
+<input id="usernameInput" placeholder="Username"><br>
+<select id="rankSelect">
+<option>👑 Boss</option><option>👑 Underboss</option><option>💜 Crew Leader</option><option>💜 Captain</option><option>💜 Gangster</option><option>💜 Shadow</option><option>💜 Vollstrecker</option><option>💜 Capo</option><option>💜 Soldier</option><option>💜 Probation</option>
+</select><br>
+<button class="fancy" onclick="addMember()">Hinzufügen</button>
+<button class="fancy" onclick="closePopup()">Abbrechen</button>
+</div>
 </div>
 
-<div id="item-popup" class="popup-item">
-  <div class="popup-item-content">
-    <h3 id="item-popup-title"></h3>
-    <input id="item-date" type="date" placeholder="Datum">
-    <input id="item-text" placeholder="Text"><br>
-    <button class="fancy" id="item-add-btn">Speichern</button>
-    <button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
-  </div>
+<div id="item-popup">
+<div id="item-popup-content">
+<h3 id="item-popup-title"></h3>
+<input id="item-date" type="date">
+<input id="item-text" placeholder="Text"><br>
+<button class="fancy" id="item-add-btn">Speichern</button>
+<button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
+</div>
 </div>
 
 <div id="login-container">
-  <div id="login-box">
-    <h2>Login</h2>
-    <input id="user" placeholder="Username">
-    <input id="pass" type="password" placeholder="Passwort">
-    <button onclick="login()">Login</button>
-    <p id="login-error" style="color:red;"></p>
-  </div>
+<div id="login-box">
+<h2>Login</h2>
+<input id="login-username" placeholder="Username">
+<input id="login-password" type="password" placeholder="Passwort">
+<button onclick="login()">Login</button>
+<p id="login-error" style="color:red;"></p>
+</div>
 </div>
 
 <script>
-// ====== Daten arrays + localStorage
-let members = JSON.parse(localStorage.getItem("members")) || [
-  {username:"Julian",rank:"👑 Boss"},
-  {username:"Max",rank:"👑 Underboss"}
-];
-let meetings = JSON.parse(localStorage.getItem("meetings")) || [];
-let changes = JSON.parse(localStorage.getItem("changes")) || [];
-let wars = JSON.parse(localStorage.getItem("wars")) || [];
+const socket = io();
+let currentUser=null;
+const allowedUsers=["Julian","Max"];
 
-let currentUser = null;
+// Tabs
+function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
-// ====== Speicherfunktion
-function saveData(){
-  localStorage.setItem("members",JSON.stringify(members));
-  localStorage.setItem("meetings",JSON.stringify(meetings));
-  localStorage.setItem("changes",JSON.stringify(changes));
-  localStorage.setItem("wars",JSON.stringify(wars));
-}
-
-// ====== Tabs
-function showTab(id){
-  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// ====== Render Tabellen
-function renderMembers(){
+// Render Mitglieder
+function renderMembers(members){
   const tbody=document.querySelector("#members-table tbody");
   tbody.innerHTML="";
   members.forEach(m=>{
     const tr=document.createElement("tr");
-    const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
-    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td>${del}</td>`;
-    if(del) tr.querySelector("button").onclick=()=>{
-      members=members.filter(x=>x.username!==m.username);
-      saveData(); renderMembers();
-    };
+    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td></td>`;
+    if(allowedUsers.includes(currentUser)){
+      const delBtn=document.createElement("button");
+      delBtn.className="fancy";
+      delBtn.textContent="❌";
+      delBtn.onclick=()=>socket.emit("deleteMember", m.username);
+      tr.querySelector("td:last-child").appendChild(delBtn);
+    }
     tbody.appendChild(tr);
   });
 }
 
-function renderItems(tableId,arr){
+// Render Items
+function renderItems(tableId,items){
   const tbody=document.querySelector(`#${tableId} tbody`);
   tbody.innerHTML="";
-  arr.forEach(i=>{
+  items.forEach(item=>{
     const tr=document.createElement("tr");
-    const del = (currentUser==="Julian"||currentUser==="Max") ? `<button class='fancy'>🗑️</button>` : "";
-    tr.innerHTML=`<td>${i.date}</td><td>${i.text}</td><td>${del}</td>`;
-    if(del) tr.querySelector("button").onclick=()=>{
-      const idx=arr.indexOf(i); if(idx>-1) arr.splice(idx,1);
-      saveData(); renderItems(tableId,arr);
-    };
+    tr.innerHTML=`<td>${item.date}</td><td>${item.text}</td><td></td>`;
+    if(allowedUsers.includes(currentUser)){
+      const delBtn=document.createElement("button");
+      delBtn.className="fancy";
+      delBtn.textContent="❌";
+      delBtn.onclick=()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
+      tr.querySelector("td:last-child").appendChild(delBtn);
+    }
     tbody.appendChild(tr);
   });
 }
 
-// ====== Login (Server prüft login.json)
+// Login
 async function login(){
-  const username = document.getElementById("user").value.trim();
-  const password = document.getElementById("pass").value.trim();
-  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
+  const username=document.getElementById("login-username").value.trim();
+  const password=document.getElementById("login-password").value.trim();
+  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
   try{
-    const res = await fetch("/login.json");
-    const data = await res.json();
-    const user = data.find(u=>u.username===username && u.password===password);
-    if(user){
+    const res=await axios.post("/login",{username,password});
+    if(res.data.success){
       currentUser=username;
-      localStorage.setItem("currentUser",username);
-      showAdminUI();
-    }else{
-      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
-    }
-  }catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
-  }
-}
+      document.getElementById("login-container").style.display="none";
+      document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
+      socket.emit("userOnline", username);
+      if(allowedUsers.includes(username)){
+        document.getElementById("add-btn").style.display="inline-block";
+        document.getElementById("add-meeting-btn").style.display="inline-block
 
-// ====== Admin UI nach Login
-function showAdminUI(){
-  document.getElementById("login-container").style.display="none";
-  document.getElementById("logged-in").innerText=`Eingeloggt als: ${currentUser}`;
-  document.getElementById("add-btn").style.display="inline-block";
-  document.getElementById("add-meeting-btn").style.display="inline-block";
-  document.getElementById("add-change-btn").style.display="inline-block";
-  document.getElementById("add-war-btn").style.display="inline-block";
-  renderMembers();
-  renderItems("meetings-table",meetings);
-  renderItems("changes-table",changes);
-  renderItems("wars-table",wars);
-}
-
-// ====== Auto Login
-window.addEventListener("load",()=>{
-  const saved = localStorage.getItem("currentUser");
-  if(saved){currentUser=saved; showAdminUI();}
-  else{renderMembers(); renderItems("meetings-table",meetings); renderItems("changes-table",changes); renderItems("wars-table",wars);}
-});
-
-// ====== Member hinzufügen
-function openPopup(){document.getElementById("popup").style.display="flex";}
-function closePopup(){document.getElementById("popup").style.display="none";}
-function addMember(){
-  const name=document.getElementById("usernameInput").value.trim();
-  const rank=document.getElementById("rankSelect").value;
-  if(name!==""){members.push({username:name,rank}); saveData(); renderMembers(); closePopup();}
-}
-
-// ====== Items hinzufügen
-function openItemPopup(title,tableName){
-  document.getElementById("item-popup").style.display="flex";
-  document.getElementById("item-popup-title").innerText=title;
-  document.getElementById("item-add-btn").onclick=function(){
-    const date=document.getElementById("item-date").value;
-    const text=document.getElementById("item-text").value;
-    if(date.trim()!==""&&text.trim()!==""){
-      if(tableName==="meetings-table") meetings.push({date,text});
-      else if(tableName==="changes-table") changes.push({date,text});
-      else if(tableName==="wars-table") wars.push({date,text});
-      saveData();
-      renderItems(tableName,eval(tableName.replace("-table","")));
-    }
-    closeItemPopup();
-  };
-}
-function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
-
-// ====== Buttons
-document.getElementById("add-btn").onclick=openPopup;
-document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
-document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
-document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
-</script>
-</body>
-</html>
