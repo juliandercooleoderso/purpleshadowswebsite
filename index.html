@@ -19,7 +19,7 @@ th,td{border:1px solid #7d2aff;padding:12px 15px;text-align:center;}
 th{background:#5a00a3;}
 button.fancy{background:linear-gradient(90deg,#7d2aff,#d18eff);border:none;color:#fff;padding:8px 15px;border-radius:10px;cursor:pointer;transition:0.3s;}
 button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
-.plus-btn{background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px;color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;}
+.plus-btn{background: linear-gradient(45deg,#ff6fff,#7d2aff); border:none;border-radius:50%;width:40px;height:40px;color:white;font-weight:bold;font-size:1.3rem;cursor:pointer;transition:0.3s;}
 .plus-btn:hover{transform: scale(1.1);}
 #login-container{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;justify-content:center;align-items:center;z-index:10;}
 #login-box{background:#2b0030;padding:30px;border-radius:20px;width:300px;box-shadow:0 0 20px #7d2aff;}
@@ -94,24 +94,24 @@ button.fancy:hover{background:linear-gradient(90deg,#d18eff,#7d2aff);}
 
 <script>
 const socket = io();
-let currentUser=null;
-const allowedUsers=["Julian","Max"];
+let currentUser = null;
+const allowedUsers = ["Julian","Max"];
 
 // Tabs
 function showTab(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
 
-// Render Mitglieder
+// Render Members
 function renderMembers(members){
-  const tbody=document.querySelector("#members-table tbody");
-  tbody.innerHTML="";
+  const tbody = document.querySelector("#members-table tbody");
+  tbody.innerHTML = "";
   members.forEach(m=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td></td>`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${m.username}</td><td>${m.rank}</td><td></td>`;
     if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
+      const delBtn = document.createElement("button");
       delBtn.className="fancy";
       delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteMember", m.username);
+      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
       tr.querySelector("td:last-child").appendChild(delBtn);
     }
     tbody.appendChild(tr);
@@ -119,17 +119,17 @@ function renderMembers(members){
 }
 
 // Render Items
-function renderItems(tableId,items){
-  const tbody=document.querySelector(`#${tableId} tbody`);
-  tbody.innerHTML="";
+function renderItems(tableId, items){
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  tbody.innerHTML = "";
   items.forEach(item=>{
-    const tr=document.createElement("tr");
-    tr.innerHTML=`<td>${item.date}</td><td>${item.text}</td><td></td>`;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${item.date}</td><td>${item.text}</td><td></td>`;
     if(allowedUsers.includes(currentUser)){
-      const delBtn=document.createElement("button");
+      const delBtn = document.createElement("button");
       delBtn.className="fancy";
       delBtn.textContent="❌";
-      delBtn.onclick=()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
+      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
       tr.querySelector("td:last-child").appendChild(delBtn);
     }
     tbody.appendChild(tr);
@@ -142,13 +142,58 @@ async function login(){
   const password=document.getElementById("login-password").value.trim();
   if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
   try{
-    const res=await axios.post("/login",{username,password});
+    const res = await axios.post("/login",{username,password});
     if(res.data.success){
-      currentUser=username;
+      currentUser = username;
       document.getElementById("login-container").style.display="none";
       document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
       socket.emit("userOnline", username);
       if(allowedUsers.includes(username)){
         document.getElementById("add-btn").style.display="inline-block";
-        document.getElementById("add-meeting-btn").style.display="inline-block
+        document.getElementById("add-meeting-btn").style.display="inline-block";
+        document.getElementById("add-change-btn").style.display="inline-block";
+        document.getElementById("add-war-btn").style.display="inline-block";
+      }
+    } else {
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+    }
+  } catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
+  }
+}
 
+// Popups
+function openPopup(){document.getElementById("popup").style.display="flex";}
+function closePopup(){document.getElementById("popup").style.display="none";}
+function addMember(){
+  const username=document.getElementById("usernameInput").value;
+  const rank=document.getElementById("rankSelect").value;
+  if(username.trim()!=="") socket.emit("addMember",{username,rank});
+  closePopup();
+}
+function openItemPopup(title, table){
+  document.getElementById("item-popup").style.display="flex";
+  document.getElementById("item-popup-title").innerText=title;
+  document.getElementById("item-add-btn").onclick = ()=>{
+    const date=document.getElementById("item-date").value;
+    const text=document.getElementById("item-text").value;
+    if(date.trim()!==""&&text.trim()!==""){
+      socket.emit("addItem",{table,date,text});
+      closeItemPopup();
+    }
+  };
+}
+function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
+
+// Button Events
+document.getElementById("add-btn").onclick=openPopup;
+document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
+document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
+document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
+
+// Socket Events
+socket.on("updateMembers", members => renderMembers(members));
+socket.on("updateItems", data => renderItems(data.table, data.items));
+</script>
+</body>
+</html>
