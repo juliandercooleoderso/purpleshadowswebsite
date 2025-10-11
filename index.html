@@ -27,6 +27,9 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 #login-box input,#login-box button{display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none;}
 .particle { position:absolute; border-radius:50%; background: rgba(155,0,255,0.7); pointer-events:none; animation: floatParticle linear infinite;}
 @keyframes floatParticle {0%{transform:translateY(0) translateX(0) scale(.5);opacity:.5}50%{transform:translateY(-50px) translateX(30px) scale(1);opacity:1}100%{transform:translateY(-100px) translateX(-20px) scale(.5);opacity:.5}}
+table { width:90%; margin:20px auto; border-collapse:collapse; background: rgba(60,0,90,0.5); border-radius:12px; overflow:hidden;}
+th, td { border:1px solid #7d2aff; padding:12px 15px; text-align:center; }
+th { background:#5a00a3; }
 </style>
 </head>
 <body>
@@ -42,11 +45,13 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 
 <div id="viewer">👁️ 0</div>
 
+<!-- Startseite -->
 <section id="home" class="active">
 <h2>💜 Willkommen bei Purple Shadows 💜</h2>
 <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
 </section>
 
+<!-- Shop -->
 <section id="shop">
 <h2>💜 Purple Shadows - Shop 💜</h2>
 <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
@@ -69,14 +74,31 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 </div>
 </section>
 
+<!-- Autoliste -->
 <section id="autoliste">
 <h2>💜 Purple Shadows - Autoliste 💜</h2>
 <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
 <div style="display:grid; grid-template-columns:repeat(3,minmax(180px,1fr));gap:20px;padding:20px;">
-<!-- Hier deine Autos wie zuvor -->
+
+<!-- Beispiel Auto -->
+<div class="blur-card" style="padding:15px;">
+<img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" style="width:100%;border-radius:10px;">
+<h3>Sunfury Pony</h3>
+<button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+</div>
+
+<div class="blur-card" style="padding:15px;">
+<img src="https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png" style="width:100%;border-radius:10px;">
+<h3>Valois 650</h3>
+<button class="fancy" onclick="openAutoPopup('Valois 650','375,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+</div>
+
+<!-- Weitere Autos so wie in deinem Beispiel hinzufügen... -->
+
 </div>
 </section>
 
+<!-- Mitgliederliste -->
 <section id="members">
 <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
 <table>
@@ -85,11 +107,29 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 </table>
 </section>
 
+<!-- Statistiken -->
 <section id="stats">
 <h2>📊 Statistiken</h2>
-<div class="blur-card" style="max-width:400px;margin:auto;"><h3>🟢 Online User</h3><div id="online-users-box" style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;max-height:300px;overflow-y:auto;"><p style="opacity:0.6">Niemand online</p></div></div>
+<div class="blur-card" style="max-width:400px;margin:auto;"><h3>🟢 Online User</h3>
+<div id="online-users-box" style="background:rgba(0,0,0,0.3);border-radius:10px;padding:10px;max-height:300px;overflow-y:auto;"><p style="opacity:0.6">Niemand online</p></div>
+</div>
 </section>
 
+<!-- Auto Popup -->
+<div id="auto-popup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:20;">
+<div id="auto-popup-content" style="background:#2b0030;padding:25px;border-radius:20px;width:300px;text-align:left;box-shadow:0 0 30px #9b00ff;">
+<h3 id="auto-popup-name">Auto Name</h3>
+<p id="auto-popup-preis">Preis: </p>
+<p id="auto-popup-primary">Primary Farbe: </p>
+<p id="auto-popup-interior">Interieur Farbe: </p>
+<p id="auto-popup-wheels">Felgen Farbe: </p>
+<p id="auto-popup-undercarriage">Unterboden: </p>
+<p id="auto-popup-rank">Rang: </p>
+<button class="fancy" onclick="document.getElementById('auto-popup').style.display='none'">Close</button>
+</div>
+</div>
+
+<!-- Login -->
 <div id="login-container">
 <div id="login-box">
 <h2>Login</h2>
@@ -115,7 +155,11 @@ document.getElementById(id).classList.add("active");
 function renderMembers(members){
 const table = document.getElementById("members-table");
 table.innerHTML="";
-members.forEach(m=>{const row=document.createElement("tr");row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;table.appendChild(row);});
+members.forEach(m=>{
+const row=document.createElement("tr");
+row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td>`;
+table.appendChild(row);
+});
 }
 
 // Socket Events
@@ -144,6 +188,18 @@ if(allowedUsers.includes(username)) document.getElementById("stats-btn").style.d
 }catch(e){document.getElementById("login-error").innerText="Serverfehler!";}
 }
 
+// Auto Popup
+function openAutoPopup(name, preis, primary, interior, wheels, undercarriage, rank){
+document.getElementById("auto-popup-name").innerText=name;
+document.getElementById("auto-popup-preis").innerText="Preis: "+preis;
+document.getElementById("auto-popup-primary").innerText="Primary Farbe: "+primary;
+document.getElementById("auto-popup-interior").innerText="Interieur Farbe: "+interior;
+document.getElementById("auto-popup-wheels").innerText="Felgen Farbe: "+wheels;
+document.getElementById("auto-popup-undercarriage").innerText="Unterboden: "+undercarriage;
+document.getElementById("auto-popup-rank").innerText="Rang: "+rank;
+document.getElementById("auto-popup").style.display="flex";
+}
+
 // Particles
 for(let i=0;i<40;i++){
 const p=document.createElement("div");p.className="particle";const size=Math.random()*5+5;p.style.width=size+"px";p.style.height=size+"px";p.style.left=Math.random()*window.innerWidth+"px";p.style.top=Math.random()*window.innerHeight+"px";p.style.animationDuration=(5+Math.random()*5)+"s";document.body.appendChild(p);
@@ -152,6 +208,4 @@ const p=document.createElement("div");p.className="particle";const size=Math.ran
 
 </body>
 </html>
-
-
 
