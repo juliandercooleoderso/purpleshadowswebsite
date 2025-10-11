@@ -102,78 +102,57 @@ button.fancy:hover {
   background:linear-gradient(90deg,#d18eff,#7d2aff);
 }
 
-/* Login */
-#login-container{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:10;
-}
-
-#login-box{
-  background:#2b0030;
-  padding:30px;
+/* Blur Card Styles */
+.blur-card {
+  backdrop-filter: blur(10px);
+  background: rgba(60,0,90,0.5);
   border-radius:20px;
-  width:300px;
-  box-shadow:0 0 20px #7d2aff;
-}
-
-#login-box input,#login-box button{
-  display:block;
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-}
-
-/* Neon Cards */
-.card {
-  background: rgba(60,0,90,0.6);
-  border-radius:25px;
-  padding:25px;
-  min-width:320px;
-  max-width:400px;
-  box-shadow:0 0 30px #9b00ff, 0 0 50px #7d2aff inset;
-  text-align:center;
+  padding:20px;
+  box-shadow: 0 0 30px #7d2aff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.card:hover {
+.blur-card:hover {
   transform: translateY(-5px);
-  box-shadow:0 0 50px #9b00ff, 0 0 70px #7d2aff inset;
+  box-shadow:0 0 50px #d18eff;
 }
 
-.card h3 {
-  display:flex;
-  justify-content:space-between;
+.blur-card img {
+  border-radius:12px;
+  margin-bottom:10px;
+  max-width:180px;
+}
+
+/* Centered Popup */
+#auto-popup {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.85);
+  justify-content:center;
   align-items:center;
-  background: linear-gradient(90deg,#7d2aff,#d18eff);
-  padding:12px 18px;
-  border-radius:15px;
-  color:white;
-  margin-bottom:20px;
-  box-shadow:0 0 15px #9b00ff inset;
+  z-index:20;
 }
 
-/* Logo Animiert */
-.logo-float {
-  animation: floatLogo 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px #9b00ff);
+#auto-popup-content {
+  background:#2b0030;
+  padding:25px;
+  border-radius:20px;
+  width:300px;
+  text-align:left;
+  box-shadow:0 0 30px #9b00ff;
 }
 
-@keyframes floatLogo {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+#auto-popup-content h3 {
+  text-align:center;
+  margin-bottom:15px;
 }
 
-/* Viewer */
 #viewer {
   position:absolute;
   top:20px;
@@ -193,6 +172,7 @@ button.fancy:hover {
   <button onclick="showTab('home')">Startseite</button>
   <button onclick="showTab('shop')">Shop</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
+  <button onclick="showTab('autoliste')">Autoliste</button>
   <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
 
@@ -206,20 +186,36 @@ button.fancy:hover {
 <section id="shop">
   <h2>💜 Purple Shadows - Shop 💜</h2>
   <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Shirt (Variante 1):</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" alt="Shirt1">
+      <h3>Shirt Variante 1</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
     </div>
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Shirt (Variante 2):</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" alt="Shirt2">
+      <h3>Shirt Variante 2</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
     </div>
-    <div style="background:#1a0033;border-radius:15px;padding:15px;">
-      <h3>Unsere Weste:</h3>
-      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" width="150">
-      <br><button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" alt="Weste">
+      <h3>Unsere Weste</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+    </div>
+  </div>
+</section>
+
+<section id="autoliste">
+  <h2>💜 Purple Shadows - Autoliste 💜</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;padding:20px;">
+    <div class="blur-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="Auto1">
+      <h3>Sportwagen</h3>
+      <button class="fancy" onclick="openAutoPopup('Sportwagen', '50.000$', 'Rot', 'Schwarz', 'Silber', 'Unterboden Blau', '👑 Boss')">Ansehen</button>
+    </div>
+    <div class="blur-card">
+      <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="Auto2">
+      <h3>Limousine</h3>
+      <button class="fancy" onclick="openAutoPopup('Limousine', '30.000$', 'Weiß', 'Beige', 'Chrom', 'Unterboden Rot', '💜 Crew Leader')">Ansehen</button>
     </div>
   </div>
 </section>
@@ -251,6 +247,20 @@ button.fancy:hover {
   </div>
 </section>
 
+<!-- Popup für Auto Details -->
+<div id="auto-popup">
+  <div id="auto-popup-content">
+    <h3 id="auto-popup-name">Auto Name</h3>
+    <p id="auto-popup-preis">Preis: </p>
+    <p id="auto-popup-primary">Primary Farbe: </p>
+    <p id="auto-popup-interior">Interieur Farbe: </p>
+    <p id="auto-popup-wheels">Felgen Farbe: </p>
+    <p id="auto-popup-undercarriage">Unterboden: </p>
+    <p id="auto-popup-rank">Rang: </p>
+    <button class="fancy" onclick="closeAutoPopup()">Close</button>
+  </div>
+</div>
+
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
@@ -265,13 +275,11 @@ button.fancy:hover {
 const socket = io();
 let currentUser = null;
 
-// Tabs
 function showTab(id){
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// Mitglieder
 function renderMembers(members){
   const table = document.getElementById("members-table");
   table.innerHTML = "";
@@ -282,8 +290,9 @@ function renderMembers(members){
   });
 }
 
-// 🔥 NEU: Online Users + Logs
-function updateOnlineUsers(users){
+socket.on("updateMembers", members => renderMembers(members));
+socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
+socket.on("updateOnlineUsers", users => {
   const box = document.getElementById("online-users-box");
   box.innerHTML = "";
   if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
@@ -292,31 +301,21 @@ function updateOnlineUsers(users){
     p.textContent = "• " + u;
     box.appendChild(p);
   });
-}
-
-function addAuditLog(entry){
+});
+socket.on("newAuditLog", log => {
   const box = document.getElementById("audit-log-box");
   if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
   const time = new Date().toLocaleTimeString();
   const p = document.createElement("p");
-  p.textContent = `[${time}] ${entry}`;
+  p.textContent = `[${time}] ${log}`;
   box.appendChild(p);
   box.scrollTop = box.scrollHeight;
-}
+});
 
-// Socket Events
-socket.on("updateMembers", members => renderMembers(members));
-socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
-socket.on("updateOnlineUsers", users => updateOnlineUsers(users));
-socket.on("newAuditLog", log => addAuditLog(log));
-
-// Login
 async function login(){
   const username = document.getElementById("login-username").value.trim();
   const password = document.getElementById("login-password").value.trim();
-
   if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
-
   try{
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
@@ -332,6 +331,22 @@ async function login(){
     document.getElementById("login-error").innerText="Serverfehler!";
   }
 }
+
+// Auto Popup
+function openAutoPopup(name, preis, primary, interior, wheels, undercarriage, rank){
+  document.getElementById("auto-popup-name").innerText = name;
+  document.getElementById("auto-popup-preis").innerText = "Preis: " + preis;
+  document.getElementById("auto-popup-primary").innerText = "Primary Farbe: " + primary;
+  document.getElementById("auto-popup-interior").innerText = "Interieur Farbe: " + interior;
+  document.getElementById("auto-popup-wheels").innerText = "Felgen Farbe: " + wheels;
+  document.getElementById("auto-popup-undercarriage").innerText = "Unterboden: " + undercarriage;
+  document.getElementById("auto-popup-rank").innerText = "Rang: " + rank;
+  document.getElementById("auto-popup").style.display="flex";
+}
+function closeAutoPopup(){
+  document.getElementById("auto-popup").style.display="none";
+}
 </script>
 </body>
 </html>
+
