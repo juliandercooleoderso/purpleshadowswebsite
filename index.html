@@ -133,37 +133,6 @@ button.fancy:hover {
   border:none;
 }
 
-/* Popups */
-#popup, .popup-item {
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-  z-index:15;
-}
-
-#popup-content, .popup-item-content {
-  background:#2b0030;
-  padding:20px;
-  border-radius:20px;
-  box-shadow:0 0 20px #9b00ff;
-  text-align:center;
-}
-
-#popup-content input,#popup-content select,
-.popup-item-content input,.popup-item-content select{
-  margin:10px 0;
-  width:200px;
-  padding:8px;
-  border-radius:8px;
-  border:none;
-}
-
 /* Neon Cards */
 .card {
   background: rgba(60,0,90,0.6);
@@ -191,48 +160,6 @@ button.fancy:hover {
   color:white;
   margin-bottom:20px;
   box-shadow:0 0 15px #9b00ff inset;
-}
-
-.card h3 button.plus-btn {
-  background: linear-gradient(45deg,#ff6fff,#7d2aff);
-  border:none;
-  border-radius:50%;
-  width:35px;
-  height:35px;
-  font-size:1.5rem;
-  font-weight:bold;
-  cursor:pointer;
-  color:white;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card h3 button.plus-btn:hover {
-  transform: scale(1.2);
-  box-shadow:0 0 20px #ff6fff, 0 0 30px #7d2aff inset;
-}
-
-/* Plus-Buttons */
-.plus-btn {
-  background: linear-gradient(45deg,#ff6fff,#7d2aff);
-  border:none;
-  border-radius:50%;
-  width:40px;
-  height:40px;
-  color:white;
-  font-weight:bold;
-  font-size:1.3rem;
-  cursor:pointer;
-  box-shadow:0 0 10px #ff6fff, 0 0 20px #7d2aff inset;
-  transition: 0.3s;
-}
-
-.plus-btn:hover {
-  transform: scale(1.1);
-  box-shadow:0 0 20px #ff6fff,0 0 30px #7d2aff inset;
 }
 
 /* Logo Animiert */
@@ -266,7 +193,6 @@ button.fancy:hover {
   <button onclick="showTab('home')">Startseite</button>
   <button onclick="showTab('shop')">Shop</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
-  <!-- 🔥 NEU -->
   <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
 
@@ -275,32 +201,6 @@ button.fancy:hover {
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&" width="220" style="margin:25px auto;display:block;">
-
-  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
-    <div class="card">
-      <h3>📅 Meetings <button id="add-meeting-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Thema</th><th>Aktionen</th></tr></thead>
-        <tbody id="meetings-table"></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h3>🔮 Veränderungen <button id="add-change-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Beschreibung</th><th>Aktionen</th></tr></thead>
-        <tbody id="changes-table"></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h3>⚔️ Kriege <button id="add-war-btn" class="plus-btn" style="display:none;">+</button></h3>
-      <table>
-        <thead><tr><th>Datum</th><th>Gegner</th><th>Aktionen</th></tr></thead>
-        <tbody id="wars-table"></tbody>
-      </table>
-    </div>
-  </div>
 </section>
 
 <section id="shop">
@@ -326,14 +226,12 @@ button.fancy:hover {
 
 <section id="members">
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
-  <button id="add-btn" class="fancy" style="display:none;">Hinzufügen</button>
   <table>
-    <thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
+    <thead><tr><th>Username</th><th>Rang</th></tr></thead>
     <tbody id="members-table"></tbody>
   </table>
 </section>
 
-<!-- 🔥 NEU -->
 <section id="stats">
   <h2>📊 Statistiken</h2>
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
@@ -353,38 +251,6 @@ button.fancy:hover {
   </div>
 </section>
 
-<!-- Popups -->
-<div id="popup">
-  <div id="popup-content">
-    <h3>Mitglied hinzufügen</h3>
-    <input id="usernameInput" placeholder="Username"><br>
-    <select id="rankSelect">
-      <option value="👑 Boss">👑 Boss</option>
-      <option value="👑 Underboss">👑 Underboss</option>
-      <option value="💜 Crew Leader">💜 Crew Leader</option>
-      <option value="💜 Captain">💜 Captain</option>
-      <option value="💜 Gangster">💜 Gangster</option>
-      <option value="💜 Shadow">💜 Shadow</option>
-      <option value="💜 Vollstrecker">💜 Vollstrecker</option>
-      <option value="💜 Capo">💜 Capo</option>
-      <option value="💜 Soldier">💜 Soldier</option>
-      <option value="💜 Probation">💜 Probation</option>
-    </select><br>
-    <button class="fancy" onclick="addMember()">Hinzufügen</button>
-    <button class="fancy" onclick="closePopup()">Abbrechen</button>
-  </div>
-</div>
-
-<div id="item-popup" class="popup-item">
-  <div class="popup-item-content">
-    <h3 id="item-popup-title"></h3>
-    <input id="item-date" type="date" placeholder="Datum">
-    <input id="item-text" placeholder="Thema/Beschreibung/Gegner"><br>
-    <button class="fancy" id="item-add-btn">Akzeptieren</button>
-    <button class="fancy" onclick="closeItemPopup()">Abbrechen</button>
-  </div>
-</div>
-
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
@@ -398,7 +264,6 @@ button.fancy:hover {
 <script>
 const socket = io();
 let currentUser = null;
-const allowedUsers = ["Julian","Max"];
 
 // Tabs
 function showTab(id){
@@ -413,35 +278,6 @@ function renderMembers(members){
   members.forEach(m=>{
     const row = document.createElement("tr");
     row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td>`;
-    const actionsCell = document.createElement("td");
-    if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className = "fancy";
-      delBtn.textContent = "❌";
-      delBtn.onclick = ()=>socket.emit("deleteMember", m.username);
-      actionsCell.appendChild(delBtn);
-    }
-    row.appendChild(actionsCell);
-    table.appendChild(row);
-  });
-}
-
-// Items
-function renderItems(tableId, items){
-  const table = document.getElementById(tableId);
-  table.innerHTML = "";
-  items.forEach(item=>{
-    const row = document.createElement("tr");
-    row.innerHTML = `<td>${item.date}</td><td>${item.text}</td>`;
-    const actionsCell = document.createElement("td");
-    if(allowedUsers.includes(currentUser)){
-      const delBtn = document.createElement("button");
-      delBtn.className = "fancy";
-      delBtn.textContent = "❌";
-      delBtn.onclick = ()=>socket.emit("deleteItem",{table:tableId,date:item.date,text:item.text});
-      actionsCell.appendChild(delBtn);
-    }
-    row.appendChild(actionsCell);
     table.appendChild(row);
   });
 }
@@ -470,7 +306,6 @@ function addAuditLog(entry){
 
 // Socket Events
 socket.on("updateMembers", members => renderMembers(members));
-socket.on("updateItems", data => renderItems(data.table, data.items));
 socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
 socket.on("updateOnlineUsers", users => updateOnlineUsers(users));
 socket.on("newAuditLog", log => addAuditLog(log));
@@ -489,13 +324,7 @@ async function login(){
       document.getElementById("login-container").style.display="none";
       document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
       socket.emit("userOnline", username);
-      if(allowedUsers.includes(username)){
-        document.getElementById("add-btn").style.display="inline-block";
-        document.getElementById("add-meeting-btn").style.display="inline-block";
-        document.getElementById("add-change-btn").style.display="inline-block";
-        document.getElementById("add-war-btn").style.display="inline-block";
-        document.getElementById("stats-btn").style.display="inline-block";
-      }
+      document.getElementById("stats-btn").style.display="inline-block";
     } else {
       document.getElementById("login-error").innerText="Login fehlgeschlagen!";
     }
@@ -503,37 +332,6 @@ async function login(){
     document.getElementById("login-error").innerText="Serverfehler!";
   }
 }
-
-// Popups
-function openPopup(){document.getElementById("popup").style.display="flex";}
-function closePopup(){document.getElementById("popup").style.display="none";}
-function addMember(){
-  const username = document.getElementById("usernameInput").value;
-  const rank = document.getElementById("rankSelect").value;
-  if(username.trim()!=="") socket.emit("addMember",{username,rank});
-  closePopup();
-}
-
-function openItemPopup(tableTitle, tableName){
-  document.getElementById("item-popup").style.display="flex";
-  document.getElementById("item-popup-title").innerText=tableTitle;
-  document.getElementById("item-add-btn").onclick=function(){
-    const date=document.getElementById("item-date").value;
-    const text=document.getElementById("item-text").value;
-    if(date.trim()!==""&&text.trim()!==""){
-      socket.emit("addItem",{table:tableName,date,text});
-    }
-    closeItemPopup();
-  }
-}
-function closeItemPopup(){document.getElementById("item-popup").style.display="none";}
-
-// Button Events
-document.getElementById("add-btn").onclick=openPopup;
-document.getElementById("add-meeting-btn").onclick=()=>openItemPopup("Meeting hinzufügen","meetings-table");
-document.getElementById("add-change-btn").onclick=()=>openItemPopup("Veränderung hinzufügen","changes-table");
-document.getElementById("add-war-btn").onclick=()=>openItemPopup("Krieg hinzufügen","wars-table");
 </script>
 </body>
 </html>
-
