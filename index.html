@@ -153,6 +153,16 @@ button.fancy:hover {
   margin-bottom:15px;
 }
 
+.logo-float {
+  animation: floatLogo 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px #9b00ff);
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
 #viewer {
   position:absolute;
   top:20px;
@@ -180,7 +190,7 @@ button.fancy:hover {
 
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68ea0464&is=68e8b2e4&hm=c15e11b4763cf22a1813ddac80ea435bc3c6c8e8e0dddabf2bd215f4fe504f55&" width="220" style="margin:25px auto;display:block;">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" width="220" style="margin:25px auto;display:block;">
 </section>
 
 <section id="shop">
@@ -210,12 +220,12 @@ button.fancy:hover {
     <div class="blur-card">
       <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="Auto1">
       <h3>Sportwagen</h3>
-      <button class="fancy" onclick="openAutoPopup('Sportwagen', '50.000$', 'Rot', 'Schwarz', 'Silber', 'Unterboden Blau', '👑 Boss')">Ansehen</button>
+      <button class="fancy" onclick="openAutoPopup('Sportwagen','50.000$','Rot','Schwarz','Silber','Unterboden Blau','👑 Boss')">Ansehen</button>
     </div>
     <div class="blur-card">
       <img src="https://cdn-icons-png.flaticon.com/512/743/743007.png" alt="Auto2">
       <h3>Limousine</h3>
-      <button class="fancy" onclick="openAutoPopup('Limousine', '30.000$', 'Weiß', 'Beige', 'Chrom', 'Unterboden Rot', '💜 Crew Leader')">Ansehen</button>
+      <button class="fancy" onclick="openAutoPopup('Limousine','30.000$','Weiß','Beige','Chrom','Unterboden Rot','💜 Crew Leader')">Ansehen</button>
     </div>
   </div>
 </section>
@@ -231,14 +241,13 @@ button.fancy:hover {
 <section id="stats">
   <h2>📊 Statistiken</h2>
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
-    <div class="card">
+    <div class="blur-card" style="max-width:400px;">
       <h3>📜 Audit Logs</h3>
       <div id="audit-log-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
         <p style="opacity:0.6;">Noch keine Logs...</p>
       </div>
     </div>
-
-    <div class="card">
+    <div class="blur-card" style="max-width:400px;">
       <h3>🟢 Online User</h3>
       <div id="online-users-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
         <p style="opacity:0.6;">Niemand online</p>
@@ -261,6 +270,7 @@ button.fancy:hover {
   </div>
 </div>
 
+<!-- Login -->
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
@@ -274,12 +284,15 @@ button.fancy:hover {
 <script>
 const socket = io();
 let currentUser = null;
+const allowedUsers = ["Julian","Max"];
 
+// Tabs
 function showTab(id){
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
+// Mitgliederliste rendern
 function renderMembers(members){
   const table = document.getElementById("members-table");
   table.innerHTML = "";
@@ -290,6 +303,7 @@ function renderMembers(members){
   });
 }
 
+// Socket Events
 socket.on("updateMembers", members => renderMembers(members));
 socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
 socket.on("updateOnlineUsers", users => {
@@ -312,10 +326,13 @@ socket.on("newAuditLog", log => {
   box.scrollTop = box.scrollHeight;
 });
 
+// Login
 async function login(){
   const username = document.getElementById("login-username").value.trim();
   const password = document.getElementById("login-password").value.trim();
+
   if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+
   try{
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
@@ -323,7 +340,9 @@ async function login(){
       document.getElementById("login-container").style.display="none";
       document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
       socket.emit("userOnline", username);
-      document.getElementById("stats-btn").style.display="inline-block";
+      if(allowedUsers.includes(username)){
+        document.getElementById("stats-btn").style.display="inline-block";
+      }
     } else {
       document.getElementById("login-error").innerText="Login fehlgeschlagen!";
     }
@@ -349,4 +368,3 @@ function closeAutoPopup(){
 </script>
 </body>
 </html>
-
