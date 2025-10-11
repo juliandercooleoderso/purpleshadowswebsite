@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "username": "Julian",
+    "rank": "👑 Boss"
+  },
+  {
+    "username": "Max",
+    "rank": "💜 Crew Leader"
+  },
+  {
+    "username": "Lena",
+    "rank": "💜 Gangster"
+  }
+]
