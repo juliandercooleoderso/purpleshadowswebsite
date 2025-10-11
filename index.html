@@ -15,6 +15,7 @@ body {
   text-align:center;
 }
 
+/* Header */
 header {
   background:#3b0066;
   padding:15px;
@@ -32,6 +33,7 @@ header {
   color:#fff;
 }
 
+/* Navigation */
 nav {
   margin:15px;
 }
@@ -51,6 +53,7 @@ nav button:hover {
   background:#9b00ff;
 }
 
+/* Sections */
 section {
   display:none;
   margin-top:20px;
@@ -60,6 +63,7 @@ section.active {
   display:block;
 }
 
+/* Tables */
 table {
   width:90%;
   margin:20px auto;
@@ -102,7 +106,7 @@ button.fancy:hover {
   background:linear-gradient(90deg,#d18eff,#7d2aff);
 }
 
-/* Blur Card Styles */
+/* Blur Cards */
 .blur-card {
   backdrop-filter: blur(10px);
   background: rgba(60,0,90,0.5);
@@ -126,7 +130,7 @@ button.fancy:hover {
   max-width:180px;
 }
 
-/* Centered Popup */
+/* Auto Popup */
 #auto-popup {
   display:none;
   position:fixed;
@@ -153,6 +157,7 @@ button.fancy:hover {
   margin-bottom:15px;
 }
 
+/* Logo Animation */
 .logo-float {
   animation: floatLogo 4s ease-in-out infinite;
   filter: drop-shadow(0 0 25px #9b00ff);
@@ -169,6 +174,38 @@ button.fancy:hover {
   left:20px;
   font-size:1.1rem;
   text-shadow:0 0 8px #fff;
+}
+
+/* ===================== LOGIN ===================== */
+#login-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+#login-box{
+  background:#2b0030;
+  padding:30px;
+  border-radius:20px;
+  width:300px;
+  box-shadow:0 0 20px #7d2aff;
+  text-align:center;
+}
+
+#login-box input,#login-box button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
 }
 </style>
 </head>
@@ -256,7 +293,7 @@ button.fancy:hover {
   </div>
 </section>
 
-<!-- Popup für Auto Details -->
+<!-- Auto Popup -->
 <div id="auto-popup">
   <div id="auto-popup-content">
     <h3 id="auto-popup-name">Auto Name</h3>
@@ -270,7 +307,7 @@ button.fancy:hover {
   </div>
 </div>
 
-<!-- Login -->
+<!-- Login Modal -->
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
@@ -330,9 +367,7 @@ socket.on("newAuditLog", log => {
 async function login(){
   const username = document.getElementById("login-username").value.trim();
   const password = document.getElementById("login-password").value.trim();
-
   if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
-
   try{
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
