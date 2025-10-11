@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[ <!DOCTYPE html>
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -456,7 +456,7 @@ function closeAutoPopup(){
 }
 </script>
 </body>
-</html>
+</html> ]
 
 
 
