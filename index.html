@@ -1,184 +1,231 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<title>Purple Shadows Gang</title>
-<script src="/socket.io/socket.io.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<style>
-/* === Global === */
-body {
-  margin:0; padding:0;
-  font-family:"Poppins",sans-serif;
-  background: radial-gradient(circle at top left, #2b0030, #000);
-  color:#fff;
-  overflow-x:hidden;
-}
-
-/* Header */
-header {
-  background:#3b0066;
-  padding:15px;
-  font-size:1.8rem;
-  font-weight:bold;
-  letter-spacing:2px;
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-#logged-in { position:absolute; right:20px; top:15px; font-size:1rem; color:#fff; }
-
-/* Animated logo right */
-#logo-right {
-  position:absolute;
-  top:10px;
-  right:100px;
-  width:120px;
-  animation: floatLogo 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px #9b00ff);
-}
-
-/* Navigation */
-nav { margin:15px; text-align:center; }
-nav button {
-  background:#5a00a3; color:white;
-  border:none; padding:10px 20px; margin:5px;
-  border-radius:12px; cursor:pointer; transition:0.3s;
-}
-nav button:hover { background:#9b00ff; }
-
-/* Sections */
-section { display:none; margin-top:20px; position:relative; }
-section.active { display:block; }
-
-/* Tables */
-table { width:90%; margin:20px auto; border-collapse:collapse; background: rgba(60,0,90,0.5); border-radius:12px; overflow:hidden; }
-th, td { border:1px solid #7d2aff; padding:12px 15px; text-align:center; }
-th { background:#5a00a3; }
-button.fancy-member { background: #5a00a3; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-button.fancy-member:hover { background:#9b00ff; }
-
-/* Blur Cards */
-.blur-card { backdrop-filter: blur(10px); background: rgba(60,0,90,0.5); border-radius:20px; padding:20px; box-shadow: 0 0 30px #7d2aff; display:flex; flex-direction:column; align-items:center; transition: transform 0.3s, box-shadow 0.3s; }
-.blur-card:hover { transform: translateY(-5px); box-shadow:0 0 50px #d18eff; }
-.blur-card img { border-radius:12px; margin-bottom:10px; max-width:180px; }
-
-/* Auto Popup */
-#auto-popup { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:20; }
-#auto-popup-content { background:#2b0030; padding:25px; border-radius:20px; width:300px; text-align:left; box-shadow:0 0 30px #9b00ff; }
-
-/* Logo Animation */
-.logo-float { animation: floatLogo 4s ease-in-out infinite; filter: drop-shadow(0 0 25px #9b00ff); display:block; margin:25px auto; width:220px; }
-@keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-
-#viewer { position:absolute; top:20px; left:20px; font-size:1.1rem; text-shadow:0 0 8px #fff; }
-
-/* Login Modal */
-#login-container{
-  position:fixed; top:0; left:0; width:100%; height:100%;
-  background: rgba(0,0,0,0.95);
-  display:flex; justify-content:center; align-items:center; z-index:100;
-}
-#login-box{
-  background:#2b0030; padding:30px; border-radius:20px;
-  width:300px; box-shadow:0 0 20px #7d2aff; text-align:center;
-}
-#login-box input,#login-box button{ display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none; }
-button.fancy { background:linear-gradient(90deg,#7d2aff,#d18eff); border:none; color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; transition:0.3s; }
-button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Purple Shadows</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+  <script src="/socket.io/socket.io.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <style>
+    :root {
+      --purple: #9b5cff;
+      --dark: #0b0b0f;
+      --darker: #050507;
+      --text: #e5e5e5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Rajdhani", sans-serif; }
+    body {
+      background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 80%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-bottom: 1px solid rgba(155,92,255,0.3);
+      text-shadow: 0 0 10px var(--purple);
+    }
+    header h1 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 2.5rem;
+      color: var(--purple);
+      letter-spacing: 2px;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+    nav button {
+      background: none;
+      border: 1px solid var(--purple);
+      color: var(--text);
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    nav button.active, nav button:hover {
+      background: var(--purple);
+      color: #000;
+      box-shadow: 0 0 15px var(--purple);
+    }
+    .section { display: none; padding: 2rem; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease-in-out; }
+    .section.active { display: block; }
+    .stats { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+    .stat-card {
+      background: rgba(155,92,255,0.08);
+      border: 1px solid rgba(155,92,255,0.3);
+      border-radius: 15px;
+      padding: 1rem 2rem;
+      text-align: center;
+      flex: 1 1 200px;
+      box-shadow: 0 0 15px rgba(155,92,255,0.1);
+      transition: transform 0.3s;
+    }
+    .stat-card:hover { transform: scale(1.05); }
+    .stat-card h2 { color: var(--purple); font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px var(--purple); }
+    .member-list, .auto-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
+    .card {
+      background: rgba(155,92,255,0.05);
+      border: 1px solid rgba(155,92,255,0.2);
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.3s;
+    }
+    .card:hover {
+      background: rgba(155,92,255,0.15);
+      transform: scale(1.03);
+      box-shadow: 0 0 20px rgba(155,92,255,0.3);
+    }
+    .card h3 { color: var(--purple); margin-bottom: 0.5rem; }
+    #auditLog {
+      background: rgba(155,92,255,0.05);
+      border: 1px solid rgba(155,92,255,0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      height: 300px;
+      overflow-y: auto;
+      margin-top: 2rem;
+      font-size: 0.9rem;
+    }
+    #login-container {
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.95);
+      display:flex; justify-content:center; align-items:center; z-index:100;
+    }
+    #login-box {
+      background:#2b0030; padding:30px; border-radius:20px;
+      width:300px; box-shadow:0 0 20px #7d2aff; text-align:center;
+    }
+    #login-box input, #login-box button { display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none; }
+    button.login-btn {
+      background: linear-gradient(90deg,#7d2aff,#d18eff);
+      color:#fff; cursor:pointer;
+    }
+    button.login-btn:hover { background: linear-gradient(90deg,#d18eff,#7d2aff); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body>
-<header>
-💜 Purple Shadows 💜
-<img id="logo-right" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
-<div id="logged-in"></div>
-</header>
-
-<nav>
-  <button onclick="showTab('home')">Startseite</button>
-  <button onclick="showTab('shop')">Shop</button>
-  <button onclick="showTab('members')">Mitgliederliste</button>
-  <button onclick="showTab('autoliste')">Autoliste</button>
-  <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
-</nav>
-
-<div id="viewer">👁️ 0</div>
-
-<!-- Sections (home, shop, autoliste, members, stats) hier ... ähnlich wie vorher, alles mit blur-cards, animiertem Logo, Auto Popup etc. -->
-
-<!-- Login Modal -->
-<div id="login-container">
-  <div id="login-box">
-    <h2>Login</h2>
-    <input id="login-username" placeholder="Username">
-    <input id="login-password" type="password" placeholder="Passwort">
-    <button onclick="login()">Login</button>
-    <p id="login-error" style="color:red;"></p>
+  <div id="login-container">
+    <div id="login-box">
+      <h2>Login</h2>
+      <input id="login-username" placeholder="Username">
+      <input id="login-password" type="password" placeholder="Passwort">
+      <button class="login-btn" onclick="login()">Login</button>
+      <p id="login-error" style="color:red;"></p>
+    </div>
   </div>
-</div>
+
+  <header>
+    <h1>💜 Purple Shadows</h1>
+    <nav>
+      <button class="tab active" data-target="home">Start</button>
+      <button class="tab" data-target="members">Mitglieder</button>
+      <button class="tab" data-target="cars">Fahrzeuge</button>
+      <button class="tab" data-target="logs">Aktivität</button>
+    </nav>
+  </header>
+
+  <section id="home" class="section active">
+    <div class="stats">
+      <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
+      <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
+      <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
+      <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
+    </div>
+  </section>
+
+  <section id="members" class="section">
+    <h2>Mitgliederliste</h2>
+    <div class="member-list" id="memberList"></div>
+  </section>
+
+  <section id="cars" class="section">
+    <h2>Fahrzeugliste</h2>
+    <div class="auto-list" id="autoliste">
+      <!-- Beispielautos -->
+      <div class="card blur-card"><h3>BMW M5</h3><p>Schwarz-Lila Custom</p></div>
+      <div class="card blur-card"><h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p></div>
+    </div>
+  </section>
+
+  <section id="logs" class="section">
+    <h2>Gang Aktivität</h2>
+    <div id="auditLog"></div>
+  </section>
 
 <script>
 const socket = io();
 let currentUser = null;
 const allowedUsers = ["Julian","Max"];
 
-// Tabs
-function showTab(id){
-  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-}
-
-// Socket Events
-socket.on("updateViewers", count => {
-  document.getElementById("viewer").innerText = `👁️ ${count}`;
-  const homeCount = document.getElementById("home-online-count");
-  if(homeCount) homeCount.innerText = count;
-});
-socket.on("updateMembers", members => {
-  const memberCountElem = document.getElementById("home-member-count");
-  if(memberCountElem) memberCountElem.innerText = members.length;
-});
-socket.on("updateOnlineUsers", users => {
-  const box = document.getElementById("online-users-box");
-  if(!box) return;
-  box.innerHTML = "";
-  if(users.length===0){ box.innerHTML="<p style='opacity:0.6;'>Niemand online</p>"; return; }
-  users.forEach(u => { const p=document.createElement("p"); p.textContent="• "+u; box.appendChild(p); });
-});
-socket.on("newAuditLog", log => {
-  const box = document.getElementById("audit-log-box");
-  if(!box) return;
-  if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
-  const time = new Date().toLocaleTimeString();
-  const p = document.createElement("p");
-  p.textContent = `[${time}] ${log}`;
-  box.appendChild(p);
-  box.scrollTop = box.scrollHeight;
-});
-
-// Login
-async function login(){
+// Login-Funktion
+async function login() {
   const username = document.getElementById("login-username").value.trim();
   const password = document.getElementById("login-password").value.trim();
-  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
-  try{
-    const res = await axios.post("/login",{username,password});
+  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
+  try {
+    const res = await axios.post("/login", {username, password});
     if(res.data.success){
-      currentUser=username;
+      currentUser = username;
       document.getElementById("login-container").style.display="none";
-      document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
+      if(allowedUsers.includes(username)){
+        document.querySelector('nav').style.display = "flex";
+      }
       socket.emit("userOnline", username);
-      if(allowedUsers.includes(username)) document.getElementById("stats-btn").style.display="inline-block";
-    } else{
-      document.getElementById("login-error").innerText=res.data.message || "Login fehlgeschlagen!";
+    } else {
+      document.getElementById("login-error").innerText = res.data.message || "Login fehlgeschlagen!";
     }
   } catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
+    document.getElementById("login-error").innerText = "Serverfehler!";
     console.error(e);
   }
 }
+
+// Tabs Navigation
+document.querySelectorAll(".tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  });
+});
+
+// Socket Events
+socket.on("updateMembers", members => {
+  const container = document.getElementById("memberList");
+  container.innerHTML = "";
+  members.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<h3>${m.name}</h3><p>${m.rank||"Member"}</p>`;
+    container.appendChild(div);
+  });
+  document.getElementById("home-member-count").innerText = members.length;
+});
+
+socket.on("updateViewers", count => {
+  document.getElementById("viewer").innerText = `👁️ ${count}`;
+  document.getElementById("home-online-count").innerText = count;
+});
+
+let carCount = document.querySelectorAll("#autoliste .blur-card").length;
+document.getElementById("home-auto-count").innerText = carCount;
+
+const auditLog = document.getElementById("auditLog");
+socket.on("newAuditLog", log => {
+  const p = document.createElement("p");
+  p.textContent = log;
+  auditLog.appendChild(p);
+  auditLog.scrollTop = auditLog.scrollHeight;
+});
 </script>
 </body>
 </html>
