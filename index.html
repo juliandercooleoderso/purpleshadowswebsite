@@ -9,7 +9,7 @@
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
 <style>
 :root {
-  --purple: #9b5cff;
+  --purple: #6a00b0;
   --dark: #0b0b0f;
   --darker: #050507;
   --text: #e5e5e5;
@@ -26,7 +26,7 @@ body {
 header {
   text-align:center;
   padding:2rem 1rem;
-  border-bottom:1px solid rgba(155,92,255,0.3);
+  border-bottom:1px solid rgba(106,0,176,0.3);
   text-shadow:0 0 10px var(--purple);
 }
 header h1 {
@@ -64,13 +64,13 @@ nav button.active, nav button:hover {
 /* Stats Cards */
 .stats { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
 .stat-card {
-  background: rgba(155,92,255,0.08);
-  border:1px solid rgba(155,92,255,0.3);
+  background: rgba(106,0,176,0.08);
+  border:1px solid rgba(106,0,176,0.3);
   border-radius:15px;
   padding:1rem 2rem;
   text-align:center;
   flex:1 1 200px;
-  box-shadow:0 0 15px rgba(155,92,255,0.1);
+  box-shadow:0 0 15px rgba(106,0,176,0.1);
   transition: transform 0.3s;
 }
 .stat-card:hover { transform:scale(1.05); }
@@ -90,6 +90,7 @@ nav button.active, nav button:hover {
   padding:1rem;
   text-align:center;
   transition:0.3s;
+  cursor:pointer;
 }
 .card:hover, .blur-card:hover {
   transform: scale(1.03);
@@ -125,21 +126,21 @@ nav button.active, nav button:hover {
   text-align:center;
   padding:30px;
   border-radius:20px;
-  background: rgba(60,0,90,0.8);
-  box-shadow:0 0 30px #9b00ff;
+  background: rgba(60,0,90,0.9);
+  box-shadow:0 0 30px #6a00b0;
 }
 #login-box input {
   width:100%; padding:12px; margin:10px 0;
-  border-radius:12px; border:1px solid #7d2aff;
-  background: rgba(60,0,90,0.5); color:#fff; font-size:1rem;
+  border-radius:12px; border:1px solid #4b0082;
+  background: rgba(40,0,70,0.7); color:#fff; font-size:1rem;
 }
 #login-box button {
   width:100%; padding:12px; margin-top:15px;
   border:none; border-radius:12px;
-  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  background:linear-gradient(90deg,#4b0082,#6a00b0);
   color:#fff; font-weight:bold; cursor:pointer;
 }
-#login-box img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #9b00ff); }
+#login-box img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #6a00b0); }
 
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
 @keyframes floatLogo {0%,100%{transform:translateY(0px);}50%{transform:translateY(-10px);}}
@@ -190,7 +191,6 @@ nav button.active, nav button:hover {
 <section id="cars" class="section">
   <h2>Fahrzeugliste</h2>
   <div class="auto-list" id="autoliste">
-    <!-- Beispiel Autos -->
     <div class="card blur-card"><h3>BMW M5</h3><p>Schwarz-Lila Custom</p></div>
     <div class="card blur-card"><h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p></div>
   </div>
@@ -244,6 +244,9 @@ socket.on("updateMembers", members => {
     const div=document.createElement("div");
     div.className="card";
     div.innerHTML=`<h3>${m.username}</h3><p>${m.rank||"Member"}</p>`;
+    if(m.link){
+      div.addEventListener("click",()=>{ window.open(m.link,"_blank"); });
+    }
     container.appendChild(div);
   });
   document.getElementById("home-member-count").innerText=members.length;
