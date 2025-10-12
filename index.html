@@ -527,6 +527,27 @@ async function login(){
   }
 }
 
+  // Live-Statistiken auf der Startseite
+let onlineCount = 0;
+let memberCount = 0;
+let carCount = document.querySelectorAll("#autoliste .blur-card").length;
+
+// Viewer/Online Updates übernehmen
+socket.on("updateViewers", count => {
+  document.getElementById("viewer").innerText = `👁️ ${count}`;
+  document.getElementById("home-online-count").innerText = count;
+});
+
+// Mitglieder zählen
+socket.on("updateMembers", members => {
+  memberCount = members.length;
+  document.getElementById("home-member-count").innerText = memberCount;
+});
+
+// Autoanzahl anzeigen
+document.getElementById("home-auto-count").innerText = carCount;
+
+
 // Auto Popup
 function openAutoPopup(name, preis, primary, interior, wheels, undercarriage, rank){
   document.getElementById("auto-popup-name").innerText = name;
@@ -544,6 +565,7 @@ function closeAutoPopup(){
 </script>
 </body>
 </html>
+
 
 
 
