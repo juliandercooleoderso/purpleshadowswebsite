@@ -1,223 +1,371 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purple Shadows</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
-  <script src="/socket.io/socket.io.js"></script>
-  <style>
-    :root {
-      --purple: #9b5cff;
-      --dark: #0b0b0f;
-      --darker: #050507;
-      --text: #e5e5e5;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Rajdhani", sans-serif; }
-    body {
-      background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 80%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8">
+<title>Purple Shadows</title>
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+body {
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
+  background: radial-gradient(circle at top left, #1a001f, #000);
+  color:#fff;
+  text-align:center;
+  overflow-x:hidden;
+}
 
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
-      border-bottom: 1px solid rgba(155,92,255,0.3);
-      text-shadow: 0 0 10px var(--purple);
-    }
-    header h1 {
-      font-family: "Orbitron", sans-serif;
-      font-size: 2.5rem;
-      color: var(--purple);
-      letter-spacing: 2px;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1rem 0;
-    }
-    nav button {
-      background: none;
-      border: 1px solid var(--purple);
-      color: var(--text);
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    nav button.active, nav button:hover {
-      background: var(--purple);
-      color: #000;
-      box-shadow: 0 0 15px var(--purple);
-    }
+/* ================= HEADER ================= */
+header {
+  background:rgba(91,0,163,0.5);
+  padding:15px;
+  font-size:1.8rem;
+  font-weight:bold;
+  letter-spacing:2px;
+  position:relative;
+  box-shadow:0 0 25px #7d2aff;
+}
 
-    .section {
-      display: none;
-      padding: 2rem;
-      max-width: 900px;
-      margin: 0 auto;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    .section.active { display: block; }
+/* Floating Logo oben rechts */
+#corner-logo {
+  position:fixed;
+  top:15px;
+  right:25px;
+  width:100px;
+  filter:drop-shadow(0 0 25px #9b00ff);
+  animation:floatLogo 4s ease-in-out infinite;
+  z-index:50;
+}
+@keyframes floatLogo {
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-10px);}
+}
 
-    /* === Statistikcards === */
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .stat-card {
-      background: rgba(155,92,255,0.08);
-      border: 1px solid rgba(155,92,255,0.3);
-      border-radius: 15px;
-      padding: 1rem 2rem;
-      text-align: center;
-      flex: 1 1 200px;
-      box-shadow: 0 0 15px rgba(155,92,255,0.1);
-      transition: transform 0.3s;
-    }
-    .stat-card:hover { transform: scale(1.05); }
-    .stat-card h2 {
-      color: var(--purple);
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 10px var(--purple);
-    }
+/* Logged In Anzeige */
+#logged-in {
+  position:absolute;
+  right:150px;
+  top:20px;
+  font-size:1rem;
+  color:#fff;
+}
 
-    /* === Mitgliederliste === */
-    .member-list, .auto-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card {
-      background: rgba(155,92,255,0.05);
-      border: 1px solid rgba(155,92,255,0.2);
-      border-radius: 15px;
-      padding: 1rem;
-      text-align: center;
-      transition: 0.3s;
-    }
-    .card:hover {
-      background: rgba(155,92,255,0.15);
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(155,92,255,0.3);
-    }
-    .card h3 {
-      color: var(--purple);
-      margin-bottom: 0.5rem;
-    }
+/* ================= NAV ================= */
+nav {
+  margin:15px;
+}
+nav button {
+  background:rgba(90,0,163,0.8);
+  color:white;
+  border:none;
+  padding:10px 20px;
+  margin:5px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+}
+nav button:hover {
+  background:#9b00ff;
+  transform:scale(1.05);
+}
 
-    /* === Logbereich === */
-    #auditLog {
-      background: rgba(155,92,255,0.05);
-      border: 1px solid rgba(155,92,255,0.2);
-      border-radius: 10px;
-      padding: 1rem;
-      height: 300px;
-      overflow-y: auto;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-    }
+/* ================= SECTIONS ================= */
+section {
+  display:none;
+  margin-top:20px;
+  position:relative;
+}
+section.active {
+  display:block;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+/* ================= BLUR CARDS ================= */
+.blur-card {
+  backdrop-filter:blur(12px);
+  background:rgba(60,0,90,0.45);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 0 30px #7d2aff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  transition:transform 0.3s, box-shadow 0.3s;
+}
+.blur-card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 0 45px #d18eff;
+}
+.blur-card img {
+  border-radius:12px;
+  margin-bottom:10px;
+  max-width:180px;
+}
+
+/* ================= TABLE ================= */
+table {
+  width:90%;
+  margin:20px auto;
+  border-collapse:collapse;
+  background:rgba(60,0,90,0.5);
+  border-radius:12px;
+  overflow:hidden;
+}
+th, td {
+  border:1px solid #7d2aff;
+  padding:12px 15px;
+  text-align:center;
+}
+th {
+  background:rgba(90,0,163,0.8);
+}
+button.fancy-member {
+  background:#5a00a3;
+  color:white;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button.fancy-member:hover {
+  background:#9b00ff;
+}
+
+/* ================= BUTTONS ================= */
+button.fancy {
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  border:none;
+  color:#fff;
+  padding:8px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+button.fancy:hover {
+  background:linear-gradient(90deg,#d18eff,#7d2aff);
+}
+
+/* ================= LOGIN SCREEN ================= */
+#login-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: radial-gradient(circle at center, #120015, #000);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:100;
+}
+#login-box{
+  background:rgba(43,0,48,0.95);
+  padding:30px;
+  border-radius:20px;
+  width:300px;
+  box-shadow:0 0 25px #7d2aff;
+  text-align:center;
+}
+#login-box input,#login-box button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  font-size:1rem;
+}
+#login-box input{
+  background:#3b0066;
+  color:#fff;
+}
+#login-box button{
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  color:#fff;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+#login-box button:hover{
+  background:linear-gradient(90deg,#d18eff,#7d2aff);
+}
+#login-logo{
+  width:120px;
+  animation:floatLogo 4s ease-in-out infinite;
+  filter:drop-shadow(0 0 25px #9b00ff);
+}
+
+/* ================= VIEWER ================= */
+#viewer {
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:1.1rem;
+  text-shadow:0 0 8px #fff;
+}
+</style>
 </head>
 <body>
-  <header>
-    <h1>💜 Purple Shadows</h1>
-    <nav>
-      <button class="tab active" data-target="home">Start</button>
-      <button class="tab" data-target="members">Mitglieder</button>
-      <button class="tab" data-target="cars">Fahrzeuge</button>
-      <button class="tab" data-target="logs">Aktivität</button>
-    </nav>
-  </header>
 
-  <!-- === START === -->
-  <section id="home" class="section active">
-    <div class="stats">
-      <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
-      <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
-      <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
-      <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
+<header>
+💜 Purple Shadows Gang 💜
+<div id="logged-in"></div>
+</header>
+
+<img id="corner-logo" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&" alt="Gang Logo">
+
+<nav>
+  <button onclick="showTab('home')">Start</button>
+  <button onclick="showTab('members')">Mitglieder</button>
+  <button onclick="showTab('autoliste')">Fahrzeuge</button>
+  <button onclick="showTab('stats')">Aktivität</button>
+</nav>
+
+<div id="viewer">👁️ 0</div>
+
+<!-- START -->
+<section id="home" class="active">
+  <h2 style="font-size:2.5rem;">💜 Willkommen bei den Purple Shadows 💜</h2>
+  <p style="opacity:0.8;font-size:1.2rem;">Ehre. Loyalität. Kontrolle über Emden.</p>
+  <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:25px;margin-top:40px;">
+    <div class="blur-card" style="width:220px;">
+      <h3>🟢 Online</h3>
+      <p id="home-online-count" style="font-size:1.6rem;font-weight:bold;">0</p>
     </div>
-  </section>
-
-  <!-- === MITGLIEDER === -->
-  <section id="members" class="section">
-    <h2>Mitgliederliste</h2>
-    <div class="member-list" id="memberList"></div>
-  </section>
-
-  <!-- === AUTOS === -->
-  <section id="cars" class="section">
-    <h2>Fahrzeugliste</h2>
-    <div class="auto-list" id="autoliste">
-      <!-- Beispiel -->
-      <div class="card blur-card"><h3>BMW M5</h3><p>Schwarz-Lila Custom</p></div>
-      <div class="card blur-card"><h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p></div>
+    <div class="blur-card" style="width:220px;">
+      <h3>🚗 Autos</h3>
+      <p id="home-auto-count" style="font-size:1.6rem;font-weight:bold;">0</p>
     </div>
-  </section>
+    <div class="blur-card" style="width:220px;">
+      <h3>👥 Mitglieder</h3>
+      <p id="home-member-count" style="font-size:1.6rem;font-weight:bold;">0</p>
+    </div>
+  </div>
+</section>
 
-  <!-- === LOGS === -->
-  <section id="logs" class="section">
-    <h2>Gang Aktivität</h2>
-    <div id="auditLog"></div>
-  </section>
+<!-- AUTOLISTE -->
+<section id="autoliste">
+  <h2>🚗 Fahrzeuge der Gang</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:25px;padding:20px;">
+    <div class="blur-card">
+      <img src="https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png" alt="Car 1">
+      <h3>K1 Military</h3>
+      <p>Preis: 850.000€</p>
+      <button class="fancy" onclick="openAutoPopup('K1 Military','850.000€')">Ansehen</button>
+    </div>
+  </div>
+</section>
 
-  <script>
-    const socket = io();
+<!-- MITGLIEDER -->
+<section id="members">
+  <h2>👥 Mitgliederliste</h2>
+  <table>
+    <thead><tr><th>Username</th><th>Rang</th><th>Aktionen</th></tr></thead>
+    <tbody id="members-table"></tbody>
+  </table>
+</section>
 
-    // Tabs Navigation
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.target).classList.add("active");
-      });
-    });
+<!-- STATS -->
+<section id="stats">
+  <h2>📊 Aktivität & Logs</h2>
+  <div class="blur-card" style="max-width:400px;margin:auto;">
+    <h3>Audit Logs</h3>
+    <div id="audit-log-box" style="max-height:300px;overflow-y:auto;text-align:left;padding:10px;background:rgba(0,0,0,0.4);border-radius:10px;">
+      <p style="opacity:0.6;">Keine Logs...</p>
+    </div>
+  </div>
+</section>
 
-    // Mitgliederliste aktualisieren
-    socket.on("updateMembers", members => {
-      const container = document.getElementById("memberList");
-      container.innerHTML = "";
-      members.forEach(m => {
-        const div = document.createElement("div");
-        div.className = "card";
-        div.innerHTML = `<h3>${m.name}</h3><p>${m.rank || "Member"}</p>`;
-        container.appendChild(div);
-      });
-      document.getElementById("home-member-count").innerText = members.length;
-    });
+<!-- AUTO POPUP -->
+<div id="auto-popup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);justify-content:center;align-items:center;z-index:20;">
+  <div id="auto-popup-content" style="background:#2b0030;padding:25px;border-radius:20px;width:300px;text-align:left;box-shadow:0 0 30px #9b00ff;">
+    <h3 id="auto-popup-name"></h3>
+    <p id="auto-popup-preis"></p>
+    <button class="fancy" onclick="closeAutoPopup()">Schließen</button>
+  </div>
+</div>
 
-    // Viewer-, Online-, Auto-Stats
-    socket.on("updateViewers", count => {
-      document.getElementById("viewer").innerText = `👁️ ${count}`;
-      document.getElementById("home-online-count").innerText = count;
-    });
+<!-- LOGIN MODAL -->
+<div id="login-container">
+  <div id="login-box">
+    <img id="login-logo" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
+    <h2>Login</h2>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Passwort">
+    <button onclick="login()">Einloggen</button>
+    <p id="login-error" style="color:red;"></p>
+  </div>
+</div>
 
-    let carCount = document.querySelectorAll("#autoliste .blur-card").length;
-    document.getElementById("home-auto-count").innerText = carCount;
+<script>
+const socket = io();
+let currentUser = null;
 
-    // Logs
-    const auditLog = document.getElementById("auditLog");
-    socket.on("newAuditLog", log => {
-      const p = document.createElement("p");
-      p.textContent = log;
-      auditLog.appendChild(p);
-      auditLog.scrollTop = auditLog.scrollHeight;
-    });
-  </script>
+function showTab(id){
+  document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
+
+function renderMembers(members){
+  const table=document.getElementById("members-table");
+  table.innerHTML="";
+  members.forEach(m=>{
+    const row=document.createElement("tr");
+    const action=`<button class="fancy-member" onclick="openMemberLink('${m.link}')">🌐</button>`;
+    row.innerHTML=`<td>${m.username}</td><td>${m.rank}</td><td>${action}</td>`;
+    table.appendChild(row);
+  });
+}
+function openMemberLink(link){
+  if(link.startsWith("http")) window.open(link,"_blank");
+}
+
+// Socket Events
+socket.on("updateMembers",members=>{renderMembers(members);document.getElementById("home-member-count").innerText=members.length;});
+socket.on("updateViewers",count=>{document.getElementById("viewer").innerText=`👁️ ${count}`;document.getElementById("home-online-count").innerText=count;});
+socket.on("newAuditLog",log=>{
+  const box=document.getElementById("audit-log-box");
+  if(box.querySelector("p")&&box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
+  const t=new Date().toLocaleTimeString();
+  const p=document.createElement("p");
+  p.textContent=`[${t}] ${log}`;
+  box.appendChild(p);
+  box.scrollTop=box.scrollHeight;
+});
+
+const carCount=document.querySelectorAll("#autoliste .blur-card").length;
+document.getElementById("home-auto-count").innerText=carCount;
+
+// Login System
+async function login(){
+  const u=document.getElementById("login-username").value.trim();
+  const p=document.getElementById("login-password").value.trim();
+  if(!u||!p){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+  try{
+    const res=await axios.post("/login",{username:u,password:p});
+    if(res.data.success){
+      currentUser=u;
+      document.getElementById("login-container").style.display="none";
+      document.getElementById("logged-in").innerText=`Eingeloggt als: ${u}`;
+      socket.emit("userOnline",u);
+    }else{
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+    }
+  }catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
+  }
+}
+
+// Auto Popup
+function openAutoPopup(name,preis){
+  document.getElementById("auto-popup-name").innerText=name;
+  document.getElementById("auto-popup-preis").innerText="Preis: "+preis;
+  document.getElementById("auto-popup").style.display="flex";
+}
+function closeAutoPopup(){
+  document.getElementById("auto-popup").style.display="none";
+}
+</script>
 </body>
 </html>
-
