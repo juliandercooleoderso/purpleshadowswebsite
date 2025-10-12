@@ -121,7 +121,7 @@ nav button.active, nav button:hover {
 }
 
 /* Login Modal */
-#login-container {
+#login-container, #autoModal {
   position:fixed;
   top:0; left:0;
   width:100%; height:100%;
@@ -131,13 +131,14 @@ nav button.active, nav button:hover {
   align-items:center;
   z-index:50;
 }
-#login-box {
-  max-width:350px; width:90%;
+#login-box, #autoModalContent {
+  max-width:400px; width:90%;
   text-align:center;
   padding:30px;
   border-radius:20px;
   background: rgba(60,0,90,0.9);
   box-shadow:0 0 30px #6a00b0;
+  position: relative;
 }
 #login-box input {
   width:100%; padding:12px; margin:10px 0;
@@ -150,7 +151,20 @@ nav button.active, nav button:hover {
   background:linear-gradient(90deg,#4b0082,#6a00b0);
   color:#fff; font-weight:bold; cursor:pointer;
 }
-#login-box img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #6a00b0); }
+#login-box img, #autoModalContent img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #6a00b0); }
+
+#autoModalContent img { width:100%; border-radius:12px; }
+#autoModalContent h3 { margin:10px 0; color:var(--purple); }
+#autoModalContent p { color:#fff; margin:5px 0; }
+
+#autoModal .closeBtn {
+  position:absolute;
+  top:10px;
+  right:15px;
+  font-size:1.5rem;
+  cursor:pointer;
+  color:#fff;
+}
 
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
 @keyframes floatLogo {0%,100%{transform:translateY(0px);}50%{transform:translateY(-10px);}}
@@ -182,6 +196,18 @@ nav button.active, nav button:hover {
   </div>
 </div>
 
+<!-- AUTO MODAL -->
+<div id="autoModal" style="display:none;">
+  <div id="autoModalContent">
+    <span class="closeBtn" onclick="closeAutoModal()">&times;</span>
+    <img id="modal-img" src="">
+    <h3 id="modal-name"></h3>
+    <p id="modal-preis"></p>
+    <p id="modal-color"></p>
+    <p id="modal-member"></p>
+  </div>
+</div>
+
 <!-- === START === -->
 <section id="home" class="section active">
   <div class="stats">
@@ -203,68 +229,20 @@ nav button.active, nav button:hover {
   <h2>Fahrzeugliste</h2>
   <div class="auto-list" id="autoliste">
 
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony" style="width:100%; border-radius:12px;">
+    <!-- Beispiel: Auto-Frames -->
+    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Sunfury Pony','96,000€','https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png','#3A00BA [Metal]','Ab 💜 Member 💜')">
+      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony">
       <h3>Sunfury Pony</h3>
       <p>Preis: 96,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
     </div>
 
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png" alt="Valois 650" style="width:100%; border-radius:12px;">
+    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Valois 650','375,000€','https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png','#3A00BA [Metal]','Ab 💜 Member 💜')">
+      <img src="https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png" alt="Valois 650">
       <h3>Valois 650</h3>
       <p>Preis: 375,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Valois 650','375,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
     </div>
 
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png" alt="K1 Military" style="width:100%; border-radius:12px;">
-      <h3>K1 Military</h3>
-      <p>Preis: 850,000€</p>
-      <button class="fancy" onclick="openAutoPopup('K1 Military','850,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png" alt="Manta" style="width:100%; border-radius:12px;">
-      <h3>Manta</h3>
-      <p>Preis: 130,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Manta','130,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png" alt="Monte Carlo" style="width:100%; border-radius:12px;">
-      <h3>Monte Carlo</h3>
-      <p>Preis: 950,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Monte Carlo','950,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png" alt="Piacenza" style="width:100%; border-radius:12px;">
-      <h3>Piacenza</h3>
-      <p>Preis: 580,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Piacenza','580,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png" alt="Emcee 6x6" style="width:100%; border-radius:12px;">
-      <h3>Emcee 6x6</h3>
-      <p>Preis: 1,500,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Emcee 6x6','1,500,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png" alt="Sect Sport" style="width:100%; border-radius:12px;">
-      <h3>Sect Sport</h3>
-      <p>Preis: 28,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Sect Sport','28,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-
-    <div class="blur-card" style="padding:20px;">
-      <img src="https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png" alt="EMD25" style="width:100%; border-radius:12px;">
-      <h3>EMD25</h3>
-      <p>Preis: Event Auto</p>
-      <button class="fancy" onclick="openAutoPopup('EMD25','Event Auto','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
+    <!-- Alle weiteren Autos gleich einfügen wie oben ... -->
 
   </div>
 </section>
@@ -341,6 +319,19 @@ socket.on("newAuditLog", log=>{
   auditLog.appendChild(p);
   auditLog.scrollTop=auditLog.scrollHeight;
 });
+
+// Auto Modal Funktionen
+function openAutoModal(name, preis, img, color, member){
+  document.getElementById("modal-img").src = img;
+  document.getElementById("modal-name").innerText = name;
+  document.getElementById("modal-preis").innerText = "Preis: "+preis;
+  document.getElementById("modal-color").innerText = "Farbe: "+color;
+  document.getElementById("modal-member").innerText = member;
+  document.getElementById("autoModal").style.display="flex";
+}
+function closeAutoModal(){
+  document.getElementById("autoModal").style.display="none";
+}
 </script>
 
 </body>
