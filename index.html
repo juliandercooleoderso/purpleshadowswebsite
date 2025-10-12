@@ -14,8 +14,6 @@ body {
   color:#fff;
   text-align:center;
 }
-
-/* Header */
 header {
   background:#3b0066;
   padding:15px;
@@ -24,281 +22,58 @@ header {
   letter-spacing:2px;
   position:relative;
 }
-#logged-in {
-  position:absolute;
-  right:20px;
-  top:15px;
-  font-size:1rem;
-  color:#fff;
-}
-
-/* Navigation */
-nav {
-  margin:15px;
-}
+#logged-in { position:absolute; right:20px; top:15px; font-size:1rem; color:#fff; }
+nav { margin:15px; }
 nav button {
-  background:#5a00a3;
-  color:white;
-  border:none;
-  padding:10px 20px;
-  margin:5px;
-  border-radius:12px;
-  cursor:pointer;
-  transition:0.3s;
+  background:#5a00a3; color:white; border:none; padding:10px 20px; margin:5px;
+  border-radius:12px; cursor:pointer; transition:0.3s;
 }
-nav button:hover {
-  background:#9b00ff;
-}
-
-/* Sections */
-section {
-  display:none;
-  margin-top:20px;
-  position:relative;
-}
-section.active {
-  display:block;
-}
-
-/* Tables */
-table {
-  width:90%;
-  margin:20px auto;
-  border-collapse:collapse;
-  background: rgba(60,0,90,0.5);
-  border-radius:12px;
-  overflow:hidden;
-}
-th, td {
-  border:1px solid #7d2aff;
-  padding:12px 15px;
-  text-align:center;
-}
-th {
-  background:#5a00a3;
-}
-
-/* Inputs */
-select, input {
-  background:#3b0066;
-  color:#fff;
-  border:1px solid #7d2aff;
-  border-radius:8px;
-  padding:8px;
-  box-sizing:border-box;
-}
-button.fancy {
-  background:linear-gradient(90deg,#7d2aff,#d18eff);
-  border:none;
-  color:#fff;
-  padding:8px 15px;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-}
-button.fancy:hover {
-  background:linear-gradient(90deg,#d18eff,#7d2aff);
-  transform: scale(1.05);
-}
-
-/* Blur Cards */
+nav button:hover { background:#9b00ff; }
+section { display:none; margin-top:20px; position:relative; }
+section.active { display:block; }
+input, select { background:#3b0066; color:#fff; border:1px solid #7d2aff; border-radius:8px; padding:8px; box-sizing:border-box; }
+button.fancy { background:linear-gradient(90deg,#7d2aff,#d18eff); border:none; color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; transition:0.3s; }
+button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transform:scale(1.05); }
 .blur-card {
   backdrop-filter: blur(10px);
   background: rgba(60,0,90,0.5);
   border-radius:20px;
   padding:20px;
-  box-shadow: 0 0 30px #7d2aff;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow:0 0 30px #7d2aff;
+  display:flex; flex-direction:column; align-items:center;
+  transition:transform 0.3s, box-shadow 0.3s;
 }
-.blur-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow:0 0 50px #d18eff;
-}
-.blur-card img {
-  border-radius:12px;
-  margin-bottom:10px;
-  max-width:180px;
-}
+.blur-card:hover { transform:translateY(-5px) scale(1.02); box-shadow:0 0 50px #d18eff; }
+.blur-card img { border-radius:12px; margin-bottom:10px; max-width:180px; }
 
-/* ===================== SHOP ===================== */
-#shop {
-  animation: fadeIn 1s ease;
-}
-.shop-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:35px;
-  padding:30px;
-  justify-items:center;
-}
-.shop-card {
-  background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6));
-  border:1px solid #a44eff;
-  border-radius:20px;
-  overflow:hidden;
-  width:230px;
-  transition:transform 0.4s ease, box-shadow 0.4s ease;
-  box-shadow: 0 0 25px rgba(155,0,255,0.4);
-  position:relative;
-}
-.shop-card:hover {
-  transform:translateY(-10px) scale(1.05);
-  box-shadow:0 0 45px rgba(210,142,255,0.8);
-}
-.shop-card img {
-  width:100%;
-  height:230px;
-  object-fit:cover;
-  border-bottom:2px solid #9b00ff;
-}
-.shop-card h3 {
-  font-size:1.2rem;
-  margin:10px 0 5px;
-  color:#fff;
-  text-shadow:0 0 8px #d18eff;
-}
-.shop-glow {
-  position:absolute;
-  inset:0;
-  background: radial-gradient(circle at center, rgba(200,0,255,0.25), transparent 70%);
-  opacity:0;
-  transition:opacity 0.3s;
-  pointer-events:none;
-}
-.shop-card:hover .shop-glow {
-  opacity:1;
-}
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(20px);}
-  to {opacity:1; transform:translateY(0);}
-}
+.logo-float { animation: floatLogo 4s ease-in-out infinite; filter: drop-shadow(0 0 25px #9b00ff); display:block; margin:25px auto; width:220px; }
+@keyframes floatLogo { 0%,100%{transform:translateY(0px);} 50%{transform:translateY(-10px);} }
+#viewer { position:absolute; top:20px; left:20px; font-size:1.1rem; text-shadow:0 0 8px #fff; }
 
-/* ===================== MEMBERS ===================== */
-#members {
-  padding:20px;
-}
-.members-grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-  gap:30px;
-  justify-items:center;
-  padding:20px;
-}
-.member-card {
-  background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6));
-  border:1px solid #a44eff;
-  border-radius:20px;
-  overflow:hidden;
-  width:180px;
-  transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 0 25px rgba(155,0,255,0.4);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  padding:15px;
-}
-.member-card:hover {
-  transform: translateY(-5px) scale(1.02);
-  box-shadow:0 0 45px rgba(210,142,255,0.8);
-}
-.member-card img {
-  width:80px;
-  height:80px;
-  border-radius:50%;
-  object-fit:cover;
-  margin-bottom:10px;
-}
+/* Shop */
+.shop-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:35px; padding:30px; justify-items:center; }
+.shop-card { background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6)); border:1px solid #a44eff; border-radius:20px; overflow:hidden; width:230px; transition:transform 0.4s, box-shadow 0.4s; box-shadow:0 0 25px rgba(155,0,255,0.4); position:relative; }
+.shop-card:hover { transform:translateY(-10px) scale(1.05); box-shadow:0 0 45px rgba(210,142,255,0.8); }
+.shop-card img { width:100%; height:230px; object-fit:cover; border-bottom:2px solid #9b00ff; }
+.shop-card h3 { font-size:1.2rem; margin:10px 0 5px; color:#fff; text-shadow:0 0 8px #d18eff; }
+.shop-glow { position:absolute; inset:0; background: radial-gradient(circle at center, rgba(200,0,255,0.25), transparent 70%); opacity:0; transition:opacity 0.3s; pointer-events:none; }
+.shop-card:hover .shop-glow { opacity:1; }
 
-/* ===================== AUTOLISTE ===================== */
-#autoliste .blur-card {
-  width:220px;
-}
+/* Mitgliederliste */
+.members-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:30px; justify-items:center; padding:20px; }
+.member-card { background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6)); border:1px solid #a44eff; border-radius:20px; overflow:hidden; width:180px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 0 25px rgba(155,0,255,0.4); display:flex; flex-direction:column; align-items:center; padding:15px; }
+.member-card:hover { transform: translateY(-5px) scale(1.02); box-shadow:0 0 45px rgba(210,142,255,0.8); }
+.member-card img { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
 
-/* ===================== AUTO POPUP ===================== */
-#auto-popup {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.85);
-  justify-content:center;
-  align-items:center;
-  z-index:20;
-}
-#auto-popup-content {
-  background:#2b0030;
-  padding:25px;
-  border-radius:20px;
-  width:300px;
-  text-align:left;
-  box-shadow:0 0 30px #9b00ff;
-}
-#auto-popup-content h3 {
-  text-align:center;
-  margin-bottom:15px;
-}
+/* Login */
+#login-container { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display:flex; justify-content:center; align-items:center; z-index:10; }
+#login-box { background:#2b0030; padding:30px; border-radius:20px; width:300px; box-shadow:0 0 20px #7d2aff; text-align:center; }
+#login-box input,#login-box button { display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none; }
 
-/* Logo Animation */
-.logo-float {
-  animation: floatLogo 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px #9b00ff);
-  display:block;
-  margin:25px auto;
-  width:220px;
-}
-@keyframes floatLogo {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-#viewer {
-  position:absolute;
-  top:20px;
-  left:20px;
-  font-size:1.1rem;
-  text-shadow:0 0 8px #fff;
-}
-
-/* ===================== LOGIN ===================== */
-#login-container{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.9);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:10;
-}
-#login-box{
-  background:#2b0030;
-  padding:30px;
-  border-radius:20px;
-  width:300px;
-  box-shadow:0 0 20px #7d2aff;
-  text-align:center;
-}
-#login-box input,#login-box button{
-  display:block;
-  width:100%;
-  margin:10px 0;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-}
 </style>
 </head>
 <body>
-<header>
-💜 Purple Shadows 💜
-<div id="logged-in"></div>
-</header>
-
+<header>💜 Purple Shadows 💜<div id="logged-in"></div></header>
 <nav>
   <button onclick="showTab('home')">Startseite</button>
   <button onclick="showTab('shop')">Shop</button>
@@ -306,19 +81,18 @@ button.fancy:hover {
   <button onclick="showTab('autoliste')">Autoliste</button>
   <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
 </nav>
-
 <div id="viewer">👁️ 0</div>
 
 <!-- HOME -->
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
 </section>
 
 <!-- SHOP -->
 <section id="shop">
   <h2>💜 Purple Shadows - Shop 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
   <div class="shop-grid">
     <div class="shop-card">
       <div class="shop-glow"></div>
@@ -341,35 +115,32 @@ button.fancy:hover {
   </div>
 </section>
 
-<!-- AUTOLISTE -->
+<!-- AUTOLISTE: ALLES WIE VORHER -->
 <section id="autoliste">
   <h2>💜 Purple Shadows - Autoliste 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
   <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; padding:20px;">
-    <!-- Beispiel Auto -->
     <div class="blur-card">
-      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" style="width:100%; border-radius:12px;">
+      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony" style="width:100%; border-radius:12px;">
       <h3>Sunfury Pony</h3>
       <p>Preis: 96,000€</p>
       <button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
     </div>
-    <!-- Weitere Autos analog ... -->
+    <!-- hier alle weiteren Autos exakt wie zuvor einfügen -->
   </div>
 </section>
 
 <!-- MITGLIEDERLISTE -->
 <section id="members">
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
-  <div class="members-grid" id="members-grid">
-    <!-- JS füllt hier Cards -->
-  </div>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <div class="members-grid" id="members-grid"></div>
 </section>
 
 <!-- STATISTIKEN -->
 <section id="stats">
   <h2>📊 Statistiken</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
     <div class="blur-card" style="max-width:400px;">
       <h3>📜 Audit Logs</h3>
@@ -501,8 +272,10 @@ function closeAutoPopup(){
   document.getElementById("auto-popup").style.display="none";
 }
 
-// Initial Mitglieder laden
+// Initial Members laden
 renderMembers();
 </script>
 </body>
 </html>
+
+
