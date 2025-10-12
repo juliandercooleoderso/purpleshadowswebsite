@@ -28,7 +28,7 @@ header {
   padding:2rem 1rem;
   border-bottom:1px solid rgba(106,0,176,0.3);
   text-shadow:0 0 10px var(--purple);
-  position:relative;
+  position: relative;
 }
 header h1 {
   font-family:"Orbitron",sans-serif;
@@ -37,14 +37,13 @@ header h1 {
   letter-spacing:2px;
 }
 
-/* Logo oben rechts */
-#header-logo {
-  position:absolute;
-  top:2rem;
-  right:1rem;
-  width:100px;
-  animation:floatLogo 4s ease-in-out infinite;
-  filter:drop-shadow(0 0 25px #6a00b0);
+header img {
+  position: absolute;
+  top:15px;
+  right:15px;
+  width:80px;
+  animation: floatLogo 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px var(--purple));
 }
 
 nav {
@@ -109,40 +108,6 @@ nav button.active, nav button:hover {
 }
 .card h3 { color:var(--purple); margin-bottom:0.5rem; }
 
-/* Modal Auto */
-#auto-modal {
-  display:none;
-  position:fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.85);
-  justify-content:center;
-  align-items:center;
-  z-index:100;
-}
-#auto-modal-content {
-  background: rgba(30,0,60,0.95);
-  padding:20px;
-  border-radius:20px;
-  width:300px;
-  text-align:center;
-  color:#fff;
-}
-#auto-modal-content img {
-  width:100%;
-  border-radius:12px;
-  margin-bottom:10px;
-}
-#auto-modal-content button {
-  margin-top:15px;
-  padding:10px 20px;
-  border:none;
-  border-radius:12px;
-  background: var(--purple);
-  color:#fff;
-  cursor:pointer;
-}
-
 /* Logs */
 #auditLog {
   background: rgba(60,0,90,0.3);
@@ -196,7 +161,7 @@ nav button.active, nav button:hover {
 <!-- HEADER -->
 <header>
   <h1>💜 Purple Shadows</h1>
-  <img id="header-logo" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+  <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
   <nav>
     <button class="tab active" data-target="home">Start</button>
     <button class="tab" data-target="members">Mitglieder</button>
@@ -237,12 +202,70 @@ nav button.active, nav button:hover {
 <section id="cars" class="section">
   <h2>Fahrzeugliste</h2>
   <div class="auto-list" id="autoliste">
-    <div class="blur-card" onclick="openAutoModal('BMW M5','Schwarz-Lila Custom','/path-to-bmw.jpg','96,000€','#3A00BA','#DADADA','#000000','Ab 💜 Member 💜')">
-      <h3>BMW M5</h3><p>Schwarz-Lila Custom</p>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony" style="width:100%; border-radius:12px;">
+      <h3>Sunfury Pony</h3>
+      <p>Preis: 96,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
     </div>
-    <div class="blur-card" onclick="openAutoModal('Mercedes AMG GT','Mit Shadow-Wrap','/path-to-mercedes.jpg','120,000€','#3A00BA','#DADADA','#000000','Ab 💜 Member 💜')">
-      <h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png" alt="Valois 650" style="width:100%; border-radius:12px;">
+      <h3>Valois 650</h3>
+      <p>Preis: 375,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Valois 650','375,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
     </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png" alt="K1 Military" style="width:100%; border-radius:12px;">
+      <h3>K1 Military</h3>
+      <p>Preis: 850,000€</p>
+      <button class="fancy" onclick="openAutoPopup('K1 Military','850,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png" alt="Manta" style="width:100%; border-radius:12px;">
+      <h3>Manta</h3>
+      <p>Preis: 130,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Manta','130,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png" alt="Monte Carlo" style="width:100%; border-radius:12px;">
+      <h3>Monte Carlo</h3>
+      <p>Preis: 950,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Monte Carlo','950,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png" alt="Piacenza" style="width:100%; border-radius:12px;">
+      <h3>Piacenza</h3>
+      <p>Preis: 580,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Piacenza','580,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png" alt="Emcee 6x6" style="width:100%; border-radius:12px;">
+      <h3>Emcee 6x6</h3>
+      <p>Preis: 1,500,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Emcee 6x6','1,500,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png" alt="Sect Sport" style="width:100%; border-radius:12px;">
+      <h3>Sect Sport</h3>
+      <p>Preis: 28,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Sect Sport','28,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png" alt="EMD25" style="width:100%; border-radius:12px;">
+      <h3>EMD25</h3>
+      <p>Preis: Event Auto</p>
+      <button class="fancy" onclick="openAutoPopup('EMD25','Event Auto','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
   </div>
 </section>
 
@@ -251,22 +274,6 @@ nav button.active, nav button:hover {
   <h2>Gang Aktivität</h2>
   <div id="auditLog"></div>
 </section>
-
-<!-- AUTO MODAL -->
-<div id="auto-modal">
-  <div id="auto-modal-content">
-    <img id="auto-modal-img" src="" alt="Auto">
-    <h3 id="auto-modal-name">Name</h3>
-    <p id="auto-modal-desc"></p>
-    <p id="auto-modal-preis"></p>
-    <p id="auto-modal-primary"></p>
-    <p id="auto-modal-interior"></p>
-    <p id="auto-modal-wheels"></p>
-    <p id="auto-modal-undercarriage"></p>
-    <p id="auto-modal-rank"></p>
-    <button onclick="closeAutoModal()">Schließen</button>
-  </div>
-</div>
 
 <script>
 const socket = io();
@@ -324,8 +331,7 @@ socket.on("updateViewers", count=>{
   document.getElementById("home-online-count").innerText=count;
 });
 
-let carCount = document.querySelectorAll("#autoliste .blur-card").length;
-document.getElementById("home-auto-count").innerText=carCount;
+document.getElementById("home-auto-count").innerText=document.querySelectorAll("#autoliste .blur-card").length;
 
 // Logs
 const auditLog=document.getElementById("auditLog");
@@ -335,23 +341,7 @@ socket.on("newAuditLog", log=>{
   auditLog.appendChild(p);
   auditLog.scrollTop=auditLog.scrollHeight;
 });
-
-// Auto Modal
-function openAutoModal(name, desc, img, preis, primary, interior, wheels, undercarriage, rank){
-  document.getElementById("auto-modal-name").innerText=name;
-  document.getElementById("auto-modal-desc").innerText=desc;
-  document.getElementById("auto-modal-img").src=img;
-  document.getElementById("auto-modal-preis").innerText="Preis: "+preis;
-  document.getElementById("auto-modal-primary").innerText="Primary Farbe: "+primary;
-  document.getElementById("auto-modal-interior").innerText="Interieur Farbe: "+interior;
-  document.getElementById("auto-modal-wheels").innerText="Felgen Farbe: "+wheels;
-  document.getElementById("auto-modal-undercarriage").innerText="Unterboden: "+undercarriage;
-  document.getElementById("auto-modal-rank").innerText="Rang: "+rank;
-  document.getElementById("auto-modal").style.display="flex";
-}
-function closeAutoModal(){
-  document.getElementById("auto-modal").style.display="none";
-}
 </script>
+
 </body>
 </html>
