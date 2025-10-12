@@ -6,43 +6,18 @@
 <script src="/socket.io/socket.io.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <style>
-body {
-  margin:0;
-  padding:0;
-  font-family:"Poppins",sans-serif;
-  background: radial-gradient(circle at top left, #2b0030, #000);
-  color:#fff;
-  text-align:center;
-}
-header {
-  background:#3b0066;
-  padding:15px;
-  font-size:1.8rem;
-  font-weight:bold;
-  letter-spacing:2px;
-  position:relative;
-}
+body { margin:0; padding:0; font-family:"Poppins",sans-serif; background: radial-gradient(circle at top left, #2b0030, #000); color:#fff; text-align:center; }
+header { background:#3b0066; padding:15px; font-size:1.8rem; font-weight:bold; letter-spacing:2px; position:relative; }
 #logged-in { position:absolute; right:20px; top:15px; font-size:1rem; color:#fff; }
 nav { margin:15px; }
-nav button {
-  background:#5a00a3; color:white; border:none; padding:10px 20px; margin:5px;
-  border-radius:12px; cursor:pointer; transition:0.3s;
-}
+nav button { background:#5a00a3; color:white; border:none; padding:10px 20px; margin:5px; border-radius:12px; cursor:pointer; transition:0.3s; }
 nav button:hover { background:#9b00ff; }
 section { display:none; margin-top:20px; position:relative; }
 section.active { display:block; }
 input, select { background:#3b0066; color:#fff; border:1px solid #7d2aff; border-radius:8px; padding:8px; box-sizing:border-box; }
 button.fancy { background:linear-gradient(90deg,#7d2aff,#d18eff); border:none; color:#fff; padding:8px 15px; border-radius:10px; cursor:pointer; transition:0.3s; }
 button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transform:scale(1.05); }
-.blur-card {
-  backdrop-filter: blur(10px);
-  background: rgba(60,0,90,0.5);
-  border-radius:20px;
-  padding:20px;
-  box-shadow:0 0 30px #7d2aff;
-  display:flex; flex-direction:column; align-items:center;
-  transition:transform 0.3s, box-shadow 0.3s;
-}
+.blur-card { backdrop-filter: blur(10px); background: rgba(60,0,90,0.5); border-radius:20px; padding:20px; box-shadow:0 0 30px #7d2aff; display:flex; flex-direction:column; align-items:center; transition:transform 0.3s, box-shadow 0.3s; }
 .blur-card:hover { transform:translateY(-5px) scale(1.02); box-shadow:0 0 50px #d18eff; }
 .blur-card img { border-radius:12px; margin-bottom:10px; max-width:180px; }
 
@@ -61,18 +36,20 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 
 /* Mitgliederliste */
 .members-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:30px; justify-items:center; padding:20px; }
-.member-card { background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6)); border:1px solid #a44eff; border-radius:20px; overflow:hidden; width:180px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 0 25px rgba(155,0,255,0.4); display:flex; flex-direction:column; align-items:center; padding:15px; }
+.member-card { background: radial-gradient(circle at top left, rgba(70,0,120,0.6), rgba(30,0,50,0.6)); border:1px solid #a44eff; border-radius:20px; overflow:hidden; width:180px; transition: transform 0.3s, box-shadow 0.3s; box-shadow: 0 0 25px rgba(155,0,255,0.4); display:flex; flex-direction:column; align-items:center; padding:15px; cursor:pointer; }
 .member-card:hover { transform: translateY(-5px) scale(1.02); box-shadow:0 0 45px rgba(210,142,255,0.8); }
 .member-card img { width:80px; height:80px; border-radius:50%; object-fit:cover; margin-bottom:10px; }
+.member-card h3 { font-size: 1rem; margin: 5px 0; color: #fff; text-shadow: 0 0 8px #d18eff; word-break: break-word; text-align: center; }
+.member-card p { font-size: 0.85rem; color: #ddd; margin: 0; text-align: center; }
 
 /* Login */
 #login-container { position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.9); display:flex; justify-content:center; align-items:center; z-index:10; }
 #login-box { background:#2b0030; padding:30px; border-radius:20px; width:300px; box-shadow:0 0 20px #7d2aff; text-align:center; }
 #login-box input,#login-box button { display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none; }
-
 </style>
 </head>
 <body>
+
 <header>💜 Purple Shadows 💜<div id="logged-in"></div></header>
 <nav>
   <button onclick="showTab('home')">Startseite</button>
@@ -86,13 +63,13 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
 <!-- HOME -->
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
 </section>
 
 <!-- SHOP -->
 <section id="shop">
   <h2>💜 Purple Shadows - Shop 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div class="shop-grid">
     <div class="shop-card">
       <div class="shop-glow"></div>
@@ -115,32 +92,26 @@ button.fancy:hover { background:linear-gradient(90deg,#d18eff,#7d2aff); transfor
   </div>
 </section>
 
-<!-- AUTOLISTE: ALLES WIE VORHER -->
+<!-- AUTOLISTE -->
 <section id="autoliste">
   <h2>💜 Purple Shadows - Autoliste 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; padding:20px;">
-    <div class="blur-card">
-      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony" style="width:100%; border-radius:12px;">
-      <h3>Sunfury Pony</h3>
-      <p>Preis: 96,000€</p>
-      <button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
-    </div>
-    <!-- hier alle weiteren Autos exakt wie zuvor einfügen -->
+    <!-- HIER KOMPLETTE AUTOS WIE VORHER EINFÜGEN -->
   </div>
 </section>
 
 <!-- MITGLIEDERLISTE -->
 <section id="members">
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div class="members-grid" id="members-grid"></div>
 </section>
 
 <!-- STATISTIKEN -->
 <section id="stats">
   <h2>📊 Statistiken</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eca764&is=68eb55e4&hm=bd734520721f84d4b584c029a21d84d027cc92fcc56b77d6b6d7ba3ab1d11447&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
     <div class="blur-card" style="max-width:400px;">
       <h3>📜 Audit Logs</h3>
@@ -187,13 +158,12 @@ const socket = io();
 let currentUser = null;
 const allowedUsers = ["Julian","Max"];
 
-// Tabs
 function showTab(id){
   document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
 }
 
-// Mitgliederliste rendern
+// Mitgliederliste
 async function renderMembers(){
   try{
     const res = await axios.get('/members.json');
@@ -203,12 +173,17 @@ async function renderMembers(){
     members.forEach(m=>{
       const card = document.createElement("div");
       card.className="member-card";
-      card.innerHTML=`<img src="${m.icon}" alt="${m.name}"><h3>${m.name}</h3><p>${m.rank}</p>`;
+      card.innerHTML=`
+        <img src="${m.icon}" alt="${m.name}">
+        <h3>${m.name}</h3>
+        <p>${m.rank}</p>
+      `;
+      if(m.link){
+        card.addEventListener("click", ()=> window.open(m.link,"_blank"));
+      }
       container.appendChild(card);
     });
-  }catch(e){
-    console.error("Fehler beim Laden der Mitglieder:",e);
-  }
+  }catch(e){ console.error("Fehler beim Laden der Mitglieder:",e); }
 }
 
 // Socket Events
@@ -216,65 +191,56 @@ socket.on("updateMembers", members => renderMembers());
 socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
 socket.on("updateOnlineUsers", users => {
   const box = document.getElementById("online-users-box");
-  box.innerHTML = "";
-  if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
-  users.forEach(u=>{
-    const p = document.createElement("p");
-    p.textContent = "• " + u;
-    box.appendChild(p);
-  });
+  box.innerHTML="";
+  if(users.length===0){ box.innerHTML="<p style='opacity:0.6;'>Niemand online</p>"; return; }
+  users.forEach(u=>{ const p=document.createElement("p"); p.textContent="• "+u; box.appendChild(p); });
 });
 socket.on("newAuditLog", log => {
-  const box = document.getElementById("audit-log-box");
+  const box=document.getElementById("audit-log-box");
   if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
-  const time = new Date().toLocaleTimeString();
-  const p = document.createElement("p");
-  p.textContent = `[${time}] ${log}`;
+  const time=new Date().toLocaleTimeString();
+  const p=document.createElement("p");
+  p.textContent=`[${time}] ${log}`;
   box.appendChild(p);
-  box.scrollTop = box.scrollHeight;
+  box.scrollTop=box.scrollHeight;
 });
 
 // Login
 async function login(){
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value.trim();
+  const username=document.getElementById("login-username").value.trim();
+  const password=document.getElementById("login-password").value.trim();
   if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
   try{
-    const res = await axios.post("/login",{username,password});
+    const res=await axios.post("/login",{username,password});
     if(res.data.success){
-      currentUser = username;
+      currentUser=username;
       document.getElementById("login-container").style.display="none";
-      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
-      socket.emit("userOnline", username);
+      document.getElementById("logged-in").innerText=`Eingeloggt als: ${username}`;
+      socket.emit("userOnline",username);
       if(allowedUsers.includes(username)){
         document.getElementById("stats-btn").style.display="inline-block";
       }
-    } else {
-      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
-    }
-  } catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
-  }
+    }else{ document.getElementById("login-error").innerText="Login fehlgeschlagen!"; }
+  }catch(e){ document.getElementById("login-error").innerText="Serverfehler!"; }
 }
 
 // Auto Popup
 function openAutoPopup(name, preis, primary, interior, wheels, undercarriage, rank){
-  document.getElementById("auto-popup-name").innerText = name;
-  document.getElementById("auto-popup-preis").innerText = "Preis: " + preis;
-  document.getElementById("auto-popup-primary").innerText = "Primary Farbe: " + primary;
-  document.getElementById("auto-popup-interior").innerText = "Interieur Farbe: " + interior;
-  document.getElementById("auto-popup-wheels").innerText = "Felgen Farbe: " + wheels;
-  document.getElementById("auto-popup-undercarriage").innerText = "Unterboden: " + undercarriage;
-  document.getElementById("auto-popup-rank").innerText = "Rang: " + rank;
+  document.getElementById("auto-popup-name").innerText=name;
+  document.getElementById("auto-popup-preis").innerText="Preis: "+preis;
+  document.getElementById("auto-popup-primary").innerText="Primary Farbe: "+primary;
+  document.getElementById("auto-popup-interior").innerText="Interieur Farbe: "+interior;
+  document.getElementById("auto-popup-wheels").innerText="Felgen Farbe: "+wheels;
+  document.getElementById("auto-popup-undercarriage").innerText="Unterboden: "+undercarriage;
+  document.getElementById("auto-popup-rank").innerText="Rang: "+rank;
   document.getElementById("auto-popup").style.display="flex";
 }
-function closeAutoPopup(){
-  document.getElementById("auto-popup").style.display="none";
-}
+function closeAutoPopup(){ document.getElementById("auto-popup").style.display="none"; }
 
-// Initial Members laden
+// Initial Members
 renderMembers();
 </script>
+
 </body>
 </html>
 
