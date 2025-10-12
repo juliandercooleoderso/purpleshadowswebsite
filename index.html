@@ -23,6 +23,7 @@ body {
   overflow-x: hidden;
 }
 
+/* HEADER */
 header {
   text-align:center;
   padding:2rem 1rem;
@@ -36,14 +37,29 @@ header h1 {
   color:var(--purple);
   letter-spacing:2px;
 }
-
-header img {
+header img.logo {
   position: absolute;
   top:15px;
   right:15px;
   width:80px;
   animation: floatLogo 4s ease-in-out infinite;
   filter: drop-shadow(0 0 25px var(--purple));
+}
+#userInfo {
+  position:absolute;
+  top:15px;
+  left:15px;
+  text-align:left;
+}
+#userInfo p { margin:2px 0; }
+#logoutBtn {
+  background:red;
+  color:white;
+  border:none;
+  padding:5px 10px;
+  border-radius:8px;
+  cursor:pointer;
+  margin-top:5px;
 }
 
 nav {
@@ -92,7 +108,7 @@ nav button.active, nav button:hover {
 }
 
 /* Cards */
-.member-list, .auto-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem; margin-top:2rem; }
+.member-list, .auto-list { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2rem; }
 .card, .blur-card {
   background: rgba(60,0,90,0.5);
   border:1px solid rgba(125,42,255,0.3);
@@ -120,7 +136,7 @@ nav button.active, nav button:hover {
   font-size:0.9rem;
 }
 
-/* Login Modal */
+/* Modals */
 #login-container, #autoModal {
   position:fixed;
   top:0; left:0;
@@ -155,8 +171,7 @@ nav button.active, nav button:hover {
 
 #autoModalContent img { width:100%; border-radius:12px; }
 #autoModalContent h3 { margin:10px 0; color:var(--purple); }
-#autoModalContent p { color:#fff; margin:5px 0; }
-
+#autoModalContent p { color:#fff; margin:5px 0; text-align:left; }
 #autoModal .closeBtn {
   position:absolute;
   top:10px;
@@ -175,12 +190,17 @@ nav button.active, nav button:hover {
 <!-- HEADER -->
 <header>
   <h1>💜 Purple Shadows</h1>
-  <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+  <img class="logo" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+  <div id="userInfo" style="display:none;">
+    <p id="userName">Angemeldet als: </p>
+    <p id="userRank">Rang: </p>
+    <button id="logoutBtn" onclick="logout()">Abmelden</button>
+  </div>
   <nav>
     <button class="tab active" data-target="home">Start</button>
     <button class="tab" data-target="members">Mitglieder</button>
     <button class="tab" data-target="cars">Fahrzeuge</button>
-    <button class="tab" data-target="logs">Aktivität</button>
+    <button id="logsBtn" class="tab" data-target="logs" style="display:none;">Aktivität</button>
   </nav>
 </header>
 
@@ -203,8 +223,11 @@ nav button.active, nav button:hover {
     <img id="modal-img" src="">
     <h3 id="modal-name"></h3>
     <p id="modal-preis"></p>
-    <p id="modal-color"></p>
-    <p id="modal-member"></p>
+    <p id="modal-wheels"></p>
+    <p id="modal-farbe"></p>
+    <p id="modal-interior"></p>
+    <p id="modal-undercarriage"></p>
+    <p id="modal-rang"></p>
   </div>
 </div>
 
@@ -228,22 +251,13 @@ nav button.active, nav button:hover {
 <section id="cars" class="section">
   <h2>Fahrzeugliste</h2>
   <div class="auto-list" id="autoliste">
-
-    <!-- Beispiel: Auto-Frames -->
-    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Sunfury Pony','96,000€','https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png','#3A00BA [Metal]','Ab 💜 Member 💜')">
+    <!-- Beispiel Auto-Frame -->
+    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Sunfury Pony','96,000€','https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png','Felgen: 20\"','Fahrzeugfarbe: #3A00BA [Metal]','Innenraum: #DADADA','Unterboden: #000000','Ab 💜 Member 💜')">
       <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony">
       <h3>Sunfury Pony</h3>
       <p>Preis: 96,000€</p>
     </div>
-
-    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Valois 650','375,000€','https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png','#3A00BA [Metal]','Ab 💜 Member 💜')">
-      <img src="https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png" alt="Valois 650">
-      <h3>Valois 650</h3>
-      <p>Preis: 375,000€</p>
-    </div>
-
-    <!-- Alle weiteren Autos gleich einfügen wie oben ... -->
-
+    <!-- weitere Autos hier einfügen ... -->
   </div>
 </section>
 
@@ -256,6 +270,7 @@ nav button.active, nav button:hover {
 <script>
 const socket = io();
 let currentUser = null;
+let currentRank = "Member";
 const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
 // Tabs
@@ -277,7 +292,14 @@ async function login(){
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
       currentUser = username;
+      currentRank = res.data.rank || "Member";
       document.getElementById("login-container").style.display="none";
+      document.getElementById("userInfo").style.display="block";
+      document.getElementById("userName").innerText="Angemeldet als: "+currentUser;
+      document.getElementById("userRank").innerText="Rang: "+currentRank;
+      if(currentUser==="Julian" || currentUser==="Max"){
+        document.getElementById("logsBtn").style.display="inline-block";
+      }
       socket.emit("userOnline", username);
     } else {
       document.getElementById("login-error").innerText="Login fehlgeschlagen!";
@@ -285,6 +307,14 @@ async function login(){
   } catch(e){
     document.getElementById("login-error").innerText="Serverfehler!";
   }
+}
+
+function logout(){
+  currentUser = null;
+  currentRank = "Member";
+  document.getElementById("login-container").style.display="flex";
+  document.getElementById("userInfo").style.display="none";
+  document.getElementById("logsBtn").style.display="none";
 }
 
 // Mitgliederliste aktualisieren
@@ -308,7 +338,6 @@ socket.on("updateViewers", count=>{
   document.getElementById("viewer").innerText=`👁️ ${count}`;
   document.getElementById("home-online-count").innerText=count;
 });
-
 document.getElementById("home-auto-count").innerText=document.querySelectorAll("#autoliste .blur-card").length;
 
 // Logs
@@ -320,13 +349,16 @@ socket.on("newAuditLog", log=>{
   auditLog.scrollTop=auditLog.scrollHeight;
 });
 
-// Auto Modal Funktionen
-function openAutoModal(name, preis, img, color, member){
+// Auto Modal
+function openAutoModal(name, preis, img, wheels, color, interior, undercarriage, rang){
   document.getElementById("modal-img").src = img;
   document.getElementById("modal-name").innerText = name;
-  document.getElementById("modal-preis").innerText = "Preis: "+preis;
-  document.getElementById("modal-color").innerText = "Farbe: "+color;
-  document.getElementById("modal-member").innerText = member;
+  document.getElementById("modal-preis").innerText = preis;
+  document.getElementById("modal-wheels").innerText = wheels;
+  document.getElementById("modal-farbe").innerText = color;
+  document.getElementById("modal-interior").innerText = interior;
+  document.getElementById("modal-undercarriage").innerText = undercarriage;
+  document.getElementById("modal-rang").innerText = rang;
   document.getElementById("autoModal").style.display="flex";
 }
 function closeAutoModal(){
