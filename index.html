@@ -107,6 +107,21 @@ button.fancy:hover {
   background:linear-gradient(90deg,#d18eff,#7d2aff);
 }
 
+/* Neue Klasse für Mitgliederliste Buttons */
+button.fancy-member {
+  background: #5a00a3;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button.fancy-member:hover {
+  background:#9b00ff;
+}
+
 /* Blur Cards */
 .blur-card {
   backdrop-filter: blur(10px);
@@ -261,13 +276,26 @@ button.fancy:hover {
 <section id="autoliste">
   <h2>💜 Purple Shadows - Autoliste 💜</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
-  <!-- Auto Cards... (unverändert) -->
+  
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; padding:20px;">
+    
+    <!-- Beispiel Auto Karte -->
+    <div class="blur-card" style="padding:20px;">
+      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony" style="width:100%; border-radius:12px;">
+      <h3>Sunfury Pony</h3>
+      <p>Preis: 96,000€</p>
+      <button class="fancy" onclick="openAutoPopup('Sunfury Pony','96,000€','#3A00BA [Metal]','#DADADA','#000000','Violet','Ab 💜 Member 💜')">Ansehen</button>
+    </div>
+
+    <!-- Weitere Autos hier… (wie vorher) -->
+
+  </div>
 </section>
 
 <!-- Mitgliederliste Section -->
 <section id="members">
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <table>
     <thead>
       <tr>
@@ -283,7 +311,7 @@ button.fancy:hover {
 <!-- Statistiken Section -->
 <section id="stats">
   <h2>📊 Statistiken</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
     <div class="blur-card" style="max-width:400px;">
       <h3>📜 Audit Logs</h3>
@@ -336,13 +364,13 @@ function showTab(id){
   document.getElementById(id).classList.add("active");
 }
 
-// Mitgliederliste rendern mit Aktionen
+// Mitgliederliste rendern
 function renderMembers(members){
   const table = document.getElementById("members-table");
   table.innerHTML = "";
   members.forEach(m=>{
     const row = document.createElement("tr");
-    const actionBtn = `<button class="fancy" onclick="openMemberLink('${m.link}')">🌐</button>`;
+    const actionBtn = `<button class="fancy-member" onclick="openMemberLink('${m.link}')">🌐</button>`;
     row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td><td>${actionBtn}</td>`;
     table.appendChild(row);
   });
