@@ -245,10 +245,53 @@ button.fancy-member:hover {
 <div id="viewer">👁️ 0</div>
 
 <!-- Home Section -->
-<section id="home" class="active">
-  <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
+<!-- Home Section -->
+<section id="home" class="active" style="padding:40px 20px;">
+  <h2 style="font-size:2.5rem; margin-bottom:10px;">💜 Willkommen bei Purple Shadows 💜</h2>
+  <p style="opacity:0.8; font-size:1.2rem;">Die exklusive Community für Stil, Power und Zusammenhalt.</p>
+
+  <img class="logo-float" 
+       src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&"
+       alt="Purple Shadows Logo">
+
+  <!-- Info Cards -->
+  <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:30px; margin-top:40px;">
+    <div class="blur-card" style="width:220px;">
+      <h3>🟢 Online</h3>
+      <p id="home-online-count" style="font-size:1.6rem; font-weight:bold;">0</p>
+    </div>
+    <div class="blur-card" style="width:220px;">
+      <h3>🚗 Autos</h3>
+      <p id="home-auto-count" style="font-size:1.6rem; font-weight:bold;">0</p>
+    </div>
+    <div class="blur-card" style="width:220px;">
+      <h3>👥 Mitglieder</h3>
+      <p id="home-member-count" style="font-size:1.6rem; font-weight:bold;">0</p>
+    </div>
+  </div>
+
+  <!-- About Us -->
+  <div class="blur-card" style="max-width:800px; margin:50px auto 20px auto;">
+    <h3>💜 Über Uns</h3>
+    <p style="opacity:0.9; font-size:1.1rem; line-height:1.6;">
+      Purple Shadows ist mehr als nur eine Crew – wir sind eine Familie.
+      Zusammen leben wir Stil, Loyalität und Leidenschaft für einzigartige Autos.
+      Bei uns zählt nicht, was du fährst – sondern wer du bist. 💜
+    </p>
+  </div>
+
+  <!-- Galerie -->
+  <div style="margin-top:40px;">
+    <h3>📸 Galerie</h3>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; padding:20px;">
+      <div class="blur-card"><img src="https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png" alt="Car 1"></div>
+      <div class="blur-card"><img src="https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png" alt="Car 2"></div>
+      <div class="blur-card"><img src="https://cdn.discordapp.com/attachments/1412886800044654603/image.png" alt="Car 3"></div>
+      <div class="blur-card"><img src="https://cdn.discordapp.com/attachments/1412886395487256809/image.png" alt="Car 4"></div>
+    </div>
+  </div>
 </section>
+
 
 <!-- Shop Section -->
 <section id="shop">
@@ -501,6 +544,7 @@ function closeAutoPopup(){
 </script>
 </body>
 </html>
+
 
 
 
