@@ -1,232 +1,275 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purple Shadows</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
-  <script src="/socket.io/socket.io.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <style>
-    :root {
-      --purple: #9b5cff;
-      --dark: #0b0b0f;
-      --darker: #050507;
-      --text: #e5e5e5;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Rajdhani", sans-serif; }
-    body {
-      background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 80%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
-      border-bottom: 1px solid rgba(155,92,255,0.3);
-      text-shadow: 0 0 10px var(--purple);
-    }
-    header h1 {
-      font-family: "Orbitron", sans-serif;
-      font-size: 2.5rem;
-      color: var(--purple);
-      letter-spacing: 2px;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1rem 0;
-    }
-    nav button {
-      background: none;
-      border: 1px solid var(--purple);
-      color: var(--text);
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    nav button.active, nav button:hover {
-      background: var(--purple);
-      color: #000;
-      box-shadow: 0 0 15px var(--purple);
-    }
-    .section { display: none; padding: 2rem; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease-in-out; }
-    .section.active { display: block; }
-    .stats { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-    .stat-card {
-      background: rgba(155,92,255,0.08);
-      border: 1px solid rgba(155,92,255,0.3);
-      border-radius: 15px;
-      padding: 1rem 2rem;
-      text-align: center;
-      flex: 1 1 200px;
-      box-shadow: 0 0 15px rgba(155,92,255,0.1);
-      transition: transform 0.3s;
-    }
-    .stat-card:hover { transform: scale(1.05); }
-    .stat-card h2 { color: var(--purple); font-size: 2rem; margin-bottom: 0.5rem; text-shadow: 0 0 10px var(--purple); }
-    .member-list, .auto-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 2rem; }
-    .card {
-      background: rgba(155,92,255,0.05);
-      border: 1px solid rgba(155,92,255,0.2);
-      border-radius: 15px;
-      padding: 1rem;
-      text-align: center;
-      transition: 0.3s;
-    }
-    .card:hover {
-      background: rgba(155,92,255,0.15);
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(155,92,255,0.3);
-    }
-    .card h3 { color: var(--purple); margin-bottom: 0.5rem; }
-    #auditLog {
-      background: rgba(155,92,255,0.05);
-      border: 1px solid rgba(155,92,255,0.2);
-      border-radius: 10px;
-      padding: 1rem;
-      height: 300px;
-      overflow-y: auto;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-    }
-    #login-container {
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      background: rgba(0,0,0,0.95);
-      display:flex; justify-content:center; align-items:center; z-index:100;
-    }
-    #login-box {
-      background:#2b0030; padding:30px; border-radius:20px;
-      width:300px; box-shadow:0 0 20px #7d2aff; text-align:center;
-    }
-    #login-box input, #login-box button { display:block; width:100%; margin:10px 0; padding:10px; border-radius:8px; border:none; }
-    button.login-btn {
-      background: linear-gradient(90deg,#7d2aff,#d18eff);
-      color:#fff; cursor:pointer;
-    }
-    button.login-btn:hover { background: linear-gradient(90deg,#d18eff,#7d2aff); }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purple Shadows</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+<style>
+:root {
+  --purple: #9b5cff;
+  --dark: #0b0b0f;
+  --darker: #050507;
+  --text: #e5e5e5;
+}
+* { box-sizing: border-box; margin:0; padding:0; font-family:"Rajdhani",sans-serif; }
+
+body {
+  background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 100%);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+header {
+  text-align:center;
+  padding:2rem 1rem;
+  border-bottom:1px solid rgba(155,92,255,0.3);
+  text-shadow:0 0 10px var(--purple);
+}
+header h1 {
+  font-family:"Orbitron",sans-serif;
+  font-size:2.5rem;
+  color:var(--purple);
+  letter-spacing:2px;
+}
+
+nav {
+  display:flex;
+  justify-content:center;
+  gap:1.5rem;
+  margin:1rem 0;
+}
+nav button {
+  background:none;
+  border:1px solid var(--purple);
+  color:var(--text);
+  padding:0.5rem 1.2rem;
+  border-radius:8px;
+  cursor:pointer;
+  transition:0.3s;
+}
+nav button.active, nav button:hover {
+  background: var(--purple);
+  color:#000;
+  box-shadow:0 0 15px var(--purple);
+}
+
+/* === Sections === */
+.section { display:none; padding:2rem; max-width:900px; margin:0 auto; animation:fadeIn 0.4s ease-in-out; }
+.section.active { display:block; }
+
+/* Stats Cards */
+.stats { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
+.stat-card {
+  background: rgba(155,92,255,0.08);
+  border:1px solid rgba(155,92,255,0.3);
+  border-radius:15px;
+  padding:1rem 2rem;
+  text-align:center;
+  flex:1 1 200px;
+  box-shadow:0 0 15px rgba(155,92,255,0.1);
+  transition: transform 0.3s;
+}
+.stat-card:hover { transform:scale(1.05); }
+.stat-card h2 {
+  color:var(--purple);
+  font-size:2rem;
+  margin-bottom:0.5rem;
+  text-shadow:0 0 10px var(--purple);
+}
+
+/* Cards */
+.member-list, .auto-list { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:1rem; margin-top:2rem; }
+.card, .blur-card {
+  background: rgba(60,0,90,0.5);
+  border:1px solid rgba(125,42,255,0.3);
+  border-radius:15px;
+  padding:1rem;
+  text-align:center;
+  transition:0.3s;
+}
+.card:hover, .blur-card:hover {
+  transform: scale(1.03);
+  box-shadow:0 0 20px rgba(155,92,255,0.3);
+}
+.card h3 { color:var(--purple); margin-bottom:0.5rem; }
+
+/* Logs */
+#auditLog {
+  background: rgba(60,0,90,0.3);
+  border:1px solid rgba(125,42,255,0.3);
+  border-radius:12px;
+  padding:1rem;
+  height:300px;
+  overflow-y:auto;
+  margin-top:2rem;
+  font-size:0.9rem;
+}
+
+/* Login Modal */
+#login-container {
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  background: radial-gradient(circle at center, #050507 0%, #0b0b0f 100%);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:50;
+}
+#login-box {
+  max-width:350px; width:90%;
+  text-align:center;
+  padding:30px;
+  border-radius:20px;
+  background: rgba(60,0,90,0.8);
+  box-shadow:0 0 30px #9b00ff;
+}
+#login-box input {
+  width:100%; padding:12px; margin:10px 0;
+  border-radius:12px; border:1px solid #7d2aff;
+  background: rgba(60,0,90,0.5); color:#fff; font-size:1rem;
+}
+#login-box button {
+  width:100%; padding:12px; margin-top:15px;
+  border:none; border-radius:12px;
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  color:#fff; font-weight:bold; cursor:pointer;
+}
+#login-box img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #9b00ff); }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
+@keyframes floatLogo {0%,100%{transform:translateY(0px);}50%{transform:translateY(-10px);}}
+</style>
 </head>
 <body>
+
+<!-- HEADER -->
+<header>
+  <h1>💜 Purple Shadows</h1>
+  <nav>
+    <button class="tab active" data-target="home">Start</button>
+    <button class="tab" data-target="members">Mitglieder</button>
+    <button class="tab" data-target="cars">Fahrzeuge</button>
+    <button class="tab" data-target="logs">Aktivität</button>
+  </nav>
+</header>
+
+<!-- LOGIN MODAL -->
 <div id="login-container">
-  <div id="login-box" class="blur-card" style="max-width:350px; text-align:center;">
-    <h2 style="color: var(--purple); text-shadow: 0 0 10px var(--purple);">Login</h2>
-    <input id="login-username" placeholder="Username" style="background: rgba(60,0,90,0.5); border:1px solid #7d2aff; color:#fff; padding:10px; border-radius:12px; width:100%; margin:10px 0;">
-    <input id="login-password" type="password" placeholder="Passwort" style="background: rgba(60,0,90,0.5); border:1px solid #7d2aff; color:#fff; padding:10px; border-radius:12px; width:100%; margin:10px 0;">
-    <button class="login-btn" onclick="login()" style="background:linear-gradient(90deg,#7d2aff,#d18eff); color:#fff; border:none; border-radius:12px; padding:10px 0; width:100%; cursor:pointer; margin-top:10px;">Login</button>
-    <p id="login-error" style="color:red; margin-top:10px;"></p>
+  <div id="login-box">
+    <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&" alt="Logo">
+    <h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Passwort">
+    <button onclick="login()">Login</button>
+    <p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
   </div>
 </div>
 
-  <header>
-    <h1>💜 Purple Shadows</h1>
-    <nav>
-      <button class="tab active" data-target="home">Start</button>
-      <button class="tab" data-target="members">Mitglieder</button>
-      <button class="tab" data-target="cars">Fahrzeuge</button>
-      <button class="tab" data-target="logs">Aktivität</button>
-    </nav>
-  </header>
+<!-- === START === -->
+<section id="home" class="section active">
+  <div class="stats">
+    <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
+    <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
+    <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
+    <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
+  </div>
+</section>
 
-  <section id="home" class="section active">
-    <div class="stats">
-      <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
-      <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
-      <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
-      <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
-    </div>
-  </section>
+<!-- === MITGLIEDER === -->
+<section id="members" class="section">
+  <h2>Mitgliederliste</h2>
+  <div class="member-list" id="memberList"></div>
+</section>
 
-  <section id="members" class="section">
-    <h2>Mitgliederliste</h2>
-    <div class="member-list" id="memberList"></div>
-  </section>
+<!-- === AUTOS === -->
+<section id="cars" class="section">
+  <h2>Fahrzeugliste</h2>
+  <div class="auto-list" id="autoliste">
+    <!-- Beispiel Autos -->
+    <div class="card blur-card"><h3>BMW M5</h3><p>Schwarz-Lila Custom</p></div>
+    <div class="card blur-card"><h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p></div>
+  </div>
+</section>
 
-  <section id="cars" class="section">
-    <h2>Fahrzeugliste</h2>
-    <div class="auto-list" id="autoliste">
-      <!-- Beispielautos -->
-      <div class="card blur-card"><h3>BMW M5</h3><p>Schwarz-Lila Custom</p></div>
-      <div class="card blur-card"><h3>Mercedes AMG GT</h3><p>Mit Shadow-Wrap</p></div>
-    </div>
-  </section>
-
-  <section id="logs" class="section">
-    <h2>Gang Aktivität</h2>
-    <div id="auditLog"></div>
-  </section>
+<!-- === LOGS === -->
+<section id="logs" class="section">
+  <h2>Gang Aktivität</h2>
+  <div id="auditLog"></div>
+</section>
 
 <script>
 const socket = io();
 let currentUser = null;
-const allowedUsers = ["Julian","Max"];
+const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
-// Login-Funktion
-async function login() {
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value.trim();
-  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
-  try {
-    const res = await axios.post("/login", {username, password});
-    if(res.data.success){
-      currentUser = username;
-      document.getElementById("login-container").style.display="none";
-      if(allowedUsers.includes(username)){
-        document.querySelector('nav').style.display = "flex";
-      }
-      socket.emit("userOnline", username);
-    } else {
-      document.getElementById("login-error").innerText = res.data.message || "Login fehlgeschlagen!";
-    }
-  } catch(e){
-    document.getElementById("login-error").innerText = "Serverfehler!";
-    console.error(e);
-  }
-}
-
-// Tabs Navigation
-document.querySelectorAll(".tab").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+// Tabs
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
     btn.classList.add("active");
     document.getElementById(btn.dataset.target).classList.add("active");
   });
 });
 
-// Socket Events
+// Login
+async function login(){
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!"; return;}
+  try{
+    const res = await axios.post("/login",{username,password});
+    if(res.data.success){
+      currentUser = username;
+      document.getElementById("login-container").style.display="none";
+      socket.emit("userOnline", username);
+    } else {
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
+    }
+  } catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
+  }
+}
+
+// Mitgliederliste aktualisieren
 socket.on("updateMembers", members => {
   const container = document.getElementById("memberList");
-  container.innerHTML = "";
-  members.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `<h3>${m.name}</h3><p>${m.rank||"Member"}</p>`;
+  container.innerHTML="";
+  members.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`<h3>${m.username}</h3><p>${m.rank||"Member"}</p>`;
     container.appendChild(div);
   });
-  document.getElementById("home-member-count").innerText = members.length;
+  document.getElementById("home-member-count").innerText=members.length;
 });
 
-socket.on("updateViewers", count => {
-  document.getElementById("viewer").innerText = `👁️ ${count}`;
-  document.getElementById("home-online-count").innerText = count;
+// Viewer-, Online-, Auto-Stats
+socket.on("updateViewers", count=>{
+  document.getElementById("viewer").innerText=`👁️ ${count}`;
+  document.getElementById("home-online-count").innerText=count;
 });
 
 let carCount = document.querySelectorAll("#autoliste .blur-card").length;
-document.getElementById("home-auto-count").innerText = carCount;
+document.getElementById("home-auto-count").innerText=carCount;
 
-const auditLog = document.getElementById("auditLog");
-socket.on("newAuditLog", log => {
-  const p = document.createElement("p");
-  p.textContent = log;
+// Logs
+const auditLog=document.getElementById("auditLog");
+socket.on("newAuditLog", log=>{
+  const p=document.createElement("p");
+  p.textContent=log;
   auditLog.appendChild(p);
-  auditLog.scrollTop = auditLog.scrollHeight;
+  auditLog.scrollTop=auditLog.scrollHeight;
 });
 </script>
+
 </body>
 </html>
+
+
 
