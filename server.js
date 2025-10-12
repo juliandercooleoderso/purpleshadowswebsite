@@ -88,6 +88,7 @@ fs.watchFile(membersFile, () => {
   io.emit("updateMembers", members);
 });
 
+// ✅ Server starten
 server.listen(PORT, () =>
   console.log(`💜 Server läuft auf http://localhost:${PORT}`)
 );
