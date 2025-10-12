@@ -187,6 +187,19 @@ button.fancy:hover {
   transition:opacity 0.3s;
 }
 
+  .shop-glow {
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at center, rgba(200,0,255,0.25), transparent 70%);
+  opacity:0;
+  transition:opacity 0.3s;
+  pointer-events:none;
+}
+
+.shop-card:hover .shop-glow {
+  opacity:1;
+}
+
 .shop-card:hover .shop-glow {
   opacity:1;
 }
@@ -464,6 +477,7 @@ function closeAutoPopup(){
 </script>
 </body>
 </html>
+
 
 
 
