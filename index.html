@@ -23,45 +23,41 @@ body {
   overflow-x: hidden;
 }
 
-/* HEADER */
 header {
   text-align:center;
   padding:2rem 1rem;
   border-bottom:1px solid rgba(106,0,176,0.3);
   text-shadow:0 0 10px var(--purple);
-  position: relative;
+  position:relative;
 }
+
 header h1 {
   font-family:"Orbitron",sans-serif;
   font-size:2.5rem;
   color:var(--purple);
   letter-spacing:2px;
 }
-header img.logo {
-  position: absolute;
-  top:15px;
-  right:15px;
-  width:80px;
-  animation: floatLogo 4s ease-in-out infinite;
-  filter: drop-shadow(0 0 25px var(--purple));
-}
-#userInfo {
+
+#user-info {
   position:absolute;
   top:15px;
   left:15px;
   text-align:left;
-}
-#userInfo p { margin:2px 0; }
-#logoutBtn {
-  background:red;
-  color:white;
-  border:none;
-  padding:5px 10px;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:5px;
+  font-size:0.9rem;
 }
 
+#user-info button {
+  margin-top:5px;
+  padding:5px 10px;
+  border:none;
+  border-radius:8px;
+  background:red;
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* Nav */
 nav {
   display:flex;
   justify-content:center;
@@ -83,11 +79,10 @@ nav button.active, nav button:hover {
   box-shadow:0 0 15px var(--purple);
 }
 
-/* === Sections === */
-.section { display:none; padding:2rem; max-width:900px; margin:0 auto; animation:fadeIn 0.4s ease-in-out; }
+/* Sections */
+.section { display:none; padding:2rem; max-width:1200px; margin:0 auto; animation:fadeIn 0.4s ease-in-out; }
 .section.active { display:block; }
 
-/* Stats Cards */
 .stats { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
 .stat-card {
   background: rgba(106,0,176,0.08);
@@ -100,12 +95,7 @@ nav button.active, nav button:hover {
   transition: transform 0.3s;
 }
 .stat-card:hover { transform:scale(1.05); }
-.stat-card h2 {
-  color:var(--purple);
-  font-size:2rem;
-  margin-bottom:0.5rem;
-  text-shadow:0 0 10px var(--purple);
-}
+.stat-card h2 { color:var(--purple); font-size:2rem; margin-bottom:0.5rem; text-shadow:0 0 10px var(--purple); }
 
 /* Cards */
 .member-list, .auto-list { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-top:2rem; }
@@ -136,8 +126,8 @@ nav button.active, nav button:hover {
   font-size:0.9rem;
 }
 
-/* Modals */
-#login-container, #autoModal {
+/* Login Modal */
+#login-container {
   position:fixed;
   top:0; left:0;
   width:100%; height:100%;
@@ -147,14 +137,13 @@ nav button.active, nav button:hover {
   align-items:center;
   z-index:50;
 }
-#login-box, #autoModalContent {
-  max-width:400px; width:90%;
+#login-box {
+  max-width:350px; width:90%;
   text-align:center;
   padding:30px;
   border-radius:20px;
   background: rgba(60,0,90,0.9);
   box-shadow:0 0 30px #6a00b0;
-  position: relative;
 }
 #login-box input {
   width:100%; padding:12px; margin:10px 0;
@@ -167,20 +156,24 @@ nav button.active, nav button:hover {
   background:linear-gradient(90deg,#4b0082,#6a00b0);
   color:#fff; font-weight:bold; cursor:pointer;
 }
-#login-box img, #autoModalContent img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #6a00b0); }
+#login-box img { width:150px; margin-bottom:20px; animation:floatLogo 4s ease-in-out infinite; filter:drop-shadow(0 0 25px #6a00b0); }
 
-#autoModalContent img { width:100%; border-radius:12px; }
-#autoModalContent h3 { margin:10px 0; color:var(--purple); }
-#autoModalContent p { color:#fff; margin:5px 0; text-align:left; }
-#autoModal .closeBtn {
-  position:absolute;
-  top:10px;
-  right:15px;
-  font-size:1.5rem;
-  cursor:pointer;
-  color:#fff;
+/* Auto Modal */
+#auto-modal {
+  display:none;
+  position:fixed; top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.85);
+  justify-content:center; align-items:center;
+  z-index:100;
 }
+#auto-modal-content {
+  background:#2b0030; padding:25px; border-radius:20px; width:350px; text-align:center;
+  box-shadow:0 0 30px #6a00b0;
+}
+#auto-modal-content img { width:100%; border-radius:12px; margin-bottom:10px; }
+#auto-modal-content button { margin-top:10px; padding:8px 15px; border:none; border-radius:10px; background:red; color:white; cursor:pointer; }
 
+/* Animations */
 @keyframes fadeIn { from { opacity:0; transform:translateY(10px);} to { opacity:1; transform:translateY(0);} }
 @keyframes floatLogo {0%,100%{transform:translateY(0px);}50%{transform:translateY(-10px);}}
 </style>
@@ -190,17 +183,16 @@ nav button.active, nav button:hover {
 <!-- HEADER -->
 <header>
   <h1>💜 Purple Shadows</h1>
-  <img class="logo" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
-  <div id="userInfo" style="display:none;">
-    <p id="userName">Angemeldet als: </p>
-    <p id="userRank">Rang: </p>
-    <button id="logoutBtn" onclick="logout()">Abmelden</button>
+  <div id="user-info">
+    <div id="info-username">Angemeldet als: -</div>
+    <div id="info-rank">Rang: -</div>
+    <button onclick="logout()">Abmelden</button>
   </div>
   <nav>
     <button class="tab active" data-target="home">Start</button>
     <button class="tab" data-target="members">Mitglieder</button>
     <button class="tab" data-target="cars">Fahrzeuge</button>
-    <button id="logsBtn" class="tab" data-target="logs" style="display:none;">Aktivität</button>
+    <button class="tab" data-target="logs" id="logs-btn" style="display:none;">Aktivität</button>
   </nav>
 </header>
 
@@ -217,17 +209,17 @@ nav button.active, nav button:hover {
 </div>
 
 <!-- AUTO MODAL -->
-<div id="autoModal" style="display:none;">
-  <div id="autoModalContent">
-    <span class="closeBtn" onclick="closeAutoModal()">&times;</span>
+<div id="auto-modal">
+  <div id="auto-modal-content">
     <img id="modal-img" src="">
-    <h3 id="modal-name"></h3>
-    <p id="modal-preis"></p>
-    <p id="modal-wheels"></p>
-    <p id="modal-farbe"></p>
-    <p id="modal-interior"></p>
-    <p id="modal-undercarriage"></p>
-    <p id="modal-rang"></p>
+    <h3 id="modal-name">Name</h3>
+    <p id="modal-preis">Preis:</p>
+    <p id="modal-wheels">Felgen Farbe:</p>
+    <p id="modal-carcolor">Fahrzeug Farbe:</p>
+    <p id="modal-interior">Innenraum Farbe:</p>
+    <p id="modal-undercarriage">Unterboden Farbe:</p>
+    <p id="modal-rank">Rang:</p>
+    <button onclick="closeAutoModal()">Schließen</button>
   </div>
 </div>
 
@@ -250,15 +242,7 @@ nav button.active, nav button:hover {
 <!-- === AUTOS === -->
 <section id="cars" class="section">
   <h2>Fahrzeugliste</h2>
-  <div class="auto-list" id="autoliste">
-    <!-- Beispiel Auto-Frame -->
-    <div class="blur-card" style="padding:20px;" onclick="openAutoModal('Sunfury Pony','96,000€','https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png','Felgen: 20\"','Fahrzeugfarbe: #3A00BA [Metal]','Innenraum: #DADADA','Unterboden: #000000','Ab 💜 Member 💜')">
-      <img src="https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png" alt="Sunfury Pony">
-      <h3>Sunfury Pony</h3>
-      <p>Preis: 96,000€</p>
-    </div>
-    <!-- weitere Autos hier einfügen ... -->
-  </div>
+  <div class="auto-list" id="autoliste"></div>
 </section>
 
 <!-- === LOGS === -->
@@ -270,7 +254,6 @@ nav button.active, nav button:hover {
 <script>
 const socket = io();
 let currentUser = null;
-let currentRank = "Member";
 const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
 // Tabs
@@ -292,32 +275,26 @@ async function login(){
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
       currentUser = username;
-      currentRank = res.data.rank || "Member";
       document.getElementById("login-container").style.display="none";
-      document.getElementById("userInfo").style.display="block";
-      document.getElementById("userName").innerText="Angemeldet als: "+currentUser;
-      document.getElementById("userRank").innerText="Rang: "+currentRank;
-      if(currentUser==="Julian" || currentUser==="Max"){
-        document.getElementById("logsBtn").style.display="inline-block";
-      }
+      document.getElementById("info-username").innerText = "Angemeldet als: "+username;
+      document.getElementById("info-rank").innerText = "Rang: "+(res.data.rank||"Member");
+      if(allowedUsers.includes(username)) document.getElementById("logs-btn").style.display="inline-block";
       socket.emit("userOnline", username);
-    } else {
-      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
-    }
-  } catch(e){
-    document.getElementById("login-error").innerText="Serverfehler!";
-  }
+      loadAutos();
+    } else { document.getElementById("login-error").innerText="Login fehlgeschlagen!"; }
+  } catch(e){ document.getElementById("login-error").innerText="Serverfehler!"; }
 }
 
+// Logout
 function logout(){
-  currentUser = null;
-  currentRank = "Member";
+  currentUser=null;
   document.getElementById("login-container").style.display="flex";
-  document.getElementById("userInfo").style.display="none";
-  document.getElementById("logsBtn").style.display="none";
+  document.getElementById("info-username").innerText = "Angemeldet als: -";
+  document.getElementById("info-rank").innerText = "Rang: -";
+  document.getElementById("logs-btn").style.display="none";
 }
 
-// Mitgliederliste aktualisieren
+// Mitgliederliste
 socket.on("updateMembers", members => {
   const container = document.getElementById("memberList");
   container.innerHTML="";
@@ -325,20 +302,17 @@ socket.on("updateMembers", members => {
     const div=document.createElement("div");
     div.className="card";
     div.innerHTML=`<h3>${m.username}</h3><p>${m.rank||"Member"}</p>`;
-    if(m.link){
-      div.addEventListener("click",()=>{ window.open(m.link,"_blank"); });
-    }
+    if(m.link){ div.addEventListener("click",()=>{ window.open(m.link,"_blank"); }); }
     container.appendChild(div);
   });
   document.getElementById("home-member-count").innerText=members.length;
 });
 
-// Viewer-, Online-, Auto-Stats
+// Viewer
 socket.on("updateViewers", count=>{
   document.getElementById("viewer").innerText=`👁️ ${count}`;
   document.getElementById("home-online-count").innerText=count;
 });
-document.getElementById("home-auto-count").innerText=document.querySelectorAll("#autoliste .blur-card").length;
 
 // Logs
 const auditLog=document.getElementById("auditLog");
@@ -349,20 +323,48 @@ socket.on("newAuditLog", log=>{
   auditLog.scrollTop=auditLog.scrollHeight;
 });
 
-// Auto Modal
-function openAutoModal(name, preis, img, wheels, color, interior, undercarriage, rang){
-  document.getElementById("modal-img").src = img;
-  document.getElementById("modal-name").innerText = name;
-  document.getElementById("modal-preis").innerText = preis;
-  document.getElementById("modal-wheels").innerText = wheels;
-  document.getElementById("modal-farbe").innerText = color;
-  document.getElementById("modal-interior").innerText = interior;
-  document.getElementById("modal-undercarriage").innerText = undercarriage;
-  document.getElementById("modal-rang").innerText = rang;
-  document.getElementById("autoModal").style.display="flex";
+// AUTO MODAL
+function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank){
+  document.getElementById("modal-img").src=img;
+  document.getElementById("modal-name").innerText=name;
+  document.getElementById("modal-preis").innerText=preis;
+  document.getElementById("modal-wheels").innerText=wheels;
+  document.getElementById("modal-carcolor").innerText=carcolor;
+  document.getElementById("modal-interior").innerText=interior;
+  document.getElementById("modal-undercarriage").innerText=undercarriage;
+  document.getElementById("modal-rank").innerText=rank;
+  document.getElementById("auto-modal").style.display="flex";
 }
-function closeAutoModal(){
-  document.getElementById("autoModal").style.display="none";
+function closeAutoModal(){ document.getElementById("auto-modal").style.display="none"; }
+
+// Lade Autos
+function loadAutos(){
+  const autos = [
+    {name:"Sunfury Pony",preis:"Preis: 96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png",wheels:"Felgen: 20\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Valois 650",preis:"Preis: 375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png",wheels:"Felgen: 21\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"K1 Military",preis:"Preis: 850,000€",img:"https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png",wheels:"Felgen: 22\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Manta",preis:"Preis: 130,000€",img:"https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png",wheels:"Felgen: 19\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Monte Carlo",preis:"Preis: 950,000€",img:"https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png",wheels:"Felgen: 21\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Piacenza",preis:"Preis: 580,000€",img:"https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png",wheels:"Felgen: 20\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Emcee 6x6",preis:"Preis: 1,500,000€",img:"https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png",wheels:"Felgen: 24\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Sect Sport",preis:"Preis: 28,000€",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png",wheels:"Felgen: 18\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"EMD25",preis:"Preis: Event Auto",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png",wheels:"Felgen: 20\"",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"}
+  ];
+
+  const container = document.getElementById("autoliste");
+  container.innerHTML="";
+  autos.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="blur-card";
+    div.style.padding="20px";
+    div.innerHTML=`<img src="${a.img}" alt="${a.name}" style="width:100%; border-radius:12px;">
+                   <h3>${a.name}</h3>
+                   <p>${a.preis}</p>`;
+    div.addEventListener("click",()=>openAutoModal(a.name,a.preis,a.img,a.wheels,a.carcolor,a.interior,a.undercarriage,a.rank));
+    container.appendChild(div);
+  });
+
+  document.getElementById("home-auto-count").innerText=autos.length;
 }
 </script>
 
