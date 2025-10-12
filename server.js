@@ -36,8 +36,22 @@ let auditLogs = [];
 // ================= ROUTES =================
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
-  const user = logins.find(u => u.username === username && u.password === password);
-  res.json({ success: !!user });
+
+  if (!username || !password) {
+    return res.json({ success: false, message: "Bitte Username und Passwort eingeben!" });
+  }
+
+  const user = logins.find(
+    u => u.username.toLowerCase() === username.toLowerCase() && u.password === password
+  );
+
+  if (user) {
+    console.log(`✅ Login erfolgreich: ${username}`);
+    res.json({ success: true });
+  } else {
+    console.log(`❌ Login fehlgeschlagen: ${username}`);
+    res.json({ success: false, message: "Username oder Passwort falsch!" });
+  }
 });
 
 app.get("/members", (req, res) => res.json(members));
@@ -88,8 +102,6 @@ fs.watchFile(membersFile, () => {
   io.emit("updateMembers", members);
 });
 
-// ✅ Server starten
 server.listen(PORT, () =>
   console.log(`💜 Server läuft auf http://localhost:${PORT}`)
 );
-
