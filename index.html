@@ -112,15 +112,15 @@
   </style>
 </head>
 <body>
-  <div id="login-container">
-    <div id="login-box">
-      <h2>Login</h2>
-      <input id="login-username" placeholder="Username">
-      <input id="login-password" type="password" placeholder="Passwort">
-      <button class="login-btn" onclick="login()">Login</button>
-      <p id="login-error" style="color:red;"></p>
-    </div>
+<div id="login-container">
+  <div id="login-box" class="blur-card" style="max-width:350px; text-align:center;">
+    <h2 style="color: var(--purple); text-shadow: 0 0 10px var(--purple);">Login</h2>
+    <input id="login-username" placeholder="Username" style="background: rgba(60,0,90,0.5); border:1px solid #7d2aff; color:#fff; padding:10px; border-radius:12px; width:100%; margin:10px 0;">
+    <input id="login-password" type="password" placeholder="Passwort" style="background: rgba(60,0,90,0.5); border:1px solid #7d2aff; color:#fff; padding:10px; border-radius:12px; width:100%; margin:10px 0;">
+    <button class="login-btn" onclick="login()" style="background:linear-gradient(90deg,#7d2aff,#d18eff); color:#fff; border:none; border-radius:12px; padding:10px 0; width:100%; cursor:pointer; margin-top:10px;">Login</button>
+    <p id="login-error" style="color:red; margin-top:10px;"></p>
   </div>
+</div>
 
   <header>
     <h1>💜 Purple Shadows</h1>
@@ -229,3 +229,4 @@ socket.on("newAuditLog", log => {
 </script>
 </body>
 </html>
+
