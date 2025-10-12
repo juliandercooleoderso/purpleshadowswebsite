@@ -1,16 +1,10 @@
 [
-  { "username": "Julian", "password": "juliancool"},
- { "username": "Max", "password": "max123"},
-   { "username": "Tobias", "password": "Test"},
-  { "username": "Dome", "password": "SUCKMYGIANTBALLSBITCH"},
-  { "username": "Hyundai", "password": "PS_Hyundai"},
-   { "username": "Felix", "password": "PS_Felix0121"}
+  { "username": "Julian",  "password": "juliancool" },
+  { "username": "Max",     "password": "max123" },
+  { "username": "Tobias",  "password": "Test" },
+  { "username": "Dome",    "password": "SUCKMYGIANTBALLSBITCH" },
+  { "username": "Hyundai", "password": "PS_Hyundai" },
+  { "username": "Felix",   "password": "PS_Felix0121" }
 ]
-
-
-
-
-
-
 
 
