@@ -232,9 +232,19 @@ function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarria
 }
 function closeAutoModal(){ document.getElementById("auto-modal").style.display="none"; }
 
-// Autos
+// Autos laden
 function loadAutos(){
-  const autos=[ /* deine Autos wie vorher */ ];
+  const autos=[
+    {name:"Sunfury Pony",preis:"Preis: 96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Valois 650",preis:"Preis: 375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"K1 Military",preis:"Preis: 850,000€",img:"https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Manta",preis:"Preis: 130,000€",img:"https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Monte Carlo",preis:"Preis: 950,000€",img:"https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Piacenza",preis:"Preis: 580,000€",img:"https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Emcee 6x6",preis:"Preis: 1,500,000€",img:"https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"Sect Sport",preis:"Preis: 28,000€",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"},
+    {name:"EMD25",preis:"Preis: Event Auto",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: #000000",rank:"Ab 💜 Member 💜"}
+  ];
   const container=document.getElementById("autoliste");
   container.innerHTML="";
   autos.forEach(a=>{
@@ -261,12 +271,11 @@ function loadClothing(){
   clothingItems.forEach(item=>{
     const div=document.createElement("div");
     div.className="blur-card";
-    div.innerHTML=`<img src="${item.img}" alt="${item.name}" style="width:100%; border-radius:12px;"><h3>${item.name}</h3><button onclick="window.open('${item.link}','_blank')">Kaufen</button>`;
+    div.innerHTML=`<img src="${item.img}" alt="${item.name}" style="width:100%; border-radius:12px;"><h3>${item.name}</h3>`;
+    div.addEventListener("click",()=>window.open(item.link,"_blank"));
     container.appendChild(div);
   });
 }
 </script>
 </body>
 </html>
-
-
