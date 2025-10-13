@@ -1,233 +1,459 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LuxusSecurity - Dashboard</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #0e0e0e;
-      color: white;
-      margin: 0;
-      padding: 0;
-      overflow-x: hidden;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #1a1a1a;
-      padding: 10px 20px;
-      border-bottom: 2px solid #ffcc00;
-    }
-    header h1 {
-      font-size: 20px;
-    }
-    #userInfo {
-      text-align: right;
-    }
-    #logoutBtn {
-      background: #ff3b3b;
-      color: white;
-      border: none;
-      padding: 6px 12px;
-      border-radius: 6px;
-      margin-left: 10px;
-      cursor: pointer;
-    }
-    nav {
-      background: #111;
-      display: flex;
-      justify-content: center;
-      padding: 10px;
-      gap: 20px;
-    }
-    nav button {
-      background: #ffcc00;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-      color: black;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-    nav button:hover {
-      background: #e6b800;
-    }
-    #login {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    #login input {
-      margin: 8px;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #222;
-      color: white;
-    }
-    #login button {
-      background: #ffcc00;
-      color: black;
-      font-weight: bold;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .section {
-      display: none;
-      padding: 20px;
-    }
-    .active {
-      display: block;
-    }
-    .item-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-    .item-card {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      border-radius: 10px;
-      text-align: center;
-      padding: 15px;
-      transition: transform 0.3s;
-    }
-    .item-card:hover {
-      transform: scale(1.05);
-      border-color: #ffcc00;
-    }
-    .item-card img {
-      width: 100%;
-      border-radius: 8px;
-    }
-    .item-card a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 6px 12px;
-      background: #ffcc00;
-      color: black;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Purple Shadows</title>
+<script src="/socket.io/socket.io.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<style>
+body {
+  margin:0;
+  padding:0;
+  font-family:"Poppins",sans-serif;
+  background: radial-gradient(circle at top left, #2b0030, #000);
+  color:#fff;
+  text-align:center;
+}
+
+/* Header */
+header {
+  background:#3b0066;
+  padding:15px;
+  font-size:1.8rem;
+  font-weight:bold;
+  letter-spacing:2px;
+  position:relative;
+}
+
+#logged-in {
+  position:absolute;
+  right:20px;
+  top:15px;
+  font-size:1rem;
+  color:#fff;
+  text-align:right;
+}
+
+#rank-display {
+  position:absolute;
+  right:20px;
+  top:40px;
+  font-size:0.9rem;
+  color:#fff;
+  text-align:right;
+}
+
+/* Navigation */
+nav {
+  margin:15px;
+}
+
+nav button {
+  background:#5a00a3;
+  color:white;
+  border:none;
+  padding:10px 20px;
+  margin:5px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+nav button:hover {
+  background:#9b00ff;
+}
+
+/* Sections */
+section {
+  display:none;
+  margin-top:20px;
+  position:relative;
+}
+
+section.active {
+  display:block;
+}
+
+/* Tables */
+table {
+  width:90%;
+  margin:20px auto;
+  border-collapse:collapse;
+  background: rgba(60,0,90,0.5);
+  border-radius:12px;
+  overflow:hidden;
+}
+
+th, td {
+  border:1px solid #7d2aff;
+  padding:12px 15px;
+  text-align:center;
+}
+
+th {
+  background:#5a00a3;
+}
+
+select, input {
+  background:#3b0066;
+  color:#fff;
+  border:1px solid #7d2aff;
+  border-radius:8px;
+  padding:8px;
+  box-sizing:border-box;
+}
+
+button.fancy {
+  background:linear-gradient(90deg,#7d2aff,#d18eff);
+  border:none;
+  color:#fff;
+  padding:8px 15px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button.fancy:hover {
+  background:linear-gradient(90deg,#d18eff,#7d2aff);
+}
+
+/* Neue Klasse für Mitgliederliste Buttons */
+button.fancy-member {
+  background: #5a00a3;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button.fancy-member:hover {
+  background:#9b00ff;
+}
+
+/* Blur Cards */
+.blur-card {
+  backdrop-filter: blur(10px);
+  background: rgba(60,0,90,0.5);
+  border-radius:20px;
+  padding:20px;
+  box-shadow: 0 0 30px #7d2aff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.blur-card:hover {
+  transform: translateY(-5px);
+  box-shadow:0 0 50px #d18eff;
+}
+
+.blur-card img {
+  border-radius:12px;
+  margin-bottom:10px;
+  max-width:180px;
+}
+
+/* Auto Popup */
+#auto-popup {
+  display:none;
+  position:fixed;
+  top:0; left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:20;
+}
+
+#auto-popup-content {
+  background:#2b0030;
+  padding:25px;
+  border-radius:20px;
+  width:300px;
+  text-align:left;
+  box-shadow:0 0 30px #9b00ff;
+}
+
+#auto-popup-content h3 {
+  text-align:center;
+  margin-bottom:15px;
+}
+
+/* Logo Animation */
+.logo-float {
+  animation: floatLogo 4s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px #9b00ff);
+  display:block;
+  margin:25px auto;
+  width:220px;
+}
+
+@keyframes floatLogo {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+#viewer {
+  position:absolute;
+  top:20px;
+  left:20px;
+  font-size:1.1rem;
+  text-shadow:0 0 8px #fff;
+}
+
+/* ===================== LOGIN ===================== */
+#login-container{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.9);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+#login-box{
+  background:#2b0030;
+  padding:30px;
+  border-radius:20px;
+  width:300px;
+  box-shadow:0 0 20px #7d2aff;
+  text-align:center;
+}
+
+#login-box input,#login-box button{
+  display:block;
+  width:100%;
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+</style>
 </head>
 <body>
+<header>
+💜 Purple Shadows 💜
+<div id="logged-in"></div>
+<div id="rank-display"></div>
+<button id="logout-btn" onclick="logout()" style="position:absolute; right:20px; top:65px; display:none;">Abmelden</button>
+</header>
 
-  <div id="login">
+<nav>
+  <button onclick="showTab('home')">Startseite</button>
+  <button onclick="showTab('shop')">Shop</button>
+  <button onclick="showTab('members')">Mitgliederliste</button>
+  <button onclick="showTab('autoliste')">Autoliste</button>
+  <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
+</nav>
+
+<div id="viewer">👁️ 0</div>
+
+<!-- Home Section -->
+<section id="home" class="active">
+  <h2>💜 Willkommen bei Purple Shadows 💜</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+</section>
+
+<!-- Shop Section -->
+<section id="shop">
+  <h2>💜 Purple Shadows - Kleidung 💜</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:25px;padding:20px;">
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter" alt="Shirt1">
+      <h3>Shirt Variante 1</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt')">Kaufen</button>
+    </div>
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter" alt="Shirt2">
+      <h3>Shirt Variante 2</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss')">Kaufen</button>
+    </div>
+    <div class="blur-card">
+      <img src="https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter" alt="Weste">
+      <h3>Unsere Weste</h3>
+      <button class="fancy" onclick="window.open('https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails')">Kaufen</button>
+    </div>
+  </div>
+</section>
+
+<section id="autoliste">
+  <h2>💜 Purple Shadows - Autoliste 💜</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; padding:20px;">
+    <!-- Auto-Karten hier wie im Beispiel -->
+  </div>
+</section>
+
+<section id="members">
+  <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <table>
+    <thead>
+      <tr>
+        <th>Username</th>
+        <th>Rang</th>
+        <th>Aktionen</th>
+      </tr>
+    </thead>
+    <tbody id="members-table"></tbody>
+  </table>
+</section>
+
+<section id="stats">
+  <h2>📊 Statistiken</h2>
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <div style="display:flex; justify-content:center; flex-wrap:wrap; gap:50px; margin-top:40px;">
+    <div class="blur-card" style="max-width:400px;">
+      <h3>📜 Audit Logs</h3>
+      <div id="audit-log-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Noch keine Logs...</p>
+      </div>
+    </div>
+    <div class="blur-card" style="max-width:400px;">
+      <h3>🟢 Online User</h3>
+      <div id="online-users-box" style="max-height:300px; overflow-y:auto; text-align:left; background:rgba(0,0,0,0.3); padding:10px; border-radius:10px;">
+        <p style="opacity:0.6;">Niemand online</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="auto-popup">
+  <div id="auto-popup-content">
+    <h3 id="auto-popup-name">Auto Name</h3>
+    <p id="auto-popup-preis">Preis: </p>
+    <p id="auto-popup-primary">Primary Farbe: </p>
+    <p id="auto-popup-interior">Interieur Farbe: </p>
+    <p id="auto-popup-wheels">Felgen Farbe: </p>
+    <p id="auto-popup-undercarriage">Unterboden: </p>
+    <p id="auto-popup-rank">Rang: </p>
+    <button class="fancy" onclick="closeAutoPopup()">Close</button>
+  </div>
+</div>
+
+<div id="login-container">
+  <div id="login-box">
     <h2>Login</h2>
-    <input id="username" type="text" placeholder="Benutzername">
-    <input id="password" type="password" placeholder="Passwort">
-    <button id="loginBtn">Einloggen</button>
-    <p id="loginError" style="color: red;"></p>
+    <input id="login-username" placeholder="Username">
+    <input id="login-password" type="password" placeholder="Passwort">
+    <button onclick="login()">Login</button>
+    <p id="login-error" style="color:red;"></p>
   </div>
+</div>
 
-  <div id="dashboard" style="display:none;">
-    <header>
-      <h1>LuxusSecurity</h1>
-      <div id="userInfo">
-        <span id="loggedInUser">Eingeloggt als: </span><br>
-        <span id="userRank">Rang: </span>
-        <button id="logoutBtn">Abmelden</button>
-      </div>
-    </header>
+<script>
+const socket = io();
+let currentUser = null;
+let currentRank = null;
+let membersData = [];
+const allowedUsers = ["Julian","Max"];
 
-    <nav>
-      <button data-target="shop">Shop</button>
-    </nav>
+// Tabs
+function showTab(id){
+  document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+}
 
-    <section id="shop" class="section active">
-      <h2>Kleidung</h2>
-      <div class="item-grid">
-        <div class="item-card">
-          <img src="https://tr.rbxcdn.com/24f6d55f3a3f21b894ed5d9a4d8c244f/420/420/Shirt/Png" alt="LuxusSecurity Shirt">
-          <h3>LuxusSecurity Shirt</h3>
-          <a href="https://www.roblox.com/catalog/18156004660/LuxusSecurity-Shirt" target="_blank">Kaufen</a>
-        </div>
+// Mitgliederliste rendern
+function renderMembers(members){
+  const table = document.getElementById("members-table");
+  table.innerHTML = "";
+  members.forEach(m=>{
+    const actionBtn = `<button class="fancy-member" onclick="openMemberLink('${m.link}')">🌐</button>`;
+    table.innerHTML += `<tr><td>${m.username}</td><td>${m.rank}</td><td>${actionBtn}</td></tr>`;
+  });
+}
 
-        <div class="item-card">
-          <img src="https://tr.rbxcdn.com/fb798fae8ebef0e16cd94ed8f9539a62/420/420/Shirt/Png" alt="LuxusSecurity Weste">
-          <h3>LuxusSecurity Weste</h3>
-          <a href="https://www.roblox.com/catalog/18156151341/LuxusSecurity-Weste" target="_blank">Kaufen</a>
-        </div>
+// Öffnet den Link eines Mitglieds
+function openMemberLink(link){
+  if(link && link.startsWith("http")){
+    window.open(link,"_blank");
+  } else {
+    alert("Kein Link vorhanden!");
+  }
+}
 
-        <div class="item-card">
-          <img src="https://tr.rbxcdn.com/7f827ce71f1b8b987157314773b48411/420/420/Pants/Png" alt="LuxusSecurity Hose">
-          <h3>LuxusSecurity Hose</h3>
-          <a href="https://www.roblox.com/catalog/18156143067/LuxusSecurity-Hose" target="_blank">Kaufen</a>
-        </div>
-      </div>
-    </section>
-  </div>
+// Socket Events
+socket.on("updateMembers", members => { membersData = members; renderMembers(members); });
+socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
+socket.on("updateOnlineUsers", users => {
+  const box = document.getElementById("online-users-box");
+  box.innerHTML = "";
+  if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
+  users.forEach(u=>{ box.innerHTML += "<p>• " + u + "</p>"; });
+});
+socket.on("newAuditLog", log => {
+  const box = document.getElementById("audit-log-box");
+  if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
+  const time = new Date().toLocaleTimeString();
+  box.innerHTML += `[${time}] ${log}<br>`;
+  box.scrollTop = box.scrollHeight;
+});
 
-  <script>
-    const loginDiv = document.getElementById('login');
-    const dashboard = document.getElementById('dashboard');
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const loginError = document.getElementById('loginError');
-    const loggedInUser = document.getElementById('loggedInUser');
-    const userRank = document.getElementById('userRank');
-    const sections = document.querySelectorAll('.section');
-    const navButtons = document.querySelectorAll('nav button');
-    let socket;
-    let currentUser = null;
+// Login
+async function login(){
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+  try{
+    const res = await axios.post("/login",{username,password});
+    if(res.data.success){
+      currentUser = username;
+      document.getElementById("login-container").style.display="none";
+      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
+      document.getElementById("logout-btn").style.display="inline-block";
 
-    async function loginUser(username, password) {
-      try {
-        const res = await fetch('members.json');
-        const members = await res.json();
-        const user = members.find(u => u.username === username && u.password === password);
-        return user || null;
-      } catch (err) {
-        console.error('Fehler beim Laden der Mitglieder:', err);
-        return null;
+      // Rang aus membersData
+      const member = membersData.find(m=>m.username===username);
+      currentRank = member ? member.rank : "Member";
+      document.getElementById("rank-display").innerText = "Rang: " + currentRank;
+
+      socket.emit("userOnline", username);
+      if(allowedUsers.includes(username)){
+        document.getElementById("stats-btn").style.display="inline-block";
       }
+    } else {
+      document.getElementById("login-error").innerText="Login fehlgeschlagen!";
     }
+  } catch(e){
+    document.getElementById("login-error").innerText="Serverfehler!";
+  }
+}
 
-    loginBtn.addEventListener('click', async () => {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
+// Logout
+function logout(){
+  currentUser = null;
+  currentRank = null;
+  document.getElementById("logged-in").innerText = "";
+  document.getElementById("rank-display").innerText = "";
+  document.getElementById("logout-btn").style.display="none";
+  document.getElementById("login-container").style.display = "flex";
+  socket.emit("userOffline");
+}
 
-      const user = await loginUser(username, password);
-      if (user) {
-        currentUser = user;
-        loggedInUser.textContent = `Eingeloggt als: ${user.username}`;
-        userRank.textContent = `Rang: ${user.rank}`;
-        loginDiv.style.display = 'none';
-        dashboard.style.display = 'block';
-        socket = io();
-      } else {
-        loginError.textContent = 'Ungültiger Benutzername oder Passwort!';
-      }
-    });
-
-    logoutBtn.addEventListener('click', () => {
-      if (socket) socket.disconnect();
-      currentUser = null;
-      dashboard.style.display = 'none';
-      loginDiv.style.display = 'flex';
-      document.getElementById('username').value = '';
-      document.getElementById('password').value = '';
-    });
-
-    navButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        sections.forEach(sec => sec.classList.remove('active'));
-        document.getElementById(btn.dataset.target).classList.add('active');
-      });
-    });
-  </script>
+// Auto Popup
+function openAutoPopup(name, preis, primary, interior, wheels, undercarriage, rank){
+  document.getElementById("auto-popup-name").innerText = name;
+  document.getElementById("auto-popup-preis").innerText = "Preis: " + preis;
+  document.getElementById("auto-popup-primary").innerText = "Primary Farbe: " + primary;
+  document.getElementById("auto-popup-interior").innerText = "Interieur Farbe: " + interior;
+  document.getElementById("auto-popup-wheels").innerText = "Felgen Farbe: " + wheels;
+  document.getElementById("auto-popup-undercarriage").innerText = "Unterboden: " + undercarriage;
+  document.getElementById("auto-popup-rank").innerText = "Rang: " + rank;
+  document.getElementById("auto-popup").style.display="flex";
+}
+function closeAutoPopup(){
+  document.getElementById("auto-popup").style.display="none";
+}
+</script>
 </body>
 </html>
