@@ -31,16 +31,6 @@ header {
   top:15px;
   font-size:1rem;
   color:#fff;
-  text-align:right;
-}
-
-#rank-display {
-  position:absolute;
-  right:20px;
-  top:40px;
-  font-size:0.9rem;
-  color:#fff;
-  text-align:right;
 }
 
 /* Navigation */
@@ -242,13 +232,11 @@ button.fancy-member:hover {
 <header>
 💜 Purple Shadows 💜
 <div id="logged-in"></div>
-<div id="rank-display"></div>
-<button id="logout-btn" onclick="logout()" style="position:absolute; right:20px; top:65px; display:none;">Abmelden</button>
 </header>
 
 <nav>
   <button onclick="showTab('home')">Startseite</button>
-  <button onclick="showTab('shop')">Shop</button>
+  <button onclick="showTab('shop')">Kleidung</button>
   <button onclick="showTab('members')">Mitgliederliste</button>
   <button onclick="showTab('autoliste')">Autoliste</button>
   <button id="stats-btn" onclick="showTab('stats')" style="display:none;">Statistiken</button>
@@ -259,10 +247,10 @@ button.fancy-member:hover {
 <!-- Home Section -->
 <section id="home" class="active">
   <h2>💜 Willkommen bei Purple Shadows 💜</h2>
-  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
+  <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&">
 </section>
 
-<!-- Shop Section -->
+<!-- Shop/Kleidung Section -->
 <section id="shop">
   <h2>💜 Purple Shadows - Kleidung 💜</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
@@ -285,14 +273,16 @@ button.fancy-member:hover {
   </div>
 </section>
 
+<!-- Autoliste Section -->
 <section id="autoliste">
   <h2>💜 Purple Shadows - Autoliste 💜</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
   <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; padding:20px;">
-    <!-- Auto-Karten hier wie im Beispiel -->
+    <!-- Autos hier wie im Originalscript -->
   </div>
 </section>
 
+<!-- Mitgliederliste Section -->
 <section id="members">
   <h2>💜 Purple Shadows - Mitgliederliste 💜</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
@@ -308,6 +298,7 @@ button.fancy-member:hover {
   </table>
 </section>
 
+<!-- Statistiken Section -->
 <section id="stats">
   <h2>📊 Statistiken</h2>
   <img class="logo-float" src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png">
@@ -327,6 +318,7 @@ button.fancy-member:hover {
   </div>
 </section>
 
+<!-- Auto Popup -->
 <div id="auto-popup">
   <div id="auto-popup-content">
     <h3 id="auto-popup-name">Auto Name</h3>
@@ -340,6 +332,7 @@ button.fancy-member:hover {
   </div>
 </div>
 
+<!-- Login Modal -->
 <div id="login-container">
   <div id="login-box">
     <h2>Login</h2>
@@ -353,8 +346,7 @@ button.fancy-member:hover {
 <script>
 const socket = io();
 let currentUser = null;
-let currentRank = null;
-let membersData = [];
+let currentRank = "Member";
 const allowedUsers = ["Julian","Max"];
 
 // Tabs
@@ -368,8 +360,10 @@ function renderMembers(members){
   const table = document.getElementById("members-table");
   table.innerHTML = "";
   members.forEach(m=>{
+    const row = document.createElement("tr");
     const actionBtn = `<button class="fancy-member" onclick="openMemberLink('${m.link}')">🌐</button>`;
-    table.innerHTML += `<tr><td>${m.username}</td><td>${m.rank}</td><td>${actionBtn}</td></tr>`;
+    row.innerHTML = `<td>${m.username}</td><td>${m.rank}</td><td>${actionBtn}</td>`;
+    table.appendChild(row);
   });
 }
 
@@ -383,19 +377,25 @@ function openMemberLink(link){
 }
 
 // Socket Events
-socket.on("updateMembers", members => { membersData = members; renderMembers(members); });
+socket.on("updateMembers", members => renderMembers(members));
 socket.on("updateViewers", count => document.getElementById("viewer").innerText=`👁️ ${count}`);
 socket.on("updateOnlineUsers", users => {
   const box = document.getElementById("online-users-box");
   box.innerHTML = "";
   if(users.length===0){ box.innerHTML = "<p style='opacity:0.6;'>Niemand online</p>"; return; }
-  users.forEach(u=>{ box.innerHTML += "<p>• " + u + "</p>"; });
+  users.forEach(u=>{
+    const p = document.createElement("p");
+    p.textContent = "• " + u;
+    box.appendChild(p);
+  });
 });
 socket.on("newAuditLog", log => {
   const box = document.getElementById("audit-log-box");
   if(box.querySelector("p") && box.querySelector("p").style.opacity==="0.6") box.innerHTML="";
   const time = new Date().toLocaleTimeString();
-  box.innerHTML += `[${time}] ${log}<br>`;
+  const p = document.createElement("p");
+  p.textContent = `[${time}] ${log}`;
+  box.appendChild(p);
   box.scrollTop = box.scrollHeight;
 });
 
@@ -403,20 +403,14 @@ socket.on("newAuditLog", log => {
 async function login(){
   const username = document.getElementById("login-username").value.trim();
   const password = document.getElementById("login-password").value.trim();
-  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+  if(username===""||password===""){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
   try{
     const res = await axios.post("/login",{username,password});
     if(res.data.success){
       currentUser = username;
+      currentRank = res.data.rank || "Member";
       document.getElementById("login-container").style.display="none";
-      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username}`;
-      document.getElementById("logout-btn").style.display="inline-block";
-
-      // Rang aus membersData
-      const member = membersData.find(m=>m.username===username);
-      currentRank = member ? member.rank : "Member";
-      document.getElementById("rank-display").innerText = "Rang: " + currentRank;
-
+      document.getElementById("logged-in").innerText = `Eingeloggt als: ${username} (${currentRank})`;
       socket.emit("userOnline", username);
       if(allowedUsers.includes(username)){
         document.getElementById("stats-btn").style.display="inline-block";
@@ -427,17 +421,6 @@ async function login(){
   } catch(e){
     document.getElementById("login-error").innerText="Serverfehler!";
   }
-}
-
-// Logout
-function logout(){
-  currentUser = null;
-  currentRank = null;
-  document.getElementById("logged-in").innerText = "";
-  document.getElementById("rank-display").innerText = "";
-  document.getElementById("logout-btn").style.display="none";
-  document.getElementById("login-container").style.display = "flex";
-  socket.emit("userOffline");
 }
 
 // Auto Popup
