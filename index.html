@@ -1,392 +1,284 @@
 <!DOCTYPE html>
 <html lang="de" translate="yes">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Purple Shadows</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
-  <style>
-    :root {
-      --purple: #6a00b0;
-      --dark: #0b0b0f;
-      --darker: #050507;
-      --text: #e5e5e5;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: "Rajdhani", sans-serif;
-    }
-    body {
-      background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 100%);
-      color: var(--text);
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    header {
-      text-align: center;
-      padding: 2rem 1rem;
-      border-bottom: 1px solid rgba(106,0,176,0.3);
-      text-shadow: 0 0 10px var(--purple);
-      position: relative;
-    }
-    header h1 {
-      font-family: "Orbitron", sans-serif;
-      font-size: 2.5rem;
-      color: var(--purple);
-      letter-spacing: 2px;
-    }
-    #user-info {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      text-align: left;
-      font-size: 0.9rem;
-    }
-    #user-info button {
-      margin-top: 5px;
-      padding: 5px 10px;
-      border: none;
-      border-radius: 8px;
-      background: red;
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin: 1rem 0;
-    }
-    nav button {
-      background: none;
-      border: 1px solid var(--purple);
-      color: var(--text);
-      padding: 0.5rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    nav button.active, nav button:hover {
-      background: var(--purple);
-      color: #000;
-      box-shadow: 0 0 15px var(--purple);
-    }
-    .section {
-      display: none;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      animation: fadeIn 0.4s ease-in-out;
-    }
-    .section.active {
-      display: block;
-    }
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-    }
-    .stat-card {
-      background: rgba(106,0,176,0.08);
-      border: 1px solid rgba(106,0,176,0.3);
-      border-radius: 15px;
-      padding: 1rem 2rem;
-      text-align: center;
-      flex: 1 1 200px;
-      box-shadow: 0 0 15px rgba(106,0,176,0.1);
-      transition: transform 0.3s;
-    }
-    .stat-card:hover { transform: scale(1.05); }
-    .stat-card h2 {
-      color: var(--purple);
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      text-shadow: 0 0 10px var(--purple);
-    }
-    .member-list, .auto-list, .shop-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card, .blur-card {
-      background: rgba(60,0,90,0.5);
-      border: 1px solid rgba(125,42,255,0.3);
-      border-radius: 15px;
-      padding: 1rem;
-      text-align: center;
-      transition: 0.3s;
-      cursor: pointer;
-    }
-    .card:hover, .blur-card:hover {
-      transform: scale(1.03);
-      box-shadow: 0 0 20px rgba(155,92,255,0.3);
-    }
-    .card h3 { color: var(--purple); margin-bottom: 0.5rem; }
-    #auditLog {
-      background: rgba(60,0,90,0.3);
-      border: 1px solid rgba(125,42,255,0.3);
-      border-radius: 12px;
-      padding: 1rem;
-      height: 300px;
-      overflow-y: auto;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-    }
-    #login-container {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: radial-gradient(circle at center, #050507 0%, #0b0b0f 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 50;
-    }
-    #login-box {
-      max-width: 350px;
-      width: 90%;
-      text-align: center;
-      padding: 30px;
-      border-radius: 20px;
-      background: rgba(60,0,90,0.9);
-      box-shadow: 0 0 30px #6a00b0;
-    }
-    #login-box input {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 12px;
-      border: 1px solid #4b0082;
-      background: rgba(40,0,70,0.7);
-      color: #fff;
-      font-size: 1rem;
-    }
-    #login-box button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg,#4b0082,#6a00b0);
-      color: #fff;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #login-box img {
-      width: 150px;
-      margin-bottom: 20px;
-      animation: floatLogo 4s ease-in-out infinite;
-      filter: drop-shadow(0 0 25px #6a00b0);
-    }
-    #auto-modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-    }
-    #auto-modal-content {
-      background: #2b0030;
-      padding: 25px;
-      border-radius: 20px;
-      width: 350px;
-      text-align: center;
-      box-shadow: 0 0 30px #6a00b0;
-    }
-    #auto-modal-content img {
-      width: 100%;
-      border-radius: 12px;
-      margin-bottom: 10px;
-    }
-    #auto-modal-content button {
-      margin-top: 10px;
-      padding: 8px 15px;
-      border: none;
-      border-radius: 10px;
-      background: red;
-      color: white;
-      cursor: pointer;
-    }
-
-    /* === Regeln-Styling === */
-    .regeln-container {
-      background: rgba(60,0,90,0.3);
-      border: 1px solid rgba(125,42,255,0.3);
-      border-radius: 15px;
-      padding: 2rem;
-      line-height: 1.8;
-      box-shadow: 0 0 20px rgba(106,0,176,0.2);
-    }
-    .regeln-container h2 {
-      text-align: center;
-      color: var(--purple);
-      text-shadow: 0 0 15px var(--purple);
-      margin-bottom: 1rem;
-    }
-    .regeln-container h3 {
-      color: var(--purple);
-      margin-top: 1rem;
-      text-shadow: 0 0 10px var(--purple);
-    }
-    .regeln-container p {
-      margin-left: 1rem;
-      font-size: 1rem;
-    }
-
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
-    @keyframes floatLogo { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purple Shadows</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+<style>
+:root {--purple:#6a00b0;--dark:#0b0b0f;--darker:#050507;--text:#e5e5e5;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:"Rajdhani",sans-serif;}
+body{background:radial-gradient(circle at center,var(--darker) 0%,var(--dark) 100%);color:var(--text);min-height:100vh;overflow-x:hidden;}
+header{text-align:center;padding:2rem 1rem;border-bottom:1px solid rgba(106,0,176,0.3);text-shadow:0 0 10px var(--purple);position:relative;}
+header h1{font-family:"Orbitron",sans-serif;font-size:2.5rem;color:var(--purple);letter-spacing:2px;}
+#user-info{position:absolute;top:15px;left:15px;text-align:left;font-size:0.9rem;}
+#user-info button{margin-top:5px;padding:5px 10px;border:none;border-radius:8px;background:red;color:white;cursor:pointer;font-weight:bold;}
+nav{display:flex;justify-content:center;gap:1.5rem;margin:1rem 0;}
+nav button{background:none;border:1px solid var(--purple);color:var(--text);padding:0.5rem 1.2rem;border-radius:8px;cursor:pointer;transition:0.3s;}
+nav button.active,nav button:hover{background:var(--purple);color:#000;box-shadow:0 0 15px var(--purple);}
+.section{display:none;padding:2rem;max-width:1200px;margin:0 auto;animation:fadeIn 0.4s ease-in-out;}
+.section.active{display:block;}
+.stats{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;}
+.stat-card{background:rgba(106,0,176,0.08);border:1px solid rgba(106,0,176,0.3);border-radius:15px;padding:1rem 2rem;text-align:center;flex:1 1 200px;box-shadow:0 0 15px rgba(106,0,176,0.1);transition:transform 0.3s;}
+.stat-card:hover{transform:scale(1.05);}
+.stat-card h2{color:var(--purple);font-size:2rem;margin-bottom:0.5rem;text-shadow:0 0 10px var(--purple);}
+.member-list,.auto-list,.shop-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:2rem;}
+.card,.blur-card{background:rgba(60,0,90,0.5);border:1px solid rgba(125,42,255,0.3);border-radius:15px;padding:1rem;text-align:center;transition:0.3s;cursor:pointer;}
+.card:hover,.blur-card:hover{transform:scale(1.03);box-shadow:0 0 20px rgba(155,92,255,0.3);}
+.card h3{color:var(--purple);margin-bottom:0.5rem;}
+#auditLog{background:rgba(60,0,90,0.3);border:1px solid rgba(125,42,255,0.3);border-radius:12px;padding:1rem;height:300px;overflow-y:auto;margin-top:2rem;font-size:0.9rem;}
+#login-container{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at center,#050507 0%,#0b0b0f 100%);display:flex;justify-content:center;align-items:center;z-index:50;}
+#login-box{max-width:350px;width:90%;text-align:center;padding:30px;border-radius:20px;background:rgba(60,0,90,0.9);box-shadow:0 0 30px #6a00b0;}
+#login-box input{width:100%;padding:12px;margin:10px 0;border-radius:12px;border:1px solid #4b0082;background:rgba(40,0,70,0.7);color:#fff;font-size:1rem;}
+#login-box button{width:100%;padding:12px;margin-top:15px;border:none;border-radius:12px;background:linear-gradient(90deg,#4b0082,#6a00b0);color:#fff;font-weight:bold;cursor:pointer;}
+#login-box img{width:150px;margin-bottom:20px;animation:floatLogo 4s ease-in-out infinite;filter:drop-shadow(0 0 25px #6a00b0);}
+#auto-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:100;}
+#auto-modal-content{background:#2b0030;padding:25px;border-radius:20px;width:350px;text-align:center;box-shadow:0 0 30px #6a00b0;}
+#auto-modal-content img{width:100%;border-radius:12px;margin-bottom:10px;}
+#auto-modal-content button{margin-top:10px;padding:8px 15px;border:none;border-radius:10px;background:red;color:white;cursor:pointer;}
+.regeln-container{background:rgba(60,0,90,0.3);border:1px solid rgba(125,42,255,0.3);border-radius:15px;padding:2rem;line-height:1.8;box-shadow:0 0 20px rgba(106,0,176,0.2);}
+.regeln-container h2{text-align:center;color:var(--purple);text-shadow:0 0 15px var(--purple);margin-bottom:1rem;}
+.regeln-container h3{color:var(--purple);margin-top:1rem;text-shadow:0 0 10px var(--purple);}
+.regeln-container p{margin-left:1rem;font-size:1rem;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes floatLogo{0%,100%{transform:translateY(0px);}50%{transform:translateY(-10px);}}
+</style>
 </head>
 
 <body>
-  <header>
-    <h1>💜 Purple Shadows</h1>
-    <div id="user-info">
-      <div id="info-username">Angemeldet als: -</div>
-      <div id="info-rank">Rang: -</div>
-      <button onclick="logout()">Abmelden</button>
-    </div>
-    <nav>
-      <button class="tab active" data-target="home">Start</button>
-      <button class="tab" data-target="members">Mitglieder</button>
-      <button class="tab" data-target="cars">Fahrzeuge</button>
-      <button class="tab" data-target="shop">Kleidung</button>
-      <button class="tab" data-target="rules">Regeln</button>
-      <button class="tab" data-target="logs" id="logs-btn" style="display:none;">Aktivität</button>
-    </nav>
-  </header>
+<header>
+<h1>💜 Purple Shadows</h1>
+<div id="user-info">
+<div id="info-username">Angemeldet als: -</div>
+<div id="info-rank">Rang: -</div>
+<button onclick="logout()">Abmelden</button>
+</div>
+<nav>
+<button class="tab active" data-target="home">Start</button>
+<button class="tab" data-target="members">Mitglieder</button>
+<button class="tab" data-target="cars">Fahrzeuge</button>
+<button class="tab" data-target="shop">Kleidung</button>
+<button class="tab" data-target="rules">Regeln</button>
+<button class="tab" data-target="logs" id="logs-btn" style="display:none;">Aktivität</button>
+</nav>
+</header>
 
-  <!-- Login -->
-  <div id="login-container">
-    <div id="login-box">
-      <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427691099371212820/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
-      <h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
-      <input id="login-username" placeholder="Username">
-      <input id="login-password" type="password" placeholder="Passwort">
-      <button onclick="login()">Login</button>
-      <p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
-    </div>
-  </div>
+<!-- Login -->
+<div id="login-container">
+<div id="login-box">
+<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427691099371212820/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+<h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
+<input id="login-username" placeholder="Username">
+<input id="login-password" type="password" placeholder="Passwort">
+<button onclick="login()">Login</button>
+<p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
+</div>
+</div>
 
-  <!-- Autos Modal -->
-  <div id="auto-modal">
-    <div id="auto-modal-content">
-      <img id="modal-img" src="">
-      <h3 id="modal-name">Name</h3>
-      <p id="modal-preis">Preis:</p>
-      <p id="modal-wheels">Felgenfarbe:</p>
-      <p id="modal-carcolor">Fahrzeug Farbe:</p>
-      <p id="modal-interior">Innenraum Farbe:</p>
-      <p id="modal-undercarriage">Unterboden Farbe:</p>
-      <p id="modal-rank">Rang:</p>
-      <button onclick="closeAutoModal()">Schließen</button>
-    </div>
-  </div>
+<!-- Autos Modal -->
+<div id="auto-modal">
+<div id="auto-modal-content">
+<img id="modal-img" src="">
+<h3 id="modal-name">Name</h3>
+<p id="modal-preis">Preis:</p>
+<p id="modal-wheels">Felgenfarbe:</p>
+<p id="modal-carcolor">Fahrzeug Farbe:</p>
+<p id="modal-interior">Innenraum Farbe:</p>
+<p id="modal-undercarriage">Unterboden Farbe:</p>
+<p id="modal-rank">Rang:</p>
+<button onclick="closeAutoModal()">Schließen</button>
+</div>
+</div>
 
-  <!-- HOME -->
-  <section id="home" class="section active">
-    <div class="stats">
-      <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
-      <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
-      <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
-      <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
-    </div>
-  </section>
+<!-- HOME -->
+<section id="home" class="section active">
+<div class="stats">
+<div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
+<div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
+<div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
+<div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
+</div>
+</section>
 
-  <!-- Mitglieder -->
-  <section id="members" class="section">
-    <h2>Mitgliederliste</h2>
-    <div class="member-list" id="memberList"></div>
-  </section>
+<!-- Mitglieder -->
+<section id="members" class="section">
+<h2>Mitgliederliste</h2>
+<div class="member-list" id="memberList"></div>
+</section>
 
-  <!-- Autos -->
-  <section id="cars" class="section">
-    <h2>Fahrzeugliste</h2>
-    <div class="auto-list" id="autoliste"></div>
-  </section>
+<!-- Autos -->
+<section id="cars" class="section">
+<h2>Fahrzeugliste</h2>
+<div class="auto-list" id="autoliste"></div>
+</section>
 
-  <!-- Shop -->
-  <section id="shop" class="section">
-    <h2>Kleidungs-Shop</h2>
-    <div class="shop-list" id="shopList"></div>
-  </section>
+<!-- Shop -->
+<section id="shop" class="section">
+<h2>Kleidungs-Shop</h2>
+<div class="shop-list" id="shopList"></div>
+</section>
 
-  <!-- Regeln -->
-  <section id="rules" class="section">
-    <div class="regeln-container">
-      <h2>📜 Purple Shadows – Gang-Regeln (Emden)</h2>
-      <p>⚠️ Diese Regeln gelten für jedes Mitglied. Verstöße können Konsequenzen bis hin zum Ausschluss haben.</p>
+<!-- Regeln -->
+<section id="rules" class="section">
+<div class="regeln-container">
+<h2>📜 Purple Shadows – Gang-Regeln (Emden)</h2>
+<p>⚠️ Diese Regeln gelten für jedes Mitglied. Verstöße können Konsequenzen haben.</p>
+<h3>§1 Allgemeines</h3>
+<p>§1.1 Jeder behandelt jeden mit Respekt.</p>
+<p>§1.2 Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
+<p>§1.3 Wir repräsentieren die Gang stolz, aber mit Niveau.</p>
+<h3>§2 Führung & Struktur 👑</h3>
+<p>§2.1 Die Führung hat immer das letzte Wort.</p>
+<p>§2.2 Diskussionen sind erlaubt, Entscheidung der Leitung ist bindend.</p>
+<p>§2.3 Befehle der Highranks werden respektiert.</p>
+<h3>§3 Kriege & Fights 🎧🔥</h3>
+<p>§3.1 Call im Krieg/Fight ist Gesetz.</p>
+<p>§3.2 Nur Ansagen des Callers zählen – keine Diskussion.</p>
+<p>§3.3 Kein Alleingang im Fight ohne Absprache.</p>
+<h3>§4 Loyalität 🤝</h3>
+<p>§4.1 Purple Shadows sind eine Einheit.</p>
+<p>§4.2 Verrat, Leaks oder Spionage werden nicht toleriert.</p>
+<p>§4.3 Informationen bleiben intern.</p>
+<h3>§5 Disziplin 🎯</h3>
+<p>§5.1 Keine unnötigen Alleingänge.</p>
+<p>§5.2 Absprache mit Leitung vor Aktionen.</p>
+<p>§5.3 Verhalten im RP respektvoll und realistisch.</p>
+<h3>§6 Verhalten im Discord 💬</h3>
+<p>§6.1 Kein Spam, kein unnötiges Pingen, keine Störgeräusche.</p>
+<p>§6.2 Channel-Struktur respektieren.</p>
+<p>§6.3 AFK-Status korrekt nutzen.</p>
+<h3>§7 Privatsphäre & Auftreten 🔒</h3>
+<p>§7.1 Keine privaten Infos weitergeben.</p>
+<p>§7.2 Screenshots nur mit Zustimmung.</p>
+<p>§7.3 Jeder repräsentiert die Gang nach außen.</p>
+</div>
+</section>
 
-      <h3>§1 Allgemeines</h3>
-      <p>§1.1 Jeder behandelt jeden mit Respekt.</p>
-      <p>§1.2 Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
-      <p>§1.3 Wir repräsentieren die Gang stolz, aber mit Niveau – kein kindisches oder respektloses Verhalten in der Öffentlichkeit.</p>
+<!-- Logs -->
+<section id="logs" class="section">
+<h2>Gang Aktivität</h2>
+<div id="auditLog"></div>
+</section>
 
-      <h3>§2 Führung & Struktur 👑</h3>
-      <p>§2.1 Die Führung hat immer das letzte Wort.</p>
-      <p>§2.2 Diskussionen sind erlaubt, aber die Entscheidung der Leitung ist bindend.</p>
-      <p>§2.3 Befehle der Highranks werden respektiert und ohne Widerrede ausgeführt.</p>
+<script>
+const socket = io();
+let currentUser = null;
+const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
-      <h3>§3 Kriege & Fights 🎧🔥</h3>
-      <p>§3.1 Der Call im Krieg oder Fight ist Gesetz.</p>
-      <p>§3.2 Nur die Ansagen des Callers zählen – keine Diskussion, nur Ausführung.</p>
-      <p>§3.3 Kein Alleingang im Fight ohne Absprache mit dem Team.</p>
+// Tabs
+document.querySelectorAll(".tab").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  });
+});
 
-      <h3>§4 Loyalität 🤝</h3>
-      <p>§4.1 Die Purple Shadows sind eine Einheit – Zusammenhalt steht an erster Stelle.</p>
-      <p>§4.2 Verrat, Leaks oder Spionage werden nicht toleriert.</p>
-      <p>§4.3 Informationen der Gang bleiben intern.</p>
+// Login
+async function login(){
+  const username=document.getElementById("login-username").value.trim();
+  const password=document.getElementById("login-password").value.trim();
+  if(!username||!password){document.getElementById("login-error").innerText="Bitte ausfüllen!";return;}
+  try{
+    const res=await axios.post("/login",{username,password});
+    if(res.data.success){
+      currentUser=username;
+      document.getElementById("login-container").style.display="none";
+      document.getElementById("info-username").innerText="Angemeldet als: "+username;
+      document.getElementById("info-rank").innerText="Rang: "+(res.data.rank||"Member");
+      if(allowedUsers.includes(username)) document.getElementById("logs-btn").style.display="inline-block";
+      socket.emit("userOnline",username);
+      loadAutos();
+      loadShop();
+    }else{document.getElementById("login-error").innerText="Login fehlgeschlagen!";}
+  }catch(e){document.getElementById("login-error").innerText="Serverfehler!";}
+}
 
-      <h3>§5 Disziplin 🎯</h3>
-      <p>§5.1 Keine unnötigen Alleingänge oder Aktionen ohne Rücksprache.</p>
-      <p>§5.2 Immer Absprache mit Leitung oder Ranghöheren, bevor etwas gestartet wird.</p>
-      <p>§5.3 Verhalten im RP sollte realistisch und respektvoll bleiben.</p>
+function logout(){
+  currentUser=null;
+  document.getElementById("login-container").style.display="flex";
+  document.getElementById("info-username").innerText="Angemeldet als: -";
+  document.getElementById("info-rank").innerText="Rang: -";
+  document.getElementById("logs-btn").style.display="none";
+}
 
-      <h3>§6 Verhalten im Discord 💬</h3>
-      <p>§6.1 Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
-      <p>§6.2 Die Channel-Struktur ist einzuhalten.</p>
-      <p>§6.3 Wer AFK ist, mutet sich oder geht in den AFK-Channel.</p>
+// Memberliste
+socket.on("updateMembers",members=>{
+  const container=document.getElementById("memberList");
+  container.innerHTML="";
+  members.forEach(m=>{
+    const div=document.createElement("div");
+    div.className="card";
+    div.innerHTML=`<h3>${m.username}</h3><p>${m.rank||"Member"}</p>`;
+    if(m.link) div.addEventListener("click",()=>window.open(m.link,"_blank"));
+    container.appendChild(div);
+  });
+  document.getElementById("home-member-count").innerText=members.length;
+});
 
-      <h3>§7 Privatsphäre & Auftreten 🔒</h3>
-      <p>§7.1 Keine privaten Informationen anderer ohne Erlaubnis weitergeben.</p>
-      <p>§7.2 Screenshots oder Aufnahmen nur mit Zustimmung.</p>
-      <p>§7.3 Jeder Member repräsentiert die Gang nach außen – benehmt euch dementsprechend.</p>
-    </div>
-  </section>
+socket.on("updateViewers",count=>{
+  document.getElementById("viewer").innerText=`👁️ ${count}`;
+  document.getElementById("home-online-count").innerText=count;
+});
 
-  <!-- Logs -->
-  <section id="logs" class="section">
-    <h2>Gang Aktivität</h2>
-    <div id="auditLog"></div>
-  </section>
+const auditLog=document.getElementById("auditLog");
+socket.on("newAuditLog",log=>{
+  const p=document.createElement("p");
+  p.textContent=log;
+  auditLog.appendChild(p);
+  auditLog.scrollTop=auditLog.scrollHeight;
+});
 
-  <script>
-    const socket = io();
-    let currentUser = null;
-    const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
+// Autos Modal
+function openAutoModal(name,preis,img,wheels,carcolor,interior,undercarriage,rank){
+  document.getElementById("modal-img").src=img;
+  document.getElementById("modal-name").innerText=name;
+  document.getElementById("modal-preis").innerText=preis;
+  document.getElementById("modal-wheels").innerText=wheels;
+  document.getElementById("modal-carcolor").innerText=carcolor;
+  document.getElementById("modal-interior").innerText=interior;
+  document.getElementById("modal-undercarriage").innerText=undercarriage;
+  document.getElementById("modal-rank").innerText=rank;
+  document.getElementById("auto-modal").style.display="flex";
+}
 
-    document.querySelectorAll(".tab").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-        btn.classList.add("active");
-        document.getElementById(btn.dataset.target).classList.add("active");
-      });
-    });
-  </script>
+function closeAutoModal(){document.getElementById("auto-modal").style.display="none";}
+
+// Autos laden
+function loadAutos(){
+  const autos=[ /* ... deine Autos hier einfügen ... */ ];
+  const container=document.getElementById("autoliste");
+  container.innerHTML="";
+  autos.forEach(a=>{
+    const div=document.createElement("div");
+    div.className="blur-card";
+    div.style.padding="20px";
+    div.innerHTML=`<img src="${a.img}" alt="${a.name}" style="width:100%; border-radius:12px;"><h3>${a.name}</h3><p>Preis: ${a.preis}</p>`;
+    div.addEventListener("click",()=>openAutoModal(a.name,"Preis: "+a.preis,a.img,a.wheels,a.carcolor,a.interior,a.undercarriage,a.rank));
+    container.appendChild(div);
+  });
+  document.getElementById("home-auto-count").innerText=autos.length;
+}
+
+// Shop laden
+function loadShop(){
+  const items=[ /* ... deine Shop Items hier einfügen ... */ ];
+  const container=document.getElementById("shopList");
+  container.innerHTML="";
+  items.forEach(i=>{
+    const div=document.createElement("div");
+    div.className="blur-card";
+    div.innerHTML=`<img src="${i.img}" alt="${i.name}" style="width:100%; border-radius:12px;"><h3>${i.name}</h3>`;
+    div.addEventListener("click",()=>window.open(i.link,"_blank"));
+    container.appendChild(div);
+  });
+}
+</script>
 </body>
 </html>
-
 
 
 
