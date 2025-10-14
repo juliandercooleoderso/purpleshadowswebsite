@@ -14,21 +14,18 @@
       --darker: #050507;
       --text: #e5e5e5;
     }
-
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       font-family: "Rajdhani", sans-serif;
     }
-
     body {
       background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 100%);
       color: var(--text);
       min-height: 100vh;
       overflow-x: hidden;
     }
-
     header {
       text-align: center;
       padding: 2rem 1rem;
@@ -36,14 +33,12 @@
       text-shadow: 0 0 10px var(--purple);
       position: relative;
     }
-
     header h1 {
       font-family: "Orbitron", sans-serif;
       font-size: 2.5rem;
       color: var(--purple);
       letter-spacing: 2px;
     }
-
     #user-info {
       position: absolute;
       top: 15px;
@@ -51,7 +46,6 @@
       text-align: left;
       font-size: 0.9rem;
     }
-
     #user-info button {
       margin-top: 5px;
       padding: 5px 10px;
@@ -62,14 +56,12 @@
       cursor: pointer;
       font-weight: bold;
     }
-
     nav {
       display: flex;
       justify-content: center;
       gap: 1.5rem;
       margin: 1rem 0;
     }
-
     nav button {
       background: none;
       border: 1px solid var(--purple);
@@ -79,14 +71,11 @@
       cursor: pointer;
       transition: 0.3s;
     }
-
-    nav button.active,
-    nav button:hover {
+    nav button.active, nav button:hover {
       background: var(--purple);
       color: #000;
       box-shadow: 0 0 15px var(--purple);
     }
-
     .section {
       display: none;
       padding: 2rem;
@@ -94,18 +83,15 @@
       margin: 0 auto;
       animation: fadeIn 0.4s ease-in-out;
     }
-
     .section.active {
       display: block;
     }
-
     .stats {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
     }
-
     .stat-card {
       background: rgba(106,0,176,0.08);
       border: 1px solid rgba(106,0,176,0.3);
@@ -116,29 +102,20 @@
       box-shadow: 0 0 15px rgba(106,0,176,0.1);
       transition: transform 0.3s;
     }
-
-    .stat-card:hover {
-      transform: scale(1.05);
-    }
-
+    .stat-card:hover { transform: scale(1.05); }
     .stat-card h2 {
       color: var(--purple);
       font-size: 2rem;
       margin-bottom: 0.5rem;
       text-shadow: 0 0 10px var(--purple);
     }
-
-    .member-list,
-    .auto-list,
-    .shop-list {
+    .member-list, .auto-list, .shop-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1rem;
       margin-top: 2rem;
     }
-
-    .card,
-    .blur-card {
+    .card, .blur-card {
       background: rgba(60,0,90,0.5);
       border: 1px solid rgba(125,42,255,0.3);
       border-radius: 15px;
@@ -147,18 +124,11 @@
       transition: 0.3s;
       cursor: pointer;
     }
-
-    .card:hover,
-    .blur-card:hover {
+    .card:hover, .blur-card:hover {
       transform: scale(1.03);
       box-shadow: 0 0 20px rgba(155,92,255,0.3);
     }
-
-    .card h3 {
-      color: var(--purple);
-      margin-bottom: 0.5rem;
-    }
-
+    .card h3 { color: var(--purple); margin-bottom: 0.5rem; }
     #auditLog {
       background: rgba(60,0,90,0.3);
       border: 1px solid rgba(125,42,255,0.3);
@@ -169,20 +139,16 @@
       margin-top: 2rem;
       font-size: 0.9rem;
     }
-
     #login-container {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: radial-gradient(circle at center, #050507 0%, #0b0b0f 100%);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 50;
     }
-
     #login-box {
       max-width: 350px;
       width: 90%;
@@ -192,7 +158,6 @@
       background: rgba(60,0,90,0.9);
       box-shadow: 0 0 30px #6a00b0;
     }
-
     #login-box input {
       width: 100%;
       padding: 12px;
@@ -203,7 +168,6 @@
       color: #fff;
       font-size: 1rem;
     }
-
     #login-box button {
       width: 100%;
       padding: 12px;
@@ -215,27 +179,22 @@
       font-weight: bold;
       cursor: pointer;
     }
-
     #login-box img {
       width: 150px;
       margin-bottom: 20px;
       animation: floatLogo 4s ease-in-out infinite;
       filter: drop-shadow(0 0 25px #6a00b0);
     }
-
     #auto-modal {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.85);
       justify-content: center;
       align-items: center;
       z-index: 100;
     }
-
     #auto-modal-content {
       background: #2b0030;
       padding: 25px;
@@ -244,13 +203,11 @@
       text-align: center;
       box-shadow: 0 0 30px #6a00b0;
     }
-
     #auto-modal-content img {
       width: 100%;
       border-radius: 12px;
       margin-bottom: 10px;
     }
-
     #auto-modal-content button {
       margin-top: 10px;
       padding: 8px 15px;
@@ -261,239 +218,175 @@
       cursor: pointer;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* === Regeln-Styling === */
+    .regeln-container {
+      background: rgba(60,0,90,0.3);
+      border: 1px solid rgba(125,42,255,0.3);
+      border-radius: 15px;
+      padding: 2rem;
+      line-height: 1.8;
+      box-shadow: 0 0 20px rgba(106,0,176,0.2);
+    }
+    .regeln-container h2 {
+      text-align: center;
+      color: var(--purple);
+      text-shadow: 0 0 15px var(--purple);
+      margin-bottom: 1rem;
+    }
+    .regeln-container h3 {
+      color: var(--purple);
+      margin-top: 1rem;
+      text-shadow: 0 0 10px var(--purple);
+    }
+    .regeln-container p {
+      margin-left: 1rem;
+      font-size: 1rem;
     }
 
-    @keyframes floatLogo {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+    @keyframes floatLogo { 0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)} }
   </style>
 </head>
+
 <body>
+  <header>
+    <h1>💜 Purple Shadows</h1>
+    <div id="user-info">
+      <div id="info-username">Angemeldet als: -</div>
+      <div id="info-rank">Rang: -</div>
+      <button onclick="logout()">Abmelden</button>
+    </div>
+    <nav>
+      <button class="tab active" data-target="home">Start</button>
+      <button class="tab" data-target="members">Mitglieder</button>
+      <button class="tab" data-target="cars">Fahrzeuge</button>
+      <button class="tab" data-target="shop">Kleidung</button>
+      <button class="tab" data-target="rules">Regeln</button>
+      <button class="tab" data-target="logs" id="logs-btn" style="display:none;">Aktivität</button>
+    </nav>
+  </header>
 
-<header>
-  <h1>💜 Purple Shadows</h1>
-  <div id="user-info">
-    <div id="info-username">Angemeldet als: -</div>
-    <div id="info-rank">Rang: -</div>
-    <button onclick="logout()">Abmelden</button>
+  <!-- Login -->
+  <div id="login-container">
+    <div id="login-box">
+      <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427691099371212820/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+      <h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
+      <input id="login-username" placeholder="Username">
+      <input id="login-password" type="password" placeholder="Passwort">
+      <button onclick="login()">Login</button>
+      <p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
+    </div>
   </div>
-  <nav>
-    <button class="tab active" data-target="home">Start</button>
-    <button class="tab" data-target="members">Mitglieder</button>
-    <button class="tab" data-target="cars">Fahrzeuge</button>
-    <button class="tab" data-target="shop">Kleidung</button>
-    <button class="tab" data-target="logs" id="logs-btn" style="display:none;">Aktivität</button>
-  </nav>
-</header>
 
-<!-- Login -->
-<div id="login-container">
-  <div id="login-box">
-    <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427691099371212820/Lila_Schatten_Logo-removebg-preview.png?ex=68efc873&is=68ee76f3&hm=decdab4dbf0c06e4bec0461267f857d2ba86145533ad004cf648c7bcb84e00fd&" alt="Logo">
-    <h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
-    <input id="login-username" placeholder="Username">
-    <input id="login-password" type="password" placeholder="Passwort">
-    <button onclick="login()">Login</button>
-    <p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
+  <!-- Autos Modal -->
+  <div id="auto-modal">
+    <div id="auto-modal-content">
+      <img id="modal-img" src="">
+      <h3 id="modal-name">Name</h3>
+      <p id="modal-preis">Preis:</p>
+      <p id="modal-wheels">Felgenfarbe:</p>
+      <p id="modal-carcolor">Fahrzeug Farbe:</p>
+      <p id="modal-interior">Innenraum Farbe:</p>
+      <p id="modal-undercarriage">Unterboden Farbe:</p>
+      <p id="modal-rank">Rang:</p>
+      <button onclick="closeAutoModal()">Schließen</button>
+    </div>
   </div>
-</div>
 
-<!-- Modal -->
-<div id="auto-modal">
-  <div id="auto-modal-content">
-    <img id="modal-img" src="">
-    <h3 id="modal-name">Name</h3>
-    <p id="modal-preis">Preis:</p>
-    <p id="modal-wheels">Felgenfarbe:</p>
-    <p id="modal-carcolor">Fahrzeug Farbe:</p>
-    <p id="modal-interior">Innenraum Farbe:</p>
-    <p id="modal-undercarriage">Unterboden Farbe:</p>
-    <p id="modal-rank">Rang:</p>
-    <button onclick="closeAutoModal()">Schließen</button>
-  </div>
-</div>
+  <!-- HOME -->
+  <section id="home" class="section active">
+    <div class="stats">
+      <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
+      <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
+      <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
+      <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
+    </div>
+  </section>
 
-<!-- Sections -->
-<section id="home" class="section active">
-  <div class="stats">
-    <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
-    <div class="stat-card"><h2 id="home-member-count">0</h2><p>Mitglieder</p></div>
-    <div class="stat-card"><h2 id="home-auto-count">0</h2><p>Fahrzeuge</p></div>
-    <div class="stat-card"><h2 id="viewer">👁️ 0</h2><p>Viewers</p></div>
-  </div>
-</section>
+  <!-- Mitglieder -->
+  <section id="members" class="section">
+    <h2>Mitgliederliste</h2>
+    <div class="member-list" id="memberList"></div>
+  </section>
 
-<section id="members" class="section">
-  <h2>Mitgliederliste</h2>
-  <div class="member-list" id="memberList"></div>
-</section>
+  <!-- Autos -->
+  <section id="cars" class="section">
+    <h2>Fahrzeugliste</h2>
+    <div class="auto-list" id="autoliste"></div>
+  </section>
 
-<section id="cars" class="section">
-  <h2>Fahrzeugliste</h2>
-  <div class="auto-list" id="autoliste"></div>
-</section>
+  <!-- Shop -->
+  <section id="shop" class="section">
+    <h2>Kleidungs-Shop</h2>
+    <div class="shop-list" id="shopList"></div>
+  </section>
 
-<section id="shop" class="section">
-  <h2>Kleidungs-Shop</h2>
-  <div class="shop-list" id="shopList"></div>
-</section>
+  <!-- Regeln -->
+  <section id="rules" class="section">
+    <div class="regeln-container">
+      <h2>📜 Purple Shadows – Gang-Regeln (Emden)</h2>
+      <p>⚠️ Diese Regeln gelten für jedes Mitglied. Verstöße können Konsequenzen bis hin zum Ausschluss haben.</p>
 
-<section id="logs" class="section">
-  <h2>Gang Aktivität</h2>
-  <div id="auditLog"></div>
-</section>
+      <h3>§1 Allgemeines</h3>
+      <p>§1.1 Jeder behandelt jeden mit Respekt.</p>
+      <p>§1.2 Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
+      <p>§1.3 Wir repräsentieren die Gang stolz, aber mit Niveau – kein kindisches oder respektloses Verhalten in der Öffentlichkeit.</p>
 
-<script>
-  const socket = io();
-  let currentUser = null;
-  const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
+      <h3>§2 Führung & Struktur 👑</h3>
+      <p>§2.1 Die Führung hat immer das letzte Wort.</p>
+      <p>§2.2 Diskussionen sind erlaubt, aber die Entscheidung der Leitung ist bindend.</p>
+      <p>§2.3 Befehle der Highranks werden respektiert und ohne Widerrede ausgeführt.</p>
 
-  // Tabs
-  document.querySelectorAll(".tab").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-      btn.classList.add("active");
-      document.getElementById(btn.dataset.target).classList.add("active");
+      <h3>§3 Kriege & Fights 🎧🔥</h3>
+      <p>§3.1 Der Call im Krieg oder Fight ist Gesetz.</p>
+      <p>§3.2 Nur die Ansagen des Callers zählen – keine Diskussion, nur Ausführung.</p>
+      <p>§3.3 Kein Alleingang im Fight ohne Absprache mit dem Team.</p>
+
+      <h3>§4 Loyalität 🤝</h3>
+      <p>§4.1 Die Purple Shadows sind eine Einheit – Zusammenhalt steht an erster Stelle.</p>
+      <p>§4.2 Verrat, Leaks oder Spionage werden nicht toleriert.</p>
+      <p>§4.3 Informationen der Gang bleiben intern.</p>
+
+      <h3>§5 Disziplin 🎯</h3>
+      <p>§5.1 Keine unnötigen Alleingänge oder Aktionen ohne Rücksprache.</p>
+      <p>§5.2 Immer Absprache mit Leitung oder Ranghöheren, bevor etwas gestartet wird.</p>
+      <p>§5.3 Verhalten im RP sollte realistisch und respektvoll bleiben.</p>
+
+      <h3>§6 Verhalten im Discord 💬</h3>
+      <p>§6.1 Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
+      <p>§6.2 Die Channel-Struktur ist einzuhalten.</p>
+      <p>§6.3 Wer AFK ist, mutet sich oder geht in den AFK-Channel.</p>
+
+      <h3>§7 Privatsphäre & Auftreten 🔒</h3>
+      <p>§7.1 Keine privaten Informationen anderer ohne Erlaubnis weitergeben.</p>
+      <p>§7.2 Screenshots oder Aufnahmen nur mit Zustimmung.</p>
+      <p>§7.3 Jeder Member repräsentiert die Gang nach außen – benehmt euch dementsprechend.</p>
+    </div>
+  </section>
+
+  <!-- Logs -->
+  <section id="logs" class="section">
+    <h2>Gang Aktivität</h2>
+    <div id="auditLog"></div>
+  </section>
+
+  <script>
+    const socket = io();
+    let currentUser = null;
+    const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
+
+    document.querySelectorAll(".tab").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.target).classList.add("active");
+      });
     });
-  });
-
-  // Login
-  async function login() {
-    const username = document.getElementById("login-username").value.trim();
-    const password = document.getElementById("login-password").value.trim();
-    if (!username || !password) {
-      document.getElementById("login-error").innerText = "Bitte ausfüllen!";
-      return;
-    }
-    try {
-      const res = await axios.post("/login", { username, password });
-      if (res.data.success) {
-        currentUser = username;
-        document.getElementById("login-container").style.display = "none";
-        document.getElementById("info-username").innerText = "Angemeldet als: " + username;
-        document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
-        if (allowedUsers.includes(username))
-          document.getElementById("logs-btn").style.display = "inline-block";
-        socket.emit("userOnline", username);
-        loadAutos();
-        loadShop();
-      } else {
-        document.getElementById("login-error").innerText = "Login fehlgeschlagen!";
-      }
-    } catch(e) {
-      document.getElementById("login-error").innerText = "Serverfehler!";
-    }
-  }
-
-  function logout() {
-    currentUser = null;
-    document.getElementById("login-container").style.display = "flex";
-    document.getElementById("info-username").innerText = "Angemeldet als: -";
-    document.getElementById("info-rank").innerText = "Rang: -";
-    document.getElementById("logs-btn").style.display = "none";
-  }
-
-  // Mitgliederliste
-  socket.on("updateMembers", members => {
-    const container = document.getElementById("memberList");
-    container.innerHTML = "";
-    members.forEach(m => {
-      const div = document.createElement("div");
-      div.className = "card";
-      div.innerHTML = `<h3>${m.username}</h3><p>${m.rank || "Member"}</p>`;
-      if (m.link)
-        div.addEventListener("click", () => window.open(m.link, "_blank"));
-      container.appendChild(div);
-    });
-    document.getElementById("home-member-count").innerText = members.length;
-  });
-
-  socket.on("updateViewers", count => {
-    document.getElementById("viewer").innerText = `👁️ ${count}`;
-    document.getElementById("home-online-count").innerText = count;
-  });
-
-  const auditLog = document.getElementById("auditLog");
-  socket.on("newAuditLog", log => {
-    const p = document.createElement("p");
-    p.textContent = log;
-    auditLog.appendChild(p);
-    auditLog.scrollTop = auditLog.scrollHeight;
-  });
-
-  // Autos Modal
-  function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank) {
-    document.getElementById("modal-img").src = img;
-    document.getElementById("modal-name").innerText = name;
-    document.getElementById("modal-preis").innerText = preis;
-    document.getElementById("modal-wheels").innerText = wheels;
-    document.getElementById("modal-carcolor").innerText = carcolor;
-    document.getElementById("modal-interior").innerText = interior;
-    document.getElementById("modal-undercarriage").innerText = undercarriage;
-    document.getElementById("modal-rank").innerText = rank;
-    document.getElementById("auto-modal").style.display = "flex";
-  }
-
-  function closeAutoModal() {
-    document.getElementById("auto-modal").style.display = "none";
-  }
-
-  // Autos laden
-  function loadAutos() {
-    const autos = [
-      {name:"Sunfury Pony",preis:"96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png?ex=68eb5f0f&is=68ea0d8f&hm=83ab86fc6579243388d83fe33803457242e96cc7c52703ba40ee63c0e99cc44a&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Valois 650",preis:"375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png?ex=68eb5e23&is=68ea0ca3&hm=7cfd4d58e00e6cb1c512a9401376c36f5838c754b8d5cef1d5b17f23d5a06ab9&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"K1 Military",preis:"850,000€",img:"https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png?ex=68eb5dd6&is=68ea0c56&hm=6da31392c0a57be6c0f43c10ddc55cabb526424f74dd149d1043c81e30de51cd&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Manta",preis:"130,000€",img:"https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png?ex=68eb5d67&is=68ea0be7&hm=4de293b7bfa313e6eec00524b626d062355c45aae269402661c132097b871f1c&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Monte Carlo",preis:"950,000€",img:"https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png?ex=68eb5d1f&is=68ea0b9f&hm=40a19dd93e389c437fcec2df1c372009f211e1d3a0215afaf693de4627bc617b&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Piacenza",preis:"580,000€",img:"https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png?ex=68eb5cbe&is=68ea0b3e&hm=13c3f7d8ae898bd9edbcacf9c8f0cfe65044559bd975b11824ebd876a570185a&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Emcee 6x6",preis:"1,500,000€",img:"https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png?ex=68eb5c64&is=68ea0ae4&hm=42e6e0df72beea3f859fa8bb1bfa44840420fe2b6fa80f8960c3a528f9242e5e&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"Sect Sport",preis:"28,000€",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png?ex=68ecd6fc&is=68eb857c&hm=cb62817e95658b382144adc11561c899559d061c1364b5dfb5ddd442fa1fbc06&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-      {name:"EMD25",preis:"Event Auto",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png?ex=68ecd573&is=68eb83f3&hm=ede7b94cedbeaa457915c3a6cb449bedefd3d6fbfd890a3781da3bd72bef1160&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"}
-    ];
-
-    const container = document.getElementById("autoliste");
-    container.innerHTML = "";
-    autos.forEach(a => {
-      const div = document.createElement("div");
-      div.className = "blur-card";
-      div.style.padding = "20px";
-      div.innerHTML = `<img src="${a.img}" alt="${a.name}" style="width:100%; border-radius:12px;"><h3>${a.name}</h3><p>Preis: ${a.preis}</p>`;
-      div.addEventListener("click", () => openAutoModal(a.name, "Preis: " + a.preis, a.img, a.wheels, a.carcolor, a.interior, a.undercarriage, a.rank));
-      container.appendChild(div);
-    });
-    document.getElementById("home-auto-count").innerText = autos.length;
-  }
-
-  // Shop laden
-  function loadShop() {
-    const items = [
-      {name:"Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt"},
-      {name:"Shirt Variante 2",img:"https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss"},
-      {name:"Unsere Weste",img:"https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter",link:"https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails"},
-      {name:"Tracksuit Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9b3dc4c656d6e94a221a4248da14a595/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/71773965134021/Purple-Shadows-Tracksuit-Shirt-Variante-1"},
-      {name:"Tracksuit Pants Variante 1",img:"https://tr.rbxcdn.com/180DAY-33021397d17368ad012fa1e7bb371d7e/420/420/Pants/Webp/noFilter",link:"https://www.roblox.com/catalog/77436044590732/Purple-Shadows-Tracksuit-Pants-Variante-1"}
-    ];
-
-    const container = document.getElementById("shopList");
-    container.innerHTML = "";
-    items.forEach(i => {
-      const div = document.createElement("div");
-      div.className = "blur-card";
-      div.innerHTML = `<img src="${i.img}" alt="${i.name}" style="width:100%; border-radius:12px;"><h3>${i.name}</h3>`;
-      div.addEventListener("click", () => window.open(i.link, "_blank"));
-      container.appendChild(div);
-    });
-  }
-</script>
-
+  </script>
 </body>
 </html>
+
 
 
 
