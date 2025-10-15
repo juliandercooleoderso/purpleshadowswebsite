@@ -180,6 +180,32 @@ nav button:hover {
     animation: floatLogo 4s ease-in-out infinite;
     filter: drop-shadow(0 0 25px #6a00b0);
 }
+#auto-modal {
+    display: none;
+    position: fixed; top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.85);
+    justify-content: center; align-items: center;
+    z-index: 100;
+}
+#auto-modal-content {
+    background: #2b0030;
+    padding: 25px;
+    border-radius: 20px;
+    width: 350px;
+    text-align: center;
+    box-shadow: 0 0 30px #6a00b0;
+}
+#auto-modal-content img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
+#auto-modal-content button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 10px;
+    background: red;
+    color: white;
+    cursor: pointer;
+}
 .rules-frame {
     background: rgba(60,0,90,0.5);
     border: 1px solid rgba(125,42,255,0.3);
@@ -190,22 +216,6 @@ nav button:hover {
 }
 .rules-frame h3 { color: var(--purple); margin-top: 1rem; margin-bottom: 0.3rem; }
 .rules-frame p { margin-left: 1rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
-
-.treffpunkt-frame {
-    background: rgba(60,0,90,0.5);
-    border: 1px solid rgba(125,42,255,0.3);
-    border-radius: 15px;
-    padding: 1.5rem;
-    text-align: center;
-    margin-top: 1rem;
-}
-.treffpunkt-frame img {
-    max-width: 80%;
-    border-radius: 15px;
-    margin-top: 1rem;
-    box-shadow: 0 0 20px rgba(125,42,255,0.4);
-}
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 </style>
@@ -229,7 +239,34 @@ nav button:hover {
 </nav>
 </header>
 
-<!-- HOME -->
+<!-- LOGIN -->
+<div id="login-container">
+<div id="login-box">
+<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427691099371212820/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
+<h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
+<input id="login-username" placeholder="Username">
+<input id="login-password" type="password" placeholder="Passwort">
+<button onclick="login()">Login</button>
+<p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
+</div>
+</div>
+
+<!-- MODAL -->
+<div id="auto-modal">
+<div id="auto-modal-content">
+<img id="modal-img" src="">
+<h3 id="modal-name">Name</h3>
+<p id="modal-preis">Preis:</p>
+<p id="modal-wheels">Felgenfarbe:</p>
+<p id="modal-carcolor">Fahrzeug Farbe:</p>
+<p id="modal-interior">Innenraum Farbe:</p>
+<p id="modal-undercarriage">Unterboden Farbe:</p>
+<p id="modal-rank">Rang:</p>
+<button onclick="closeAutoModal()">Schließen</button>
+</div>
+</div>
+
+<!-- SECTIONS -->
 <section id="home" class="section active">
 <div class="stats">
 <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
@@ -239,62 +276,58 @@ nav button:hover {
 </div>
 </section>
 
-<!-- MITGLIEDER -->
 <section id="members" class="section">
 <h2>Mitgliederliste</h2>
 <div class="member-list" id="memberList"></div>
 </section>
 
-<!-- AUTOS -->
 <section id="cars" class="section">
 <h2>Fahrzeugliste</h2>
 <div class="auto-list" id="autoliste"></div>
 </section>
 
-<!-- SHOP -->
 <section id="shop" class="section">
 <h2>Kleidungs-Shop</h2>
 <div class="shop-list" id="shopList"></div>
 </section>
 
-<!-- REGELN -->
 <section id="rules" class="section">
-  <h2>📜 𝗚𝗮𝗻𝗴-𝗥𝗲𝗴𝗲𝗹𝗻 (𝗘𝗺𝗱𝗲𝗻)</h2>
-  <div class="rules-frame">
-    <h3>1️⃣ Respekt</h3>
-    <p>➡️ Jeder behandelt jeden mit Respekt. Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
+<h2>📜 𝗚𝗮𝗻𝗴-𝗥𝗲𝗴𝗲𝗹𝗻 (𝗘𝗺𝗱𝗲𝗻)</h2>
+<div class="rules-frame">
+<h3>1️⃣ Respekt</h3>
+<p>➡️ Jeder behandelt jeden mit Respekt. Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
 
-    <h3>2️⃣ Führung hören 👑</h3>
-    <p>➡️ Die Führung hat immer das letzte Wort. Diskussionen sind möglich, aber am Ende entscheidet die Leitung.</p>
+<h3>2️⃣ Führung hören 👑</h3>
+<p>➡️ Die Führung hat immer das letzte Wort. Diskussionen sind möglich, aber am Ende entscheidet die Leitung.</p>
 
-    <h3>3️⃣ Call im Krieg/Fight 🎧🔥</h3>
-    <p>➡️ Der Call im Fight ist Gesetz. Wenn Krieg ist oder wir fighten, zählt nur die Ansage des Callers – keine Diskussion, nur Ausführung.</p>
+<h3>3️⃣ Call im Krieg/Fight 🎧🔥</h3>
+<p>➡️ Der Call im Fight ist Gesetz. Wenn Krieg ist oder wir fighten, zählt nur die Ansage des Callers – keine Diskussion, nur Ausführung.</p>
 
-    <h3>4️⃣ Loyalität 🤝</h3>
-    <p>➡️ Wir sind eine Einheit. Verrat, Spionage oder Leaks nach außen werden nicht geduldet.</p>
+<h3>4️⃣ Loyalität 🤝</h3>
+<p>➡️ Wir sind eine Einheit. Verrat, Spionage oder Leaks nach außen werden nicht geduldet.</p>
 
-    <h3>5️⃣ Disziplin 🎯</h3>
-    <p>➡️ Keine unnötigen Alleingänge. Immer absprechen, bevor etwas gestartet wird.</p>
+<h3>5️⃣ Disziplin 🎯</h3>
+<p>➡️ Keine unnötigen Alleingänge. Immer absprechen, bevor etwas gestartet wird.</p>
 
-    <h3>6️⃣ Verhalten im Discord 💬</h3>
-    <p>➡️ Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
-    <p>➡️ Channel-Struktur respektieren.</p>
+<h3>6️⃣ Verhalten im Discord 💬</h3>
+<p>➡️ Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
+<p>➡️ Channel-Struktur respektieren.</p>
 
-    <h3>7️⃣ Privatsphäre 🔒</h3>
-    <p>➡️ Keine privaten Infos anderer ohne Erlaubnis weitergeben.</p>
-  </div>
+<h3>7️⃣ Privatsphäre 🔒</h3>
+<p>➡️ Keine privaten Infos anderer ohne Erlaubnis weitergeben.</p>
+</div>
 </section>
 
-<!-- TREFFPUNKT -->
 <section id="treffpunkt" class="section">
-  <h2>📍 Treffpunkt</h2>
-  <div class="treffpunkt-frame">
-    <p>Hier treffen sich die Purple Shadows für Meetings, Besprechungen oder einfach, um gemeinsam Zeit zu verbringen.</p>
-    <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427641889212858469/Screenshot_87.png?ex=68f0435e&is=68eef1de&hm=ade3a24bf0ec7ca4db222b338d55ada8f22653454da7ed014af5078623e292fe&" alt="Treffpunkt Bild">
-  </div>
+<h2>📍 Treffpunkt</h2>
+<div class="rules-frame">
+<p>Hier treffen sich die Purple Shadows regelmäßig, um gemeinsame Aktionen zu planen und abzustimmen.</p>
+<div style="text-align:center; margin-top:1rem;">
+<img src="https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png" alt="Treffpunkt" style="max-width:80%; border-radius:15px; box-shadow:0 0 20px rgba(106,0,176,0.4);">
+</div>
+</div>
 </section>
 
-<!-- LOGS -->
 <section id="logs" class="section">
 <h2>Gang Aktivität</h2>
 <div id="auditLog"></div>
@@ -307,89 +340,79 @@ const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
 // Tabs
 document.querySelectorAll(".tab").forEach(btn => {
-btn.addEventListener("click", () => {
-document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-btn.classList.add("active");
-document.getElementById(btn.dataset.target).classList.add("active");
-});
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById(btn.dataset.target).classList.add("active");
+  });
 });
 
 // Login
 async function login() {
-const username = document.getElementById("login-username").value.trim();
-const password = document.getElementById("login-password").value.trim();
-if (!username || !password) { document.getElementById("login-error").innerText = "Bitte ausfüllen!"; return; }
-try {
-const res = await axios.post("/login", { username, password });
-if (res.data.success) {
-currentUser = username;
-document.getElementById("login-container").style.display = "none";
-document.getElementById("info-username").innerText = "Angemeldet als: " + username;
-document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
-if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
-socket.emit("userOnline", username);
-loadAutos();
-loadShop();
-} else { document.getElementById("login-error").innerText = "Login fehlgeschlagen!"; }
-} catch(e) { document.getElementById("login-error").innerText = "Serverfehler!"; }
+  const username = document.getElementById("login-username").value.trim();
+  const password = document.getElementById("login-password").value.trim();
+  if (!username || !password) { document.getElementById("login-error").innerText = "Bitte ausfüllen!"; return; }
+  try {
+    const res = await axios.post("/login", { username, password });
+    if (res.data.success) {
+      currentUser = username;
+      document.getElementById("login-container").style.display = "none";
+      document.getElementById("info-username").innerText = "Angemeldet als: " + username;
+      document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
+      if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
+      socket.emit("userOnline", username);
+      loadAutos();
+      loadShop();
+    } else { document.getElementById("login-error").innerText = "Login fehlgeschlagen!"; }
+  } catch(e) { document.getElementById("login-error").innerText = "Serverfehler!"; }
 }
 
 function logout() {
-currentUser = null;
-document.getElementById("login-container").style.display = "flex";
-document.getElementById("info-username").innerText = "Angemeldet als: -";
-document.getElementById("info-rank").innerText = "Rang: -";
-document.getElementById("logs-btn").style.display = "none";
+  currentUser = null;
+  document.getElementById("login-container").style.display = "flex";
+  document.getElementById("info-username").innerText = "Angemeldet als: -";
+  document.getElementById("info-rank").innerText = "Rang: -";
+  document.getElementById("logs-btn").style.display = "none";
 }
 
 // Mitgliederliste
 socket.on("updateMembers", members => {
-const container = document.getElementById("memberList");
-container.innerHTML = "";
-members.forEach(m => {
-const div = document.createElement("div");
-div.className = "card";
-div.innerHTML = `<h3>${m.username}</h3><p>${m.rank || "Member"}</p>`;
-if (m.link) div.addEventListener("click", () => window.open(m.link, "_blank"));
-container.appendChild(div);
-});
-document.getElementById("home-member-count").innerText = members.length;
+  const container = document.getElementById("memberList");
+  container.innerHTML = "";
+  members.forEach(m => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `<h3>${m.username}</h3><p>${m.rank || "Member"}</p>`;
+    if (m.link) div.addEventListener("click", () => window.open(m.link, "_blank"));
+    container.appendChild(div);
+  });
+  document.getElementById("home-member-count").innerText = members.length;
 });
 
 socket.on("updateViewers", count => {
-document.getElementById("viewer").innerText = `👁️ ${count}`;
-document.getElementById("home-online-count").innerText = count;
+  document.getElementById("viewer").innerText = `👁️ ${count}`;
+  document.getElementById("home-online-count").innerText = count;
 });
 
 const auditLog = document.getElementById("auditLog");
 socket.on("newAuditLog", log => {
-const p = document.createElement("p");
-p.textContent = log;
-auditLog.appendChild(p);
-auditLog.scrollTop = auditLog.scrollHeight;
+  const p = document.createElement("p");
+  p.textContent = log;
+  auditLog.appendChild(p);
+  auditLog.scrollTop = auditLog.scrollHeight;
 });
 
 // Autos Modal
 function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank) {
-document.getElementById("modal-img").src = img;
-document.getElementById("modal-name").innerText = name;
-document.getElementById("modal-preis").innerText = preis;
-document.getElementById("modal-wheels").innerText = wheels;
-document.getElementById("modal-carcolor").innerText = carcolor;
-document.getElementById("modal-interior").innerText = interior;
-document.getElementById("modal-undercarriage").innerText = undercarriage;
-document.getElementById("modal-rank").innerText = rank;
-document.getElementById("auto-modal").style.display = "flex";
-}
-function closeAutoModal() { document.getElementById("auto-modal").style.display = "none"; }
-</script>
-</body>
-</html>
-
-
-
-
+  document.getElementById("modal-img").src = img;
+  document.getElementById("modal-name").innerText = name;
+  document.getElementById("modal-preis").innerText = preis;
+  document.getElementById("modal-wheels").innerText = wheels;
+  document.getElementById("modal-carcolor").innerText = carcolor;
+  document.getElementById("modal-interior").innerText = interior;
+  document.getElementById("modal-undercarriage").innerText = undercarriage;
+  document.getElementById("
 
 
 
