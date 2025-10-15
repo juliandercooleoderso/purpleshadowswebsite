@@ -251,7 +251,7 @@ nav button:hover {
 </div>
 </div>
 
-<!-- MODAL -->
+<!-- AUTOS MODAL -->
 <div id="auto-modal">
 <div id="auto-modal-content">
 <img id="modal-img" src="">
@@ -266,7 +266,7 @@ nav button:hover {
 </div>
 </div>
 
-<!-- SECTIONS -->
+<!-- START -->
 <section id="home" class="section active">
 <div class="stats">
 <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
@@ -276,146 +276,193 @@ nav button:hover {
 </div>
 </section>
 
+<!-- MITGLIEDER -->
 <section id="members" class="section">
 <h2>Mitgliederliste</h2>
 <div class="member-list" id="memberList"></div>
 </section>
 
+<!-- AUTOS -->
 <section id="cars" class="section">
 <h2>Fahrzeugliste</h2>
 <div class="auto-list" id="autoliste"></div>
 </section>
 
+<!-- SHOP -->
 <section id="shop" class="section">
 <h2>Kleidungs-Shop</h2>
 <div class="shop-list" id="shopList"></div>
 </section>
 
+<!-- REGELN -->
 <section id="rules" class="section">
-<h2>📜 𝗚𝗮𝗻𝗴-𝗥𝗲𝗴𝗲𝗹𝗻 (𝗘𝗺𝗱𝗲𝗻)</h2>
+<h2>📜 𝗚𝗮𝗻𝗴-𝗥𝗲𝗴𝗲𝗹𝗻</h2>
 <div class="rules-frame">
 <h3>1️⃣ Respekt</h3>
-<p>➡️ Jeder behandelt jeden mit Respekt. Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
-
+<p>➡️ Jeder behandelt jeden mit Respekt.</p>
 <h3>2️⃣ Führung hören 👑</h3>
-<p>➡️ Die Führung hat immer das letzte Wort. Diskussionen sind möglich, aber am Ende entscheidet die Leitung.</p>
-
-<h3>3️⃣ Call im Krieg/Fight 🎧🔥</h3>
-<p>➡️ Der Call im Fight ist Gesetz. Wenn Krieg ist oder wir fighten, zählt nur die Ansage des Callers – keine Diskussion, nur Ausführung.</p>
-
-<h3>4️⃣ Loyalität 🤝</h3>
-<p>➡️ Wir sind eine Einheit. Verrat, Spionage oder Leaks nach außen werden nicht geduldet.</p>
-
-<h3>5️⃣ Disziplin 🎯</h3>
-<p>➡️ Keine unnötigen Alleingänge. Immer absprechen, bevor etwas gestartet wird.</p>
-
-<h3>6️⃣ Verhalten im Discord 💬</h3>
-<p>➡️ Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
-<p>➡️ Channel-Struktur respektieren.</p>
-
-<h3>7️⃣ Privatsphäre 🔒</h3>
-<p>➡️ Keine privaten Infos anderer ohne Erlaubnis weitergeben.</p>
+<p>➡️ Entscheidungen der Leitung sind bindend.</p>
+<h3>3️⃣ Loyalität 🤝</h3>
+<p>➡️ Verrat oder Leaks werden nicht geduldet.</p>
+<h3>4️⃣ Verhalten im Discord 💬</h3>
+<p>➡️ Kein Spam oder störendes Verhalten.</p>
+<h3>5️⃣ Privatsphäre 🔒</h3>
+<p>➡️ Keine privaten Infos weitergeben.</p>
 </div>
 </section>
 
+<!-- TREFFPUNKT -->
 <section id="treffpunkt" class="section">
 <h2>📍 Treffpunkt</h2>
-<div class="rules-frame">
-<p>Hier treffen sich die Purple Shadows regelmäßig, um gemeinsame Aktionen zu planen und abzustimmen.</p>
-<div style="text-align:center; margin-top:1rem;">
-<img src="https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png" alt="Treffpunkt" style="max-width:80%; border-radius:15px; box-shadow:0 0 20px rgba(106,0,176,0.4);">
-</div>
+<div class="rules-frame" style="text-align:center;">
+<img src="DEIN_TREFFPUNKT_BILD_URL_HIER" alt="Treffpunkt" style="width:100%; border-radius:15px; margin-bottom:1rem;">
+<p>Hier treffen sich alle Mitglieder regelmäßig. Details zum Treffpunkt werden im Discord angekündigt.</p>
 </div>
 </section>
 
+<!-- LOGS -->
 <section id="logs" class="section">
 <h2>Gang Aktivität</h2>
 <div id="auditLog"></div>
 </section>
 
 <script>
+// --- SOCKET & LOGIN ---
 const socket = io();
 let currentUser = null;
 const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
 
 // Tabs
 document.querySelectorAll(".tab").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.target).classList.add("active");
-  });
+    btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.target).classList.add("active");
+    });
 });
 
 // Login
 async function login() {
-  const username = document.getElementById("login-username").value.trim();
-  const password = document.getElementById("login-password").value.trim();
-  if (!username || !password) { document.getElementById("login-error").innerText = "Bitte ausfüllen!"; return; }
-  try {
-    const res = await axios.post("/login", { username, password });
-    if (res.data.success) {
-      currentUser = username;
-      document.getElementById("login-container").style.display = "none";
-      document.getElementById("info-username").innerText = "Angemeldet als: " + username;
-      document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
-      if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
-      socket.emit("userOnline", username);
-      loadAutos();
-      loadShop();
-    } else { document.getElementById("login-error").innerText = "Login fehlgeschlagen!"; }
-  } catch(e) { document.getElementById("login-error").innerText = "Serverfehler!"; }
+    const username = document.getElementById("login-username").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+    if (!username || !password) {
+        document.getElementById("login-error").innerText = "Bitte ausfüllen!";
+        return;
+    }
+    try {
+        const res = await axios.post("/login", { username, password });
+        if (res.data.success) {
+            currentUser = username;
+            document.getElementById("login-container").style.display = "none";
+            document.getElementById("info-username").innerText = "Angemeldet als: " + username;
+            document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
+            if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
+            socket.emit("userOnline", username);
+            loadAutos();
+            loadShop();
+        } else { document.getElementById("login-error").innerText = "Login fehlgeschlagen!"; }
+    } catch(e) { document.getElementById("login-error").innerText = "Serverfehler!"; }
 }
 
 function logout() {
-  currentUser = null;
-  document.getElementById("login-container").style.display = "flex";
-  document.getElementById("info-username").innerText = "Angemeldet als: -";
-  document.getElementById("info-rank").innerText = "Rang: -";
-  document.getElementById("logs-btn").style.display = "none";
+    currentUser = null;
+    document.getElementById("login-container").style.display = "flex";
+    document.getElementById("info-username").innerText = "Angemeldet als: -";
+    document.getElementById("info-rank").innerText = "Rang: -";
+    document.getElementById("logs-btn").style.display = "none";
 }
 
-// Mitgliederliste
+// --- Mitglieder & Viewers ---
 socket.on("updateMembers", members => {
-  const container = document.getElementById("memberList");
-  container.innerHTML = "";
-  members.forEach(m => {
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML = `<h3>${m.username}</h3><p>${m.rank || "Member"}</p>`;
-    if (m.link) div.addEventListener("click", () => window.open(m.link, "_blank"));
-    container.appendChild(div);
-  });
-  document.getElementById("home-member-count").innerText = members.length;
+    const container = document.getElementById("memberList");
+    container.innerHTML = "";
+    members.forEach(m => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<h3>${m.username}</h3><p>${m.rank || "Member"}</p>`;
+        if (m.link) div.addEventListener("click", () => window.open(m.link, "_blank"));
+        container.appendChild(div);
+    });
+    document.getElementById("home-member-count").innerText = members.length;
 });
 
 socket.on("updateViewers", count => {
-  document.getElementById("viewer").innerText = `👁️ ${count}`;
-  document.getElementById("home-online-count").innerText = count;
+    document.getElementById("viewer").innerText = `👁️ ${count}`;
+    document.getElementById("home-online-count").innerText = count;
 });
 
+// Audit Log
 const auditLog = document.getElementById("auditLog");
 socket.on("newAuditLog", log => {
-  const p = document.createElement("p");
-  p.textContent = log;
-  auditLog.appendChild(p);
-  auditLog.scrollTop = auditLog.scrollHeight;
+    const p = document.createElement("p");
+    p.textContent = log;
+    auditLog.appendChild(p);
+    auditLog.scrollTop = auditLog.scrollHeight;
 });
 
 // Autos Modal
 function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank) {
-  document.getElementById("modal-img").src = img;
-  document.getElementById("modal-name").innerText = name;
-  document.getElementById("modal-preis").innerText = preis;
-  document.getElementById("modal-wheels").innerText = wheels;
-  document.getElementById("modal-carcolor").innerText = carcolor;
-  document.getElementById("modal-interior").innerText = interior;
-  document.getElementById("modal-undercarriage").innerText = undercarriage;
-  document.getElementById("
+    document.getElementById("modal-img").src = img;
+    document.getElementById("modal-name").innerText = name;
+    document.getElementById("modal-preis").innerText = preis;
+    document.getElementById("modal-wheels").innerText = wheels;
+    document.getElementById("modal-carcolor").innerText = carcolor;
+    document.getElementById("modal-interior").innerText = interior;
+    document.getElementById("modal-undercarriage").innerText = undercarriage;
+    document.getElementById("modal-rank").innerText = rank;
+    document.getElementById("auto-modal").style.display = "flex";
+}
+function closeAutoModal() { document.getElementById("auto-modal").style.display = "none"; }
 
+// Autos laden
+function loadAutos(){
+    const autos = [
+        {name:"Sunfury Pony",preis:"96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Valois 650",preis:"375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"K1 Military",preis:"850,000€",img:"https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Manta",preis:"130,000€",img:"https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Monte Carlo",preis:"950,000€",img:"https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Piacenza",preis:"580,000€",img:"https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Emcee 6x6",preis:"1,500,000€",img:"https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Sect Sport",preis:"28,000€",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"EMD25",preis:"Event Auto",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"}
+    ];
+    const container = document.getElementById("autoliste");
+    container.innerHTML = "";
+    autos.forEach(a => {
+        const div = document.createElement("div");
+        div.className = "blur-card";
+        div.style.padding = "20px";
+        div.innerHTML = `<img src="${a.img}" alt="${a.name}" style="width:100%; border-radius:12px;"><h3>${a.name}</h3><p>Preis: ${a.preis}</p>`;
+        div.addEventListener("click",()=>openAutoModal(a.name,"Preis: "+a.preis,a.img,a.wheels,a.carcolor,a.interior,a.undercarriage,a.rank));
+        container.appendChild(div);
+    });
+    document.getElementById("home-auto-count").innerText = autos.length;
+}
 
-
+// Shop laden
+function loadShop(){
+    const items=[
+        {name:"Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt"},
+        {name:"Shirt Variante 2",img:"https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss"},
+        {name:"Unsere Weste",img:"https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter",link:"https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails"},
+        {name:"Tracksuit Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9b3dc4c656d6e94a221a4248da14a595/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/71773965134021/Purple-Shadows-Tracksuit-Shirt-Variante-1"},
+        {name:"Tracksuit Pants Variante 1",img:"https://tr.rbxcdn.com/180DAY-33021397d17368ad012fa1e7bb371d7e/420/420/Pants/Webp/noFilter",link:"https://www.roblox.com/catalog/77436044590732/Purple-Shadows-Tracksuit-Pants-Variante-1"}
+    ];
+    const container=document.getElementById("shopList");
+    container.innerHTML="";
+    items.forEach(i=>{
+        const div=document.createElement("div");
+        div.className="blur-card";
+        div.innerHTML=`<img src="${i.img}" alt="${i.name}" style="width:100%; border-radius:12px;"><h3>${i.name}</h3>`;
+        div.addEventListener("click",()=>window.open(i.link,"_blank"));
+        container.appendChild(div);
+    });
+}
+</script>
+</body>
+</html>
 
 
 
