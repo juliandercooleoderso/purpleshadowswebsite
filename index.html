@@ -13,8 +13,6 @@
     --dark: #0b0b0f;
     --darker: #050507;
     --text: #e5e5e5;
-    --halloween-orange: #ff6f00;
-    --halloween-bg: rgba(255,111,0,0.1);
 }
 * {
     box-sizing: border-box;
@@ -31,14 +29,14 @@ body {
 header {
     text-align: center;
     padding: 2rem 1rem;
-    border-bottom: 1px solid rgba(255,111,0,0.3);
-    text-shadow: 0 0 10px var(--halloween-orange);
+    border-bottom: 1px solid rgba(106,0,176,0.3);
+    text-shadow: 0 0 10px var(--purple);
     position: relative;
 }
 header h1 {
     font-family: "Orbitron", sans-serif;
     font-size: 2.5rem;
-    color: var(--halloween-orange);
+    color: var(--purple);
     letter-spacing: 2px;
 }
 #user-info {
@@ -66,7 +64,7 @@ nav {
 }
 nav button {
     background: none;
-    border: 1px solid var(--halloween-orange);
+    border: 1px solid var(--purple);
     color: var(--text);
     padding: 0.5rem 1.2rem;
     border-radius: 8px;
@@ -75,9 +73,9 @@ nav button {
 }
 nav button.active,
 nav button:hover {
-    background: var(--halloween-orange);
+    background: var(--purple);
     color: #000;
-    box-shadow: 0 0 15px var(--halloween-orange);
+    box-shadow: 0 0 15px var(--purple);
 }
 .section {
     display: none;
@@ -94,21 +92,21 @@ nav button:hover {
     justify-content: center;
 }
 .stat-card {
-    background: var(--halloween-bg);
-    border: 1px solid rgba(255,111,0,0.3);
+    background: rgba(106,0,176,0.08);
+    border: 1px solid rgba(106,0,176,0.3);
     border-radius: 15px;
     padding: 1rem 2rem;
     text-align: center;
     flex: 1 1 200px;
-    box-shadow: 0 0 15px rgba(255,111,0,0.1);
+    box-shadow: 0 0 15px rgba(106,0,176,0.1);
     transition: transform 0.3s;
 }
 .stat-card:hover { transform: scale(1.05); }
 .stat-card h2 {
-    color: var(--halloween-orange);
+    color: var(--purple);
     font-size: 2rem;
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 10px var(--halloween-orange);
+    text-shadow: 0 0 10px var(--purple);
 }
 .member-list, .auto-list, .shop-list { 
     display: grid;
@@ -117,19 +115,19 @@ nav button:hover {
     margin-top: 2rem;
 }
 .card, .blur-card {
-    background: var(--halloween-bg);
-    border: 1px solid rgba(255,111,0,0.3);
+    background: rgba(60,0,90,0.5);
+    border: 1px solid rgba(125,42,255,0.3);
     border-radius: 15px;
     padding: 1rem;
     text-align: center;
     transition: 0.3s;
     cursor: pointer;
 }
-.card:hover, .blur-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(255,111,0,0.3); }
-.card h3 { color: var(--halloween-orange); margin-bottom: 0.5rem; }
+.card:hover, .blur-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(155,92,255,0.3); }
+.card h3 { color: var(--purple); margin-bottom: 0.5rem; }
 #auditLog {
-    background: var(--halloween-bg);
-    border: 1px solid rgba(255,111,0,0.3);
+    background: rgba(60,0,90,0.3);
+    border: 1px solid rgba(125,42,255,0.3);
     border-radius: 12px;
     padding: 1rem;
     height: 300px;
@@ -147,52 +145,40 @@ nav button:hover {
     align-items: center;
     z-index: 50;
 }
-    
 #login-box {
-    max-width: 350px;
-    width: 90%;
+    max-width: 350px; width: 90%;
     text-align: center;
     padding: 30px;
     border-radius: 20px;
-    background: linear-gradient(135deg, rgba(90,0,120,0.9), rgba(60,0,90,0.95));
-    box-shadow: 0 0 30px 5px rgba(255,111,0,0.6); /* orange leuchtender Schein */
-    border: 2px solid rgba(255,111,0,0.5); /* Halloween-Orangestich */
-    animation: pulseGlow 2.5s infinite alternate;
+    background: rgba(60,0,90,0.9);
+    box-shadow: 0 0 30px #6a00b0;
 }
 #login-box input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 12px;
-    border: 1px solid #4b0082; /* dunkles Lila */
-    background: rgba(40,0,70,0.7); /* dunkles Lila transparent */
+    border: 1px solid #4b0082;
+    background: rgba(40,0,70,0.7);
     color: #fff;
     font-size: 1rem;
-    text-shadow: 0 0 2px #000;
-    transition: 0.3s;
 }
-    
 #login-box button {
     width: 100%;
     padding: 12px;
     margin-top: 15px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg, #4b0082, #6a00b0);
+    background: linear-gradient(90deg,#4b0082,#6a00b0);
     color: #fff;
     font-weight: bold;
     cursor: pointer;
-    font-size: 1rem;
-    text-transform: uppercase;
-    box-shadow: 0 0 10px #ff6f00, 0 0 20px #ff6f00 inset;
-    transition: all 0.3s ease-in-out;
 }
-    
 #login-box img {
     width: 150px;
     margin-bottom: 20px;
     animation: floatLogo 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 25px var(--halloween-orange));
+    filter: drop-shadow(0 0 25px #6a00b0);
 }
 #auto-modal {
     display: none;
@@ -208,7 +194,7 @@ nav button:hover {
     border-radius: 20px;
     width: 350px;
     text-align: center;
-    box-shadow: 0 0 30px var(--halloween-orange);
+    box-shadow: 0 0 30px #6a00b0;
 }
 #auto-modal-content img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
 #auto-modal-content button {
@@ -221,29 +207,20 @@ nav button:hover {
     cursor: pointer;
 }
 .rules-frame {
-    background: var(--halloween-bg);
-    border: 1px solid rgba(255,111,0,0.3);
+    background: rgba(60,0,90,0.5);
+    border: 1px solid rgba(125,42,255,0.3);
     border-radius: 15px;
     padding: 1.5rem;
     line-height: 1.5rem;
     margin-top: 1rem;
 }
-.rules-frame h3 { color: var(--halloween-orange); margin-top: 1rem; margin-bottom: 0.3rem; }
+.rules-frame h3 { color: var(--purple); margin-top: 1rem; margin-bottom: 0.3rem; }
 .rules-frame p { margin-left: 1rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
-.bat {
-    position: absolute;
-    width: 50px;
-    height: 25px;
-    background: url('https://cdn.discordapp.com/attachments/1303446111918493769/1428925899322949744/Unbenannt-removebg-preview.png?ex=68f44672&is=68f2f4f2&hm=f1f1c42862e5b89afb15624b1ea4499e749a9752ebc1e19ffe2ecf9661e4aa69&') no-repeat center/contain;
-    animation: fly linear infinite;
-}
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-@keyframes fly { 0% { transform: translateX(-100px) translateY(0); } 50% { transform: translateX(50vw) translateY(-20px);} 100% { transform: translateX(100vw) translateY(0);} }
 </style>
 </head>
 <body>
-
 <header>
 <h1>💜 Purple Shadows</h1>
 <div id="user-info">
@@ -266,7 +243,7 @@ nav button:hover {
 <div id="login-container">
 <div id="login-box">
 <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png?ex=68eb55e4&is=68ea0464&hm=fc01da8317a10f2dca042c9a317b94acd7b2b03007cac8a61380d85e1057cf0b&" alt="Logo">
-<h2 style="color: var(--halloween-orange); text-shadow:0 0 10px var(--halloween-orange); margin-bottom:20px;">Login</h2>
+<h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
 <input id="login-username" placeholder="Username">
 <input id="login-password" type="password" placeholder="Passwort">
 <button onclick="login()">Login</button>
