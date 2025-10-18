@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Purple Shadows Halloween</title>
+<title>Purple Shadows</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
@@ -147,35 +147,47 @@ nav button:hover {
     align-items: center;
     z-index: 50;
 }
+    
 #login-box {
-    max-width: 350px; width: 90%;
+    max-width: 350px;
+    width: 90%;
     text-align: center;
     padding: 30px;
     border-radius: 20px;
-    background: rgba(60,0,90,0.9);
-    box-shadow: 0 0 30px var(--halloween-orange);
+    background: linear-gradient(135deg, rgba(90,0,120,0.9), rgba(60,0,90,0.95));
+    box-shadow: 0 0 30px 5px rgba(255,111,0,0.6); /* orange leuchtender Schein */
+    border: 2px solid rgba(255,111,0,0.5); /* Halloween-Orangestich */
+    animation: pulseGlow 2.5s infinite alternate;
 }
 #login-box input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 12px;
-    border: 1px solid #4b0082;
-    background: rgba(40,0,70,0.7);
+    border: 1px solid #4b0082; /* dunkles Lila */
+    background: rgba(40,0,70,0.7); /* dunkles Lila transparent */
     color: #fff;
     font-size: 1rem;
+    text-shadow: 0 0 2px #000;
+    transition: 0.3s;
 }
+    
 #login-box button {
     width: 100%;
     padding: 12px;
     margin-top: 15px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg,#4b0082,#6a00b0);
+    background: linear-gradient(90deg, #4b0082, #6a00b0);
     color: #fff;
     font-weight: bold;
     cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    box-shadow: 0 0 10px #ff6f00, 0 0 20px #ff6f00 inset;
+    transition: all 0.3s ease-in-out;
 }
+    
 #login-box img {
     width: 150px;
     margin-bottom: 20px;
@@ -233,7 +245,7 @@ nav button:hover {
 <body>
 
 <header>
-<h1>💜 Purple Shadows Halloween</h1>
+<h1>💜 Purple Shadows</h1>
 <div id="user-info">
 <div id="info-username">Angemeldet als: -</div>
 <div id="info-rank">Rang: -</div>
@@ -479,6 +491,7 @@ function loadShop(){
 </script>
 </body>
 </html>
+
 
 
 
