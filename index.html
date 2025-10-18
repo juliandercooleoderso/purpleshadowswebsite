@@ -348,7 +348,6 @@ body::before {
 </section>
 
 <script>
-// --- SOCKET & LOGIN ---
 const socket = io();
 let currentUser = null;
 const allowedUsers = ["Julian","Max","Tobias","Dome","Hyundai","Felix"];
@@ -377,13 +376,22 @@ async function login() {
             currentUser = username;
             document.getElementById("login-container").style.display = "none";
             document.getElementById("info-username").innerText = "Angemeldet als: " + username;
-            document.getElementById("info-rank").innerText = "Rang: " + (res.data.rank || "Member");
+
+            // Rang vom Server abrufen
+            const membersRes = await axios.get("/members");
+            const user = membersRes.data.find(m => m.username.includes(username));
+            document.getElementById("info-rank").innerText = "Rang: " + (user ? user.rank : "Member");
+
             if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
             socket.emit("userOnline", username);
             loadAutos();
             loadShop();
-        } else { document.getElementById("login-error").innerText = "Login fehlgeschlagen!"; }
-    } catch(e) { document.getElementById("login-error").innerText = "Serverfehler!"; }
+        } else {
+            document.getElementById("login-error").innerText = "Login fehlgeschlagen!";
+        }
+    } catch(e) {
+        document.getElementById("login-error").innerText = "Serverfehler!";
+    }
 }
 
 function logout() {
@@ -397,7 +405,7 @@ function logout() {
     document.getElementById("logs-btn").style.display = "none";
 }
 
-// --- Mitglieder & Viewers ---
+// Mitglieder live
 socket.on("updateMembers", members => {
     const container = document.getElementById("memberList");
     container.innerHTML = "";
@@ -441,7 +449,6 @@ function closeAutoModal() { document.getElementById("auto-modal").style.display 
 
 // Autos laden
 function loadAutos(){
-
     const autos = [
         {name:"Sunfury Pony",preis:"96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png?ex=68eb5f0f&is=68ea0d8f&hm=83ab86fc6579243388d83fe33803457242e96cc7c52703ba40ee63c0e99cc44a&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
         {name:"Valois 650",preis:"375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png?ex=68eb5e23&is=68ea0ca3&hm=7cfd4d58e00e6cb1c512a9401376c36f5838c754b8d5cef1d5b17f23d5a06ab9&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
