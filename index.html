@@ -117,7 +117,7 @@ nav button:hover {
     margin-top: 2rem;
 }
 .card, .blur-card {
-    background: rgba(60,0,30,0.5);
+    background: rgba(60,0,20,0.5);
     border: 1px solid rgba(255,106,0,0.3);
     border-radius: 15px;
     padding: 1rem;
@@ -128,7 +128,7 @@ nav button:hover {
 .card:hover, .blur-card:hover { transform: scale(1.03); box-shadow: 0 0 20px rgba(255,106,0,0.3); }
 .card h3 { color: var(--orange); margin-bottom: 0.5rem; }
 #auditLog {
-    background: rgba(60,0,30,0.3);
+    background: rgba(60,0,20,0.3);
     border: 1px solid rgba(255,106,0,0.3);
     border-radius: 12px;
     padding: 1rem;
@@ -152,7 +152,7 @@ nav button:hover {
     text-align: center;
     padding: 30px;
     border-radius: 20px;
-    background: rgba(60,0,30,0.9);
+    background: rgba(60,0,20,0.9);
     box-shadow: 0 0 30px #ff6a00;
 }
 #login-box input {
@@ -209,7 +209,7 @@ nav button:hover {
     cursor: pointer;
 }
 .rules-frame {
-    background: rgba(60,0,30,0.5);
+    background: rgba(60,0,20,0.5);
     border: 1px solid rgba(255,106,0,0.3);
     border-radius: 15px;
     padding: 1.5rem;
@@ -218,15 +218,15 @@ nav button:hover {
 }
 .rules-frame h3 { color: var(--orange); margin-top: 1rem; margin-bottom: 0.3rem; }
 .rules-frame p { margin-left: 1rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 
+/* Fledermäuse */
 .bat {
     position: absolute;
     width: 50px;
     height: 25px;
-    background: url('https://i.ibb.co/vxk4qG2/bat.png') no-repeat center/contain;
+    background: url('https://cdn.discordapp.com/attachments/1303446111918493769/1428925899322949744/Unbenannt-removebg-preview.png?ex=68f44672&is=68f2f4f2&hm=f1f1c42862e5b89afb15624b1ea4499e749a9752ebc1e19ffe2ecf9661e4aa69&') no-repeat center/contain;
     animation: fly linear infinite;
 }
 @keyframes fly {
@@ -264,7 +264,7 @@ nav button:hover {
 <!-- LOGIN -->
 <div id="login-container">
 <div id="login-box">
-<img src="https://i.ibb.co/4fXnLQQ/halloween-logo.png" alt="Logo">
+<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1425925001311293602/Lila_Schatten_Logo-removebg-preview.png" alt="Logo">
 <h2 style="color: var(--orange); text-shadow:0 0 10px var(--orange); margin-bottom:20px;">Login</h2>
 <input id="login-username" placeholder="Username">
 <input id="login-password" type="password" placeholder="Passwort">
@@ -273,7 +273,7 @@ nav button:hover {
 </div>
 </div>
 
-<!-- START -->
+<!-- Sections -->
 <section id="home" class="section active">
 <div class="stats">
 <div class="stat-card"><h2 id="home-online-count">0</h2><p>Online</p></div>
@@ -283,56 +283,34 @@ nav button:hover {
 </div>
 </section>
 
-<!-- MITGLIEDER -->
 <section id="members" class="section">
 <h2>Mitgliederliste</h2>
 <div class="member-list" id="memberList"></div>
 </section>
 
-<!-- AUTOS -->
 <section id="cars" class="section">
 <h2>Fahrzeugliste</h2>
 <div class="auto-list" id="autoliste"></div>
 </section>
 
-<!-- SHOP -->
 <section id="shop" class="section">
 <h2>Kleidungs-Shop</h2>
 <div class="shop-list" id="shopList"></div>
 </section>
 
-<!-- REGELN -->
 <section id="rules" class="section">
 <h2>Purple Shadows Regeln</h2>
-<div class="rules-frame">
-<h3>1️⃣ Respekt 💜</h3>
-<p>➡️ Jeder behandelt jeden mit Respekt. Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
-<h3>2️⃣ Führung hören 👑</h3>
-<p>➡️ Die Führung hat immer das letzte Wort. Diskussionen sind möglich, aber am Ende entscheidet die Leitung.</p>
-<h3>3️⃣ Call im Krieg/Fight 🎧</h3>
-<p>➡️ Der Call im Fight ist Gesetz. Wenn Krieg ist oder wir fighten, zählt nur die Ansage des Callers – keine Diskussion, nur Ausführung.</p>
-<h3>4️⃣ Loyalität 🤝</h3>
-<p>➡️ Wir sind eine Einheit. Verrat, Spionage oder Leaks nach außen werden nicht geduldet.</p>
-<h3>5️⃣ Disziplin 🎯</h3>
-<p>➡️ Keine unnötigen Alleingänge. Immer absprechen, bevor etwas gestartet wird.</p>
-<h3>6️⃣ Verhalten im Discord 💬</h3>
-<p>➡️ Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice.</p>
-<p>➡️ Channel-Struktur respektieren.</p>
-<h3>7️⃣ Privatsphäre 🔒</h3>
-<p>➡️ Keine privaten Infos anderer ohne Erlaubnis weitergeben.</p>
-</div>
+<div class="rules-frame" id="rulesContent"></div>
 </section>
 
-<!-- TREFFPUNKT -->
 <section id="treffpunkt" class="section">
 <h2>Treffpunkt</h2>
 <div class="rules-frame" style="text-align:center;">
 <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427641889212858469/Screenshot_87.png" alt="Treffpunkt" style="width:100%; border-radius:15px; margin-bottom:1rem;">
-<p>Am eingezeichneten Ort, treffen sich alle Mitglieder regelmäßig. Dort kommen alle Hin, wenn sie dort Chillen wollen oder Dazu aufgefordert werden.</p>
+<p>Am eingezeichneten Ort, treffen sich alle Mitglieder regelmäßig. Dort kommen alle hin, wenn sie chillen oder dazu aufgefordert werden.</p>
 </div>
 </section>
 
-<!-- LOGS -->
 <section id="logs" class="section">
 <h2>Gang Aktivität</h2>
 <div id="auditLog"></div>
@@ -385,7 +363,7 @@ function logout() {
     document.getElementById("logs-btn").style.display = "none";
 }
 
-// --- Mitglieder & Viewers ---
+// --- Members, Viewers, Audit ---
 socket.on("updateMembers", members => {
     const container = document.getElementById("memberList");
     container.innerHTML = "";
@@ -398,13 +376,10 @@ socket.on("updateMembers", members => {
     });
     document.getElementById("home-member-count").innerText = members.length;
 });
-
 socket.on("updateViewers", count => {
     document.getElementById("viewer").innerText = `👁️ ${count}`;
     document.getElementById("home-online-count").innerText = count;
 });
-
-// Audit Log
 const auditLog = document.getElementById("auditLog");
 socket.on("newAuditLog", log => {
     const p = document.createElement("p");
@@ -413,7 +388,7 @@ socket.on("newAuditLog", log => {
     auditLog.scrollTop = auditLog.scrollHeight;
 });
 
-// Autos Modal
+// --- Autos ---
 function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank) {
     document.getElementById("modal-img").src = img;
     document.getElementById("modal-name").innerText = name;
@@ -427,17 +402,64 @@ function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarria
 }
 function closeAutoModal() { document.getElementById("auto-modal").style.display = "none"; }
 
-// Platzhalter-Funktion zum Laden von Autos und Shop (Serverseitig implementieren)
-function loadAutos() { document.getElementById("home-auto-count").innerText = "10"; }
-function loadShop() { console.log("Shop geladen"); }
+function loadAutos(){
+    const autos = [
+        {name:"Sunfury Pony",preis:"96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
+        {name:"Valois 650",preis:"375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"}
+    ];
+    const container = document.getElementById("autoliste");
+    autos.forEach(a=>{
+        const div = document.createElement("div");
+        div.className="card";
+        div.innerHTML=`<h3>${a.name}</h3><img src="${a.img}" style="width:100%; border-radius:12px;"><p>${a.preis}</p>`;
+        div.addEventListener("click",()=>openAutoModal(a.name,a.preis,a.img,a.wheels,a.carcolor,a.interior,a.undercarriage,a.rank));
+        container.appendChild(div);
+    });
+    document.getElementById("home-auto-count").innerText = autos.length;
+}
+
+// --- Shop Items ---
+function loadShop(){
+    const shop = [
+        {name:"Halloween Costume",preis:"50€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png"},
+        {name:"Ghost Hat",preis:"25€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png"}
+    ];
+    const container = document.getElementById("shopList");
+    shop.forEach(i=>{
+        const div=document.createElement("div");
+        div.className="card";
+        div.innerHTML=`<h3>${i.name}</h3><img src="${i.img}" style="width:100%; border-radius:12px;"><p>${i.preis}</p>`;
+        container.appendChild(div);
+    });
+}
+
+// --- Rules ---
+document.getElementById("rulesContent").innerHTML=`
+<h3>1. Respekt</h3><p>Alle Mitglieder behandeln sich mit Respekt.</p>
+<h3>2. Aktivität</h3><p>Regelmäßige Teilnahme ist Pflicht.</p>
+<h3>3. Fahrzeuge</h3><p>Autos dürfen nicht beschädigt werden.</p>
+`;
+
+// --- Modal HTML ---
+document.body.insertAdjacentHTML('beforeend',`
+<div id="auto-modal">
+<div id="auto-modal-content">
+<h2 id="modal-name"></h2>
+<img id="modal-img" src="" alt="">
+<p id="modal-preis"></p>
+<p id="modal-wheels"></p>
+<p id="modal-carcolor"></p>
+<p id="modal-interior"></p>
+<p id="modal-undercarriage"></p>
+<p id="modal-rank"></p>
+<button onclick="closeAutoModal()">Schließen</button>
+</div>
+</div>
+`);
 </script>
 
 </body>
 </html>
-
-
-
-
 
 
 
