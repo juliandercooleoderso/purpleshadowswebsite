@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Purple Shadows 🎃</title>
+<title>Purple Shadows 💜</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
 <style>
 :root {
-    --orange: #ff7b00;
-    --dark: #1a0a00;
-    --darker: #0b0500;
-    --text: #f5e6d3;
+    --purple: #a020f0;
+    --darkpurple: #1a0033;
+    --darkerpurple: #0a001a;
+    --text: #f0e6ff;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Rajdhani", sans-serif; }
 body {
-    background: radial-gradient(circle at center, var(--darker) 0%, var(--dark) 100%);
+    background: radial-gradient(circle at center, var(--darkerpurple) 0%, var(--darkpurple) 100%);
     color: var(--text);
     min-height: 100vh;
     overflow-x: hidden;
@@ -25,14 +25,14 @@ body {
 header {
     text-align: center;
     padding: 2rem 1rem;
-    border-bottom: 1px solid rgba(255,123,0,0.3);
-    text-shadow: 0 0 10px var(--orange);
+    border-bottom: 1px solid rgba(160,32,240,0.3);
+    text-shadow: 0 0 10px var(--purple);
     position: relative;
 }
 header h1 {
     font-family: "Orbitron", sans-serif;
     font-size: 2.5rem;
-    color: var(--orange);
+    color: var(--purple);
     letter-spacing: 2px;
     animation: flicker 2s infinite;
 }
@@ -48,7 +48,7 @@ header h1 {
     padding: 5px 10px;
     border: none;
     border-radius: 8px;
-    background: darkred;
+    background: #5a008a;
     color: white;
     cursor: pointer;
     font-weight: bold;
@@ -61,7 +61,7 @@ nav {
 }
 nav button {
     background: none;
-    border: 1px solid var(--orange);
+    border: 1px solid var(--purple);
     color: var(--text);
     padding: 0.5rem 1.2rem;
     border-radius: 8px;
@@ -70,9 +70,9 @@ nav button {
 }
 nav button.active,
 nav button:hover {
-    background: var(--orange);
+    background: var(--purple);
     color: #000;
-    box-shadow: 0 0 15px var(--orange);
+    box-shadow: 0 0 15px var(--purple);
 }
 .section { display: none; padding: 2rem; max-width: 1200px; margin: 0 auto; animation: fadeIn 0.4s ease-in-out; }
 .section.active { display: block; }
@@ -83,24 +83,24 @@ nav button:hover {
     justify-content: center;
 }
 .stat-card {
-    background: rgba(255,123,0,0.08);
-    border: 1px solid rgba(255,123,0,0.3);
+    background: rgba(160,32,240,0.08);
+    border: 1px solid rgba(160,32,240,0.3);
     border-radius: 15px;
     padding: 1rem 2rem;
     text-align: center;
     flex: 1 1 200px;
-    box-shadow: 0 0 15px rgba(255,123,0,0.1);
+    box-shadow: 0 0 15px rgba(160,32,240,0.1);
     transition: transform 0.3s, box-shadow 0.3s;
 }
 .stat-card:hover { 
     transform: scale(1.05); 
-    box-shadow: 0 0 35px rgba(255,123,0,0.8);
+    box-shadow: 0 0 35px rgba(160,32,240,0.8);
 }
 .stat-card h2 {
-    color: var(--orange);
+    color: var(--purple);
     font-size: 2rem;
     margin-bottom: 0.5rem;
-    text-shadow: 0 0 10px var(--orange);
+    text-shadow: 0 0 10px var(--purple);
     animation: flicker 2.5s infinite;
 }
 .member-list, .auto-list, .shop-list { 
@@ -110,23 +110,23 @@ nav button:hover {
     margin-top: 2rem;
 }
 .card, .blur-card {
-    background: rgba(80,30,0,0.5);
-    border: 1px solid rgba(255,123,0,0.3);
+    background: rgba(40,0,60,0.5);
+    border: 1px solid rgba(160,32,240,0.3);
     border-radius: 15px;
     padding: 1rem;
     text-align: center;
     transition: 0.3s;
     cursor: pointer;
-    box-shadow: 0 0 15px rgba(255,123,0,0.4);
+    box-shadow: 0 0 15px rgba(160,32,240,0.4);
 }
 .card:hover, .blur-card:hover { 
     transform: scale(1.03); 
-    box-shadow: 0 0 35px rgba(255,123,0,0.8); 
+    box-shadow: 0 0 35px rgba(160,32,240,0.8); 
 }
-.card h3 { color: var(--orange); margin-bottom: 0.5rem; }
+.card h3 { color: var(--purple); margin-bottom: 0.5rem; }
 #auditLog {
-    background: rgba(80,30,0,0.3);
-    border: 1px solid rgba(255,123,0,0.3);
+    background: rgba(40,0,60,0.3);
+    border: 1px solid rgba(160,32,240,0.3);
     border-radius: 12px;
     padding: 1rem;
     height: 300px;
@@ -138,7 +138,7 @@ nav button:hover {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: radial-gradient(circle at center, #0b0500 0%, #1a0a00 100%);
+    background: radial-gradient(circle at center, #0a001a 0%, #1a0033 100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -149,16 +149,16 @@ nav button:hover {
     text-align: center;
     padding: 30px;
     border-radius: 20px;
-    background: rgba(80,30,0,0.9);
-    box-shadow: 0 0 30px var(--orange);
+    background: rgba(40,0,60,0.9);
+    box-shadow: 0 0 30px var(--purple);
 }
 #login-box input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 12px;
-    border: 1px solid #804000;
-    background: rgba(60,10,0,0.7);
+    border: 1px solid #5a008a;
+    background: rgba(25,0,45,0.7);
     color: #fff;
     font-size: 1rem;
 }
@@ -168,7 +168,7 @@ nav button:hover {
     margin-top: 15px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg,#804000,#ff7b00);
+    background: linear-gradient(90deg,#5a008a,#a020f0);
     color: #fff;
     font-weight: bold;
     cursor: pointer;
@@ -178,7 +178,7 @@ nav button:hover {
     width: 150px;
     margin-bottom: 20px;
     animation: floatLogo 4s ease-in-out infinite, flicker 2s infinite;
-    filter: drop-shadow(0 0 30px var(--orange));
+    filter: drop-shadow(0 0 30px var(--purple));
 }
 #auto-modal {
     display: none;
@@ -189,12 +189,12 @@ nav button:hover {
     z-index: 100;
 }
 #auto-modal-content {
-    background: #3a1000;
+    background: #2a004a;
     padding: 25px;
     border-radius: 20px;
     width: 350px;
     text-align: center;
-    box-shadow: 0 0 30px var(--orange);
+    box-shadow: 0 0 30px var(--purple);
 }
 #auto-modal-content img { width: 100%; border-radius: 12px; margin-bottom: 10px; }
 #auto-modal-content button {
@@ -202,35 +202,33 @@ nav button:hover {
     padding: 8px 15px;
     border: none;
     border-radius: 10px;
-    background: darkred;
+    background: #5a008a;
     color: white;
     cursor: pointer;
 }
 .rules-frame {
-    background: rgba(80,30,0,0.5);
-    border: 1px solid rgba(255,123,0,0.3);
+    background: rgba(40,0,60,0.5);
+    border: 1px solid rgba(160,32,240,0.3);
     border-radius: 15px;
     padding: 1.5rem;
     line-height: 1.5rem;
     margin-top: 1rem;
 }
-.rules-frame h3 { color: var(--orange); margin-top: 1rem; margin-bottom: 0.3rem; }
+.rules-frame h3 { color: var(--purple); margin-top: 1rem; margin-bottom: 0.3rem; }
 .rules-frame p { margin-left: 1rem; font-size: 0.95rem; margin-bottom: 0.5rem; }
 
-/* --- Keyframes --- */
+/* Animationen */
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 @keyframes floatLogo { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
 @keyframes flicker {
-  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 10px var(--orange); }
-  20%, 22%, 24%, 55% { opacity: 0.7; text-shadow: 0 0 20px var(--orange); }
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; text-shadow: 0 0 10px var(--purple); }
+  20%, 22%, 24%, 55% { opacity: 0.7; text-shadow: 0 0 20px var(--purple); }
 }
-
-/* Optional leichtes Hintergrund-Flimmern */
 body::before {
   content: "";
   position: fixed;
   top:0; left:0; width:100%; height:100%;
-  background: radial-gradient(circle at center, rgba(255,123,0,0.05) 0%, transparent 70%);
+  background: radial-gradient(circle at center, rgba(160,32,240,0.05) 0%, transparent 70%);
   pointer-events: none;
   animation: flicker 3s infinite;
 }
@@ -238,7 +236,7 @@ body::before {
 </head>
 <body>
 <header>
-<h1>💀 Purple Shadows 🎃</h1>
+<h1>💜 Purple Shadows 💜</h1>
 <div id="user-info">
 <div id="info-username">Angemeldet als: -</div>
 <div id="info-rank">Rang: -</div>
@@ -258,8 +256,8 @@ body::before {
 <!-- LOGIN -->
 <div id="login-container">
 <div id="login-box">
-<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1429512551120637972/purpleshadows_halloween.png-removebg-preview.png?ex=68f668cf&is=68f5174f&hm=1b0f79fb7ca617097c8b4e3ea6f65b198be8224556329aea4e5849c748356d67&" alt="Logo">
-<h2 style="color: var(--orange); text-shadow:0 0 10px var(--orange); margin-bottom:20px;">Login</h2>
+<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1429512551120637972/purpleshadows_logo_purple.png" alt="Purple Shadows Logo">
+<h2 style="color: var(--purple); text-shadow:0 0 10px var(--purple); margin-bottom:20px;">Login</h2>
 <input id="login-username" placeholder="Username">
 <input id="login-password" type="password" placeholder="Passwort">
 <button onclick="login()">Login</button>
@@ -336,8 +334,8 @@ body::before {
 <section id="treffpunkt" class="section">
 <h2>Treffpunkt</h2>
 <div class="rules-frame" style="text-align:center;">
-<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427641889212858469/Screenshot_87.png?ex=68f0435e&is=68eef1de&hm=ade3a24bf0ec7ca4db222b338d55ada8f22653454da7ed014af5078623e292fe&" style="width:100%; border-radius:15px; margin-bottom:1rem;">
-<p>Am eingezeichneten Ort, treffen sich alle Mitglieder regelmäßig. Dort kommen alle Hin, wenn sie dort Chillen wollen oder Dazu aufgefordert werden.</p>
+<img src="https://cdn.discordapp.com/attachments/1231233950089744504/1427641889212858469/Screenshot_87.png" style="width:100%; border-radius:15px; margin-bottom:1rem;">
+<p>Am eingezeichneten Ort treffen sich alle Mitglieder regelmäßig. Dort kommen alle hin, wenn sie chillen wollen oder dazu aufgefordert werden.</p>
 </div>
 </section>
 
@@ -350,10 +348,8 @@ body::before {
 <script>
 const socket = io();
 let currentUser = null;
-
 const allowedUsers = ["Julian", "Max"];
 
-// Tabs
 document.querySelectorAll(".tab").forEach(btn => {
     btn.addEventListener("click", () => {
         document.querySelectorAll(".tab").forEach(b => b.classList.remove("active"));
@@ -363,7 +359,6 @@ document.querySelectorAll(".tab").forEach(btn => {
     });
 });
 
-// Login
 async function login() {
     const username = document.getElementById("login-username").value.trim();
     const password = document.getElementById("login-password").value.trim();
@@ -377,12 +372,9 @@ async function login() {
             currentUser = username;
             document.getElementById("login-container").style.display = "none";
             document.getElementById("info-username").innerText = "Angemeldet als: " + username;
-
-            // Rang vom Server abrufen
             const membersRes = await axios.get("/members");
             const user = membersRes.data.find(m => m.username.includes(username));
             document.getElementById("info-rank").innerText = "Rang: " + (user ? user.rank : "Member");
-
             if (allowedUsers.includes(username)) document.getElementById("logs-btn").style.display = "inline-block";
             socket.emit("userOnline", username);
             loadAutos();
@@ -406,7 +398,6 @@ function logout() {
     document.getElementById("logs-btn").style.display = "none";
 }
 
-// Mitglieder live
 socket.on("updateMembers", members => {
     const container = document.getElementById("memberList");
     container.innerHTML = "";
@@ -420,79 +411,60 @@ socket.on("updateMembers", members => {
     document.getElementById("home-member-count").innerText = members.length;
 });
 
-socket.on("updateViewers", count => {
-    document.getElementById("viewer").innerText = `👁️ ${count}`;
-    document.getElementById("home-online-count").innerText = count;
-});
-
-// Audit Log
-const auditLog = document.getElementById("auditLog");
-socket.on("newAuditLog", log => {
-    const p = document.createElement("p");
-    p.textContent = log;
-    auditLog.appendChild(p);
-    auditLog.scrollTop = auditLog.scrollHeight;
-});
-
-// Autos Modal
-function openAutoModal(name, preis, img, wheels, carcolor, interior, undercarriage, rank) {
-    document.getElementById("modal-img").src = img;
-    document.getElementById("modal-name").innerText = name;
-    document.getElementById("modal-preis").innerText = preis;
-    document.getElementById("modal-wheels").innerText = wheels;
-    document.getElementById("modal-carcolor").innerText = carcolor;
-    document.getElementById("modal-interior").innerText = interior;
-    document.getElementById("modal-undercarriage").innerText = undercarriage;
-    document.getElementById("modal-rank").innerText = rank;
-    document.getElementById("auto-modal").style.display = "flex";
-}
-function closeAutoModal() { document.getElementById("auto-modal").style.display = "none"; }
-
-// Autos laden
-function loadAutos(){
-    const autos = [
-        {name:"Sunfury Pony",preis:"96,000€",img:"https://cdn.discordapp.com/attachments/1412888879870251068/1412888880088092925/image.png?ex=68eb5f0f&is=68ea0d8f&hm=83ab86fc6579243388d83fe33803457242e96cc7c52703ba40ee63c0e99cc44a&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Valois 650",preis:"375,000€",img:"https://cdn.discordapp.com/attachments/1412887889368580248/1412887889674502278/image.png?ex=68eb5e23&is=68ea0ca3&hm=7cfd4d58e00e6cb1c512a9401376c36f5838c754b8d5cef1d5b17f23d5a06ab9&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"K1 Military",preis:"850,000€",img:"https://cdn.discordapp.com/attachments/1412887567044706445/1412887567325728900/image.png?ex=68eb5dd6&is=68ea0c56&hm=6da31392c0a57be6c0f43c10ddc55cabb526424f74dd149d1043c81e30de51cd&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Manta",preis:"130,000€",img:"https://cdn.discordapp.com/attachments/1412887100025475133/1412887100960800838/image.png?ex=68eb5d67&is=68ea0be7&hm=4de293b7bfa313e6eec00524b626d062355c45aae269402661c132097b871f1c&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Monte Carlo",preis:"950,000€",img:"https://cdn.discordapp.com/attachments/1412886799767834796/1412886800044654603/image.png?ex=68eb5d1f&is=68ea0b9f&hm=40a19dd93e389c437fcec2df1c372009f211e1d3a0215afaf693de4627bc617b&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Piacenza",preis:"580,000€",img:"https://cdn.discordapp.com/attachments/1412886394971623605/1412886395487256809/image.png?ex=68eb5cbe&is=68ea0b3e&hm=13c3f7d8ae898bd9edbcacf9c8f0cfe65044559bd975b11824ebd876a570185a&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Emcee 6x6",preis:"1,500,000€",img:"https://cdn.discordapp.com/attachments/1412886013931556945/1412886017731465368/image.png?ex=68eb5c64&is=68ea0ae4&hm=42e6e0df72beea3f859fa8bb1bfa44840420fe2b6fa80f8960c3a528f9242e5e&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"Sect Sport",preis:"28,000€",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426700879217692733/grafik.png?ex=68ecd6fc&is=68eb857c&hm=cb62817e95658b382144adc11561c899559d061c1364b5dfb5ddd442fa1fbc06&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"},
-        {name:"EMD25",preis:"Event Auto",img:"https://cdn.discordapp.com/attachments/1191787606292304106/1426699229304197120/grafik.png?ex=68ecd573&is=68eb83f3&hm=ede7b94cedbeaa457915c3a6cb449bedefd3d6fbfd890a3781da3bd72bef1160&",wheels:"Felgenfarbe: #000000",carcolor:"Fahrzeugfarbe: #3A00BA [Metal]",interior:"Innenraum: #DADADA",undercarriage:"Unterboden: Violet",rank:"Ab 💜 Member 💜"}
-    ];
+async function loadAutos() {
+    const res = await axios.get("/autos");
+    const autos = res.data;
     const container = document.getElementById("autoliste");
     container.innerHTML = "";
     autos.forEach(a => {
         const div = document.createElement("div");
         div.className = "blur-card";
-        div.style.padding = "20px";
-        div.innerHTML = `<img src="${a.img}" alt="${a.name}" style="width:100%; border-radius:12px;"><h3>${a.name}</h3><p>Preis: ${a.preis}</p>`;
-        div.addEventListener("click",()=>openAutoModal(a.name,"Preis: "+a.preis,a.img,a.wheels,a.carcolor,a.interior,a.undercarriage,a.rank));
+        div.innerHTML = `<img src="${a.bild}" style="width:100%;border-radius:12px;">
+        <h3>${a.name}</h3><p>${a.preis}</p>`;
+        div.addEventListener("click", () => openAutoModal(a));
         container.appendChild(div);
     });
     document.getElementById("home-auto-count").innerText = autos.length;
 }
 
-// Shop laden
-function loadShop(){
-    const items=[
-        {name:"Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9ed721d945d3af44a3988cdafef415d8/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/136136555284898/Purple-Shadows-Shirt"},
-        {name:"Shirt Variante 2",img:"https://tr.rbxcdn.com/180DAY-349c7d6037672b05ebb1c7a21018a854/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/123029546504797/Purple-Shadows-Boss"},
-        {name:"Unsere Weste",img:"https://tr.rbxcdn.com/180DAY-22d02496c4e185f1ea538245ee6cc47b/420/420/FrontAccessory/Png/noFilter",link:"https://www.roblox.com/share?code=bd366a56c010864d9d25d5c61049a40a&type=AvatarItemDetails"},
-        {name:"Tracksuit Shirt Variante 1",img:"https://tr.rbxcdn.com/180DAY-9b3dc4c656d6e94a221a4248da14a595/420/420/Shirt/Webp/noFilter",link:"https://www.roblox.com/catalog/71773965134021/Purple-Shadows-Tracksuit-Shirt-Variante-1"},
-        {name:"Tracksuit Pants Variante 1",img:"https://tr.rbxcdn.com/180DAY-33021397d17368ad012fa1e7bb371d7e/420/420/Pants/Webp/noFilter",link:"https://www.roblox.com/catalog/77436044590732/Purple-Shadows-Tracksuit-Pants-Variante-1"}
-    ];
-    const container=document.getElementById("shopList");
-    container.innerHTML="";
-    items.forEach(i=>{
-        const div=document.createElement("div");
-        div.className="blur-card";
-        div.innerHTML=`<img src="${i.img}" alt="${i.name}" style="width:100%; border-radius:12px;"><h3>${i.name}</h3>`;
-        div.addEventListener("click",()=>window.open(i.link,"_blank"));
+function openAutoModal(auto) {
+    document.getElementById("modal-img").src = auto.bild;
+    document.getElementById("modal-name").innerText = auto.name;
+    document.getElementById("modal-preis").innerText = "Preis: " + auto.preis;
+    document.getElementById("modal-wheels").innerText = "Felgenfarbe: " + auto.felgenfarbe;
+    document.getElementById("modal-carcolor").innerText = "Fahrzeugfarbe: " + auto.fahrzeugfarbe;
+    document.getElementById("modal-interior").innerText = "Innenraum: " + auto.innenfarbe;
+    document.getElementById("modal-undercarriage").innerText = "Unterboden: " + auto.unterboden;
+    document.getElementById("modal-rank").innerText = "Rang: " + auto.rank;
+    document.getElementById("auto-modal").style.display = "flex";
+}
+
+function closeAutoModal() {
+    document.getElementById("auto-modal").style.display = "none";
+}
+
+async function loadShop() {
+    const res = await axios.get("/shop");
+    const shop = res.data;
+    const container = document.getElementById("shopList");
+    container.innerHTML = "";
+    shop.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "card";
+        div.innerHTML = `<img src="${item.bild}" style="width:100%;border-radius:12px;">
+        <h3>${item.name}</h3><p>${item.preis}</p>`;
         container.appendChild(div);
     });
 }
+
+socket.on("viewerCount", c => { document.getElementById("viewer").innerText = "👁️ " + c; });
+socket.on("updateOnlineCount", c => { document.getElementById("home-online-count").innerText = c; });
+socket.on("auditUpdate", data => {
+    const log = document.getElementById("auditLog");
+    const e = document.createElement("div");
+    e.textContent = `${new Date().toLocaleTimeString()} - ${data}`;
+    log.prepend(e);
+});
 </script>
 </body>
 </html>
