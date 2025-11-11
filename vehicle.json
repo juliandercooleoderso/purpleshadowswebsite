@@ -1,0 +1,78 @@
+[
+  {
+    "name": "Sunfury Pony",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904447937314826/Screenshot_120.png?ex=6914f05f&is=69139edf&hm=1cb0fa6acc1820540b8c6206cd3245eebd3db19282e82f11d7fe1459429415ca&",
+    "price": "96,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+  {
+    "name": "Giaro",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904447496781867/Screenshot_6.png?ex=6914f05f&is=69139edf&hm=69c13f4ca7ddcbef1c6b88e91f8860b88c4c0484c0e2976e514fc1a1a675ea92&",
+    "price": "1,000,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+  {
+    "name": "Skidder XL",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904447069098074/Screenshot_5.png?ex=6914f05f&is=69139edf&hm=be1973e1180dc2042ef84ab7d4423848b6a73e20b53785bb9058c3cb3488d721&",
+    "price": "410,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+  {
+    "name": "Piacenza [Main]",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904446662246400/Screenshot_4.png?ex=6914f05f&is=69139edf&hm=d45063fdb5f44c65a6cd970127a24ee016890cd08d1fa2ccc2b29c4ca200c234&",
+    "price": "580,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+  {
+    "name": "Valois 650 [Main]",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904445378789496/Screenshot_1.png?ex=6914f05e&is=69139ede&hm=37956eefc846f4bb832a5c6b557358b900c7162869ee59b6541198eed100747f&",
+    "price": "375,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+  {
+    "name": "Manta",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904445802418186/Screenshot_2.png?ex=6914f05e&is=69139ede&hm=a004c5a606c9de69f4991918d87b935f0cb3bc8bebb69735eebd70da18558b45&",
+    "price": "130,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  },
+
+ {
+    "name": "Monte Carlo",
+    "image": "https://cdn.discordapp.com/attachments/1231233950089744504/1437904446217785475/Screenshot_3.png?ex=6914f05e&is=69139ede&hm=5ee85b83dd50833d4cc0f70668059a8e006caf126f942afe552b435223cacc24&",
+    "price": "950,000€",
+    "primary": "#3A00BA [Metal]",
+    "interior": "#DADADA",
+    "rims": "#000000",
+    "underglow": "Violet",
+    "windows": "#000000 [Dark]"
+  }
+]
