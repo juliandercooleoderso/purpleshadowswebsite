@@ -6,8 +6,10 @@
   { "username": "Hyundai", "password": "PS_Hyundai" },
   { "username": "Felix",   "password": "PS_Felix0121" },
   { "username": "Farox",   "password": "Fabian10!" },
-  { "username": "Haitham",   "password": "PS_Haitham!@" } 
+  { "username": "Haitham",   "password": "PS_Haitham!@" },
+  { "username": "Test",   "password": "test123" }
 ]
+
 
 
 
