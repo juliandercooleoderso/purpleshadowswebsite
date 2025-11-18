@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer');
@@ -8,43 +9,70 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// -------------------- Middleware --------------------
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 
-// -------------------- In-Memory Clips --------------------
-let clips = []; // Clips werden nur im RAM gespeichert
+// -------------------- Clips persistent --------------------
+const clipsFile = path.join(__dirname, 'clips.json');
+let clips = [];
 
-// -------------------- Multer Setup --------------------
-// Dateien werden im Memory gespeichert (Base64) für Deploy-Sicherheit
+try {
+    if (fs.existsSync(clipsFile)) {
+        clips = JSON.parse(fs.readFileSync(clipsFile));
+    }
+} catch (err) {
+    console.error('Fehler beim Laden der Clips:', err);
+}
+
+// -------------------- Multer --------------------
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // -------------------- Routen --------------------
-
-// Index-Seite
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Clips-Liste zurückgeben
+// Clips zurückgeben
 app.get('/clips', (req, res) => {
     res.json(clips);
 });
 
 // Clip hochladen
 app.post('/upload-clip', upload.single('clip'), (req, res) => {
-    if (!req.file || !req.body.desc) return res.status(400).send('Fehler beim Upload');
+    const username = req.body.username || 'Unbekannt';
+    const desc = req.body.desc;
 
-    // Datei als Base64 speichern
+    if (!req.file || !desc) return res.status(400).send('Fehler beim Upload');
+
     const clipData = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
 
-    clips.push({
+    const newClip = {
+        id: Date.now(),
         file: clipData,
-        desc: req.body.desc
-    });
+        desc,
+        user: username
+    };
 
+    clips.push(newClip);
+    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
+
+    io.emit('newClip', newClip); // Echtzeit Update
     res.status(200).send('Upload erfolgreich');
+});
+
+// Clip löschen
+app.post('/delete-clip', (req, res) => {
+    const { id, username } = req.body;
+
+    // Nur Julian oder Max dürfen löschen
+    if (!['Julian','Max'].includes(username)) return res.status(403).send('Keine Rechte');
+
+    clips = clips.filter(c => c.id != id);
+    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
+
+    io.emit('removeClip', id); // Echtzeit Update
+    res.status(200).send('Clip gelöscht');
 });
 
 // -------------------- Socket.IO --------------------
@@ -73,4 +101,5 @@ io.on('connection', (socket) => {
 // -------------------- Server starten --------------------
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
+
 
