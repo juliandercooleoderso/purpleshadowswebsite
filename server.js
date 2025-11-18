@@ -9,13 +9,22 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// -------------------- MULTER FÜR CLIPS --------------------
+// -------------------- Ordner & JSON Dateien sichern --------------------
 const uploadFolder = path.join(__dirname, 'clips');
-if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
+try {
+    if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder, { recursive: true });
+} catch (err) {
+    console.error('Fehler beim Anlegen des Upload-Ordners:', err);
+}
 
+// Clips JSON Datei sicherstellen
+const clipsFile = path.join(__dirname, 'clips.json');
+if (!fs.existsSync(clipsFile)) fs.writeFileSync(clipsFile, JSON.stringify([]));
+
+// -------------------- Multer Setup --------------------
 const storage = multer.diskStorage({
     destination: function(req, file, cb){
-        cb(null, uploadFolder);
+        cb(null, path.resolve(uploadFolder));
     },
     filename: function(req, file, cb){
         const uniqueName = Date.now() + '-' + file.originalname;
@@ -24,47 +33,49 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// -------------------- MIDDLEWARE --------------------
+// -------------------- Middleware --------------------
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 
-// -------------------- ROUTEN --------------------
+// -------------------- Routen --------------------
 
-// index.html
+// Startseite
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Clips-Liste zurückgeben
 app.get('/clips', (req, res) => {
-    const clipsFile = path.join(__dirname, 'clips.json');
-    if (!fs.existsSync(clipsFile)) {
-        fs.writeFileSync(clipsFile, JSON.stringify([]));
+    try {
+        const clips = JSON.parse(fs.readFileSync(clipsFile));
+        res.json(clips);
+    } catch (err) {
+        console.error('Fehler beim Lesen der Clips JSON:', err);
+        res.json([]);
     }
-    const clips = JSON.parse(fs.readFileSync(clipsFile));
-    res.json(clips);
 });
 
 // Clip hochladen
 app.post('/upload-clip', upload.single('clip'), (req, res) => {
     if (!req.file || !req.body.desc) return res.status(400).send('Fehler beim Upload');
 
-    const clipsFile = path.join(__dirname, 'clips.json');
-    if (!fs.existsSync(clipsFile)) fs.writeFileSync(clipsFile, JSON.stringify([]));
+    try {
+        const clips = JSON.parse(fs.readFileSync(clipsFile));
 
-    const clips = JSON.parse(fs.readFileSync(clipsFile));
+        clips.push({
+            file: '/clips/' + req.file.filename,
+            desc: req.body.desc
+        });
 
-    clips.push({
-        file: '/clips/' + req.file.filename,
-        desc: req.body.desc
-    });
-
-    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
-
-    res.status(200).send('Upload erfolgreich');
+        fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
+        res.status(200).send('Upload erfolgreich');
+    } catch (err) {
+        console.error('Fehler beim Speichern des Clips:', err);
+        res.status(500).send('Serverfehler');
+    }
 });
 
-// -------------------- SOCKET.IO --------------------
+// -------------------- Socket.IO --------------------
 let onlineUsers = 0;
 
 io.on('connection', (socket) => {
@@ -87,7 +98,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// -------------------- SERVER START --------------------
+// -------------------- Server starten --------------------
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
-
