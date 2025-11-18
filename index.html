@@ -180,14 +180,16 @@ header {
     display:block;
 }
 
+/* CARD GRID */
 .card-grid {
     display:grid;
     grid-template-columns: repeat(auto-fit,minmax(180px,1fr));
     gap:15px;
-    width:85%;
+    width:80%;
     margin:auto;
 }
 
+/* CARDS */
 .card {
     background:#140014;
     padding:12px;
@@ -195,7 +197,6 @@ header {
     box-shadow:0 0 12px #8a2be2;
     cursor:pointer;
     transition:0.3s;
-    position:relative;
 }
 
 .card:hover {
@@ -203,127 +204,33 @@ header {
     box-shadow:0 0 20px #a855f7;
 }
 
-.clip-card video {
+.card img, .card video {
     width:100%;
-    border-radius:8px;
+    border-radius:10px;
+    margin-bottom:10px;
 }
 
-.clip-card p.desc {
-    margin-top:10px;
-    font-size:16px;
-    color:#d3b3ff;
+.clip-card p {
+    margin:5px 0;
 }
-
-.clip-card p.user {
-    margin-top:5px;
-    font-size:12px;
-    color:#aaa;
-}
-
 </style>
-</head>
-<body>
-
-<!-- LOGIN -->
-<div id="login-overlay">
-    <div id="login-box">
-        <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1437906569772925064/Lila_Schatten_Logo-removebg-preview.png">
-        <input id="login-user" type="text" placeholder="Benutzername">
-        <input id="login-pass" type="password" placeholder="Passwort">
-        <button onclick="login()">Login</button>
-        <div id="login-error">Login fehlgeschlagen</div>
-    </div>
-</div>
-
-<!-- HEADER -->
-<header>
-    <div class="logo-text">
-        <div id="user-info"></div>
-        <div id="user-count">👁 0</div>
-    </div>
-    <div class="hamburger" onclick="toggleSidebar()">
-        <div></div><div></div><div></div>
-    </div>
-</header>
-
-<!-- SIDEBAR -->
-<div id="overlay" onclick="toggleSidebar()"></div>
-<div id="sidebar">
-    <a href="#" onclick="showSection('start')">Startseite</a>
-    <a href="#" onclick="showSection('gallery')">Galerie</a>
-    <a href="#" onclick="showSection('clothing')">Kleidung</a>
-    <a href="#" onclick="showSection('vehicles')">Fahrzeuge</a>
-    <a href="#" onclick="showSection('members')">Mitglieder</a>
-    <a href="#" onclick="showSection('clips')">Clips</a>
-    <a id="logout-btn" href="#" onclick="logout()">Abmelden</a>
-</div>
-
-<!-- MAIN CONTENT -->
-<div id="main-content">
-
-<!-- START -->
-<section id="start" class="section active-section">
-    <h2>Willkommen bei Purple Shadows!</h2>
-</section>
-
-<!-- GALERIE -->
-<section id="gallery" class="section">
-    <h2>Galerie</h2>
-    <div id="gallery-container" class="card-grid"></div>
-</section>
-
-<!-- KLEIDUNG -->
-<section id="clothing" class="section">
-    <h2>Kleidungsliste</h2>
-    <div id="clothing-grid" class="card-grid"></div>
-</section>
-
-<!-- FAHRZEUGE -->
-<section id="vehicles" class="section">
-    <h2>Fahrzeugliste</h2>
-    <div id="vehicle-grid" class="card-grid"></div>
-</section>
-
-<!-- MITGLIEDER -->
-<section id="members" class="section">
-    <h2>Mitgliederliste</h2>
-    <table id="members-table" style="width:80%; margin:auto; border-collapse:collapse;"></table>
-</section>
-
-<!-- CLIPS -->
-<section id="clips" class="section">
-    <h2>Clips</h2>
-    <button id="add-clip-btn" onclick="addClip()" style="
-        background:#8a2be2; color:white; padding:10px 15px; border:none; border-radius:8px; cursor:pointer; box-shadow:0 0 15px #8a2be2; margin-bottom:20px;">Hinzufügen</button>
-    <input type="file" id="clip-input" style="display:none" accept="video/*,audio/*" onchange="onClipSelected(this)">
-    <div id="clips-box" class="card-grid"></div>
-</section>
-
-<!-- POPUP CLIP BESCHREIBUNG -->
-<div id="popup-clip" style="
-    display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
-    background:#1a001f; padding:20px; border-radius:15px; box-shadow:0 0 25px #9f4bff; width:350px; z-index:100;">
-    <h3>Beschreibung hinzufügen</h3>
-    <input id="clip-desc" placeholder="Beschreibung..." style="
-        width:100%; padding:10px; border-radius:8px; border:none; background:#140014; color:#d3b3ff; box-shadow:0 0 10px #8a2be2; margin-top:10px;">
-    <div style="margin-top:20px; text-align:right;">
-        <button onclick="cancelClip()" style="background:#660066; padding:10px 15px; border-radius:8px; border:none; cursor:pointer; margin-right:10px;">Abbrechen</button>
-        <button onclick="confirmClip()" style="background:#8a2be2; padding:10px 15px; border-radius:8px; border:none; cursor:pointer;">Bestätigen</button>
-    </div>
-</div>
-
 <script>
 const socket = io();
 let currentUser = '';
 
-// -------------------- LOGIN --------------------
+// LOGIN
 async function login(){
     const user = document.getElementById("login-user").value;
     const pass = document.getElementById("login-pass").value;
     const res = await fetch('login.json');
     const users = await res.json();
     const match = users.find(u=>u.username===user && u.password===pass);
-    if(!match){document.getElementById("login-error").style.display="block"; return;}
+
+    if(!match){
+        document.getElementById("login-error").style.display="block";
+        return;
+    }
+
     currentUser = user;
     document.getElementById("login-overlay").style.display="none";
     document.getElementById("main-content").style.display="block";
@@ -334,6 +241,7 @@ async function login(){
     showSection('start');
 }
 
+// LOGOUT
 function logout(){
     document.getElementById("main-content").style.display="none";
     document.getElementById("login-overlay").style.display="flex";
@@ -344,11 +252,13 @@ function logout(){
     socket.emit('userLogout');
 }
 
+// SIDEBAR
 function toggleSidebar(){
     const sidebar = document.getElementById("sidebar");
     const overlay = document.getElementById("overlay");
-    sidebar.classList.toggle("open");
-    overlay.classList.toggle("active");
+    const open = sidebar.classList.contains("open");
+    sidebar.classList.toggle("open", !open);
+    overlay.classList.toggle("active", !open);
 }
 
 function showSection(id){
@@ -361,27 +271,103 @@ socket.on('updateUserCount', (count)=>{
     document.getElementById('user-count').innerText=`👁 ${count}`;
 });
 
-// -------------------- CLIPS --------------------
+// GALERIE LADEN
+async function loadGallery(){
+    const res = await fetch('pictures.json');
+    const data = await res.json();
+    const container = document.getElementById('gallery-container');
+    container.innerHTML = '';
+    let delay = 0;
+    data.forEach(url=>{
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.animationDelay = `${delay}s`;
+        delay += 0.1;
+        container.appendChild(img);
+    });
+}
+
+// KLEIDUNG LADEN
+async function loadClothes(){
+    const res = await fetch('clothing.json');
+    const data = await res.json();
+    const grid=document.getElementById('clothing-grid');
+    grid.innerHTML='';
+    data.forEach(item=>{
+        grid.innerHTML+=`
+        <div class='card' onclick="window.open('${item.link}','_blank')">
+            <img src='${item.image}'/>
+            <h3>${item.name}</h3>
+        </div>`;
+    });
+}
+
+// VEHICLES
+async function loadVehicles(){
+    const res=await fetch('vehicle.json');
+    const data=await res.json();
+    const grid=document.getElementById('vehicle-grid');
+    grid.innerHTML='';
+    data.forEach(v=>{
+        grid.innerHTML+=`
+        <div class='card' onclick="window.open('${v.link}','_blank')">
+            <img src='${v.image}'/>
+            <h3>${v.name}</h3>
+        </div>`;
+    });
+}
+
+// MEMBERS
+async function loadMembers(){
+    const res=await fetch('members.json');
+    const members=await res.json();
+    const table=document.getElementById("members-table");
+    table.innerHTML=`<tr><th>Mitglied</th><th>Rang</th></tr>`;
+    members.forEach(m=>{
+        table.innerHTML+=`
+        <tr onclick="window.open('${m.link}','_blank')">
+            <td>${m.username}</td><td>${m.rank}</td>
+        </tr>`;
+    });
+}
+
+// CLIPS LADEN
 async function loadClips() {
     const res = await fetch("/clips");
     const clips = await res.json();
     const box = document.getElementById("clips-box");
     box.innerHTML = "";
+
     clips.forEach(c => {
         const div = document.createElement("div");
-        div.classList.add("card", "clip-card");
+        div.classList.add("card","clip-card");
         div.style.padding="10px";
         div.innerHTML = `
-            <video src="${c.file}" controls></video>
-            <p class="desc">${c.desc}</p>
-            <p class="user">Hochgeladen von: ${c.user}</p>
+            <video src="${c.file}" controls style="width:100%; border-radius:8px;"></video>
+            <p style="margin-top:10px; font-size:16px; color:#d3b3ff;">${c.desc}</p>
+            <p style="margin-top:5px; font-size:12px; color:#aaa;">Hochgeladen von: ${c.user}</p>
         `;
-        if(currentUser==="Julian"||currentUser==="Max"){
+        if(currentUser === "Julian" || currentUser === "Max") {
             const delBtn = document.createElement("button");
             delBtn.innerText = "X";
-            delBtn.style.cssText = "position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer;";
-            delBtn.onclick = async ()=>{
-                await fetch("/delete-clip",{method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({file:c.file})});
+            delBtn.style.cssText = `
+                position:absolute;
+                top:5px;
+                right:5px;
+                background:red;
+                color:white;
+                border:none;
+                border-radius:50%;
+                width:22px;
+                height:22px;
+                cursor:pointer;
+            `;
+            delBtn.onclick = async () => {
+                await fetch("/delete-clip", {
+                    method:"POST",
+                    headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({file:c.file})
+                });
                 loadClips();
             };
             div.style.position="relative";
@@ -391,28 +377,42 @@ async function loadClips() {
     });
 }
 
-function addClip(){document.getElementById("clip-input").click();}
-function onClipSelected(input){if(!input.files[0]) return; window.selectedClipFile=input.files[0]; document.getElementById("popup-clip").style.display="block";}
-function cancelClip(){document.getElementById("popup-clip").style.display="none"; window.selectedClipFile=null; document.getElementById("clip-desc").value="";}
-async function confirmClip(){
-    const desc=document.getElementById("clip-desc").value.trim();
+// CLIPS HINZUFÜGEN
+function addClip() {
+    document.getElementById("clip-input").click();
+}
+
+function onClipSelected(input) {
+    if(!input.files[0]) return;
+    window.selectedClipFile = input.files[0];
+    document.getElementById("popup-clip").style.display="block";
+}
+
+function cancelClip() {
+    document.getElementById("popup-clip").style.display="none";
+    window.selectedClipFile = null;
+    document.getElementById("clip-desc").value = "";
+}
+
+async function confirmClip() {
+    const desc = document.getElementById("clip-desc").value.trim();
     if(!window.selectedClipFile) return;
     if(!desc) return alert("Bitte Beschreibung eingeben!");
-    const form=new FormData();
+    const form = new FormData();
     form.append("clip", window.selectedClipFile);
     form.append("desc", desc);
     form.append("user", currentUser);
-    const upload=await fetch("/upload-clip",{method:"POST", body:form});
-    if(upload.ok){cancelClip(); loadClips();}
-    else alert("Upload fehlgeschlagen!");
+
+    const upload = await fetch("/upload-clip", {method:"POST", body:form});
+    if(upload.ok){
+        cancelClip();
+        loadClips();
+    } else {
+        alert("Upload fehlgeschlagen!");
+    }
 }
 
-// -------------------- LOAD OTHER SECTIONS --------------------
-async function loadGallery(){ const res=await fetch('pictures.json'); const data=await res.json(); const container=document.getElementById('gallery-container'); container.innerHTML=''; let delay=0; data.forEach(url=>{ const img=document.createElement('img'); img.src=url; img.style.animationDelay=`${delay}s`; delay+=0.1; container.appendChild(img); }); }
-async function loadClothes(){ const res=await fetch('clothing.json'); const data=await res.json(); const grid=document.getElementById('clothing-grid'); grid.innerHTML=''; data.forEach(item=>{ grid.innerHTML+=`<div class='card' onclick="window.open('${item.link}','_blank')"><img src='${item.image}'/><h3>${item.name}</h3></div>`; }); }
-async function loadVehicles(){ const res=await fetch('vehicle.json'); const data=await res.json(); const grid=document.getElementById('vehicle-grid'); grid.innerHTML=''; data.forEach(v=>{ grid.innerHTML+=`<div class='card' onclick="window.open('${v.link}','_blank')"><img src='${v.image}'/><h3>${v.name}</h3></div>`; }); }
-async function loadMembers(){ const res=await fetch('members.json'); const members=await res.json(); const table=document.getElementById("members-table"); table.innerHTML=`<tr><th>Mitglied</th><th>Rang</th></tr>`; members.forEach(m=>{ table.innerHTML+=`<tr onclick="window.open('${m.link}','_blank')"><td>${m.username}</td><td>${m.rank}</td></tr>`; }); }
-
+// On load
 window.onload = ()=>{
     loadGallery();
     loadClothes();
@@ -421,7 +421,123 @@ window.onload = ()=>{
     loadClips();
 };
 </script>
+</head>
+<body>
+
+<div id="login-overlay">
+    <div id="login-box">
+        <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1437906569772925064/Lila_Schatten_Logo-removebg-preview.png">
+        <input id="login-user" type="text" placeholder="Benutzername">
+        <input id="login-pass" type="password" placeholder="Passwort">
+        <button onclick="login()">Login</button>
+        <div id="login-error">Login fehlgeschlagen</div>
+    </div>
+</div>
+
+<header>
+    <div class="logo-text">
+        <div id="user-info"></div>
+        <div id="user-count">👁 0</div>
+    </div>
+    <div class="hamburger" onclick="toggleSidebar()">
+        <div></div><div></div><div></div>
+    </div>
+</header>
+
+<div id="overlay" onclick="toggleSidebar()"></div>
+<div id="sidebar">
+    <a href="#" onclick="showSection('start')">Startseite</a>
+    <a href="#" onclick="showSection('gallery')">Galerie</a>
+    <a href="#" onclick="showSection('clothing')">Kleidung</a>
+    <a href="#" onclick="showSection('vehicles')">Fahrzeuge</a>
+    <a href="#" onclick="showSection('members')">Mitglieder</a>
+    <a href="#" onclick="showSection('clips')">Clips</a>
+    <a id="logout-btn" href="#" onclick="logout()">Abmelden</a>
+</div>
+
+<div id="main-content">
+    <section id="start" class="section active-section">
+        <h2>Willkommen bei Purple Shadows!</h2>
+    </section>
+
+    <section id="gallery" class="section">
+        <h2>Galerie</h2>
+        <div id="gallery-container" class="gallery"></div>
+    </section>
+
+    <section id="clothing" class="section">
+        <h2>Kleidungsliste</h2>
+        <div id="clothing-grid" class="card-grid"></div>
+    </section>
+
+    <section id="vehicles" class="section">
+        <h2>Fahrzeugliste</h2>
+        <div id="vehicle-grid" class="card-grid"></div>
+    </section>
+
+    <section id="members" class="section">
+        <h2>Mitgliederliste</h2>
+        <table id="members-table"></table>
+    </section>
+
+    <section id="clips" class="section">
+        <h2>Clips</h2>
+        <button id="add-clip-btn" onclick="addClip()" style="
+            background:#8a2be2;
+            color:white;
+            padding:10px 15px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            box-shadow:0 0 15px #8a2be2;
+            margin-bottom:20px;">Hinzufügen</button>
+
+        <input type="file" id="clip-input" style="display:none" accept="video/*,audio/*" onchange="onClipSelected(this)">
+        <div id="clips-box" class="card-grid"></div>
+    </section>
+</div>
+
+<div id="popup-clip" style="
+    display:none;
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:#1a001f;
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 0 25px #9f4bff;
+    width:350px;
+    z-index:100;">
+    <h3>Beschreibung hinzufügen</h3>
+    <input id="clip-desc" placeholder="Beschreibung..." style="
+        width:100%;
+        padding:10px;
+        border-radius:8px;
+        border:none;
+        background:#140014;
+        color:#d3b3ff;
+        box-shadow:0 0 10px #8a2be2;
+        margin-top:10px;
+    ">
+    <div style="margin-top:20px; text-align:right;">
+        <button onclick="cancelClip()" style="
+            background:#660066;
+            padding:10px 15px;
+            border-radius:8px;
+            border:none;
+            cursor:pointer;
+            margin-right:10px;
+        ">Abbrechen</button>
+        <button onclick="confirmClip()" style="
+            background:#8a2be2;
+            padding:10px 15px;
+            border-radius:8px;
+            border:none;
+            cursor:pointer;
+        ">Bestätigen</button>
+    </div>
+</div>
 
 </body>
 </html>
-
