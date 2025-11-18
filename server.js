@@ -1,98 +1,110 @@
+// server.js
 const express = require('express');
-const app = express();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
 const multer = require('multer');
 const fs = require('fs');
 const path = require('path');
+const app = express();
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 
-// -------------------- MIDDLEWARE --------------------
+const PORT = process.env.PORT || 3000;
+
+// Middleware für JSON Body
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public')); // Hier muss dein index.html + assets liegen
 
-// -------------------- USER TRACKING --------------------
-let onlineUsers = 0;
+// Ordner für Clips
+const CLIP_DIR = path.join(__dirname, 'clips');
+const CLIP_DATA = path.join(__dirname, 'clips.json');
 
-io.on('connection', (socket) => {
-    onlineUsers++;
-    io.emit('updateUserCount', onlineUsers);
+// Stelle sicher, dass der Clips-Ordner existiert
+if (!fs.existsSync(CLIP_DIR)) fs.mkdirSync(CLIP_DIR);
 
-    socket.on('userLogin', () => {
-        onlineUsers++;
-        io.emit('updateUserCount', onlineUsers);
-    });
+// Clips.json existiert? Wenn nicht, erstellen
+if (!fs.existsSync(CLIP_DATA)) fs.writeFileSync(CLIP_DATA, JSON.stringify([]));
 
-    socket.on('userLogout', () => {
-        onlineUsers = Math.max(0, onlineUsers - 1);
-        io.emit('updateUserCount', onlineUsers);
-    });
+// Statische Dateien (index.html, CSS, JS, Bilder)
+app.use(express.static(path.join(__dirname, 'public')));
 
-    socket.on('disconnect', () => {
-        onlineUsers = Math.max(0, onlineUsers - 1);
-        io.emit('updateUserCount', onlineUsers);
-    });
-});
-
-// -------------------- MULTER SETUP --------------------
-const clipsDir = path.join(__dirname, 'public', 'clips');
-if (!fs.existsSync(clipsDir)) fs.mkdirSync(clipsDir, { recursive: true });
-
+// Multer Setup für Upload
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) { cb(null, clipsDir); },
-    filename: function (req, file, cb) {
-        const uniqueName = Date.now() + '-' + file.originalname.replace(/\s+/g, '_');
-        cb(null, uniqueName);
+    destination: function(req, file, cb) {
+        cb(null, CLIP_DIR);
+    },
+    filename: function(req, file, cb) {
+        const unique = Date.now() + '_' + file.originalname;
+        cb(null, unique);
     }
 });
 const upload = multer({ storage: storage });
 
-// -------------------- CLIPS ROUTES --------------------
-
-// Alle Clips laden
-app.get('/clips', (req, res) => {
-    const clipsFile = path.join(clipsDir, 'clips.json');
-    if (!fs.existsSync(clipsFile)) return res.json([]);
-    const data = JSON.parse(fs.readFileSync(clipsFile));
-    res.json(data);
+// --- ROUTES ---
+// Root /index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Clip hochladen
+// Clips hochladen
 app.post('/upload-clip', upload.single('clip'), (req, res) => {
-    const { desc, user } = req.body;
-    if (!req.file || !desc || !user) return res.status(400).send('Fehler beim Upload');
+    if(!req.file || !req.body.desc || !req.body.user){
+        return res.status(400).send('Fehlende Daten');
+    }
 
-    const clipPath = `/clips/${req.file.filename}`;
-    const clipsFile = path.join(clipsDir, 'clips.json');
-    let clips = [];
-    if (fs.existsSync(clipsFile)) clips = JSON.parse(fs.readFileSync(clipsFile));
-
-    clips.push({ file: clipPath, desc, user });
-    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
-
-    res.sendStatus(200);
+    const clips = JSON.parse(fs.readFileSync(CLIP_DATA));
+    clips.push({
+        file: `/clips/${req.file.filename}`,
+        desc: req.body.desc,
+        user: req.body.user
+    });
+    fs.writeFileSync(CLIP_DATA, JSON.stringify(clips, null, 2));
+    res.status(200).send('OK');
 });
 
-// Clip löschen
+// Clips löschen
 app.post('/delete-clip', (req, res) => {
     const { file } = req.body;
     if (!file) return res.status(400).send('Keine Datei angegeben');
 
-    const clipsFile = path.join(clipsDir, 'clips.json');
-    if (!fs.existsSync(clipsFile)) return res.sendStatus(200);
-
-    let clips = JSON.parse(fs.readFileSync(clipsFile));
-    clips = clips.filter(c => c.file !== file);
-
-    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
-
-    const filePath = path.join(__dirname, 'public', file);
+    // Datei löschen
+    const filePath = path.join(__dirname, file);
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
-    res.sendStatus(200);
+    // Aus JSON entfernen
+    let clips = JSON.parse(fs.readFileSync(CLIP_DATA));
+    clips = clips.filter(c => c.file !== file);
+    fs.writeFileSync(CLIP_DATA, JSON.stringify(clips, null, 2));
+
+    res.status(200).send('Gelöscht');
 });
 
-// -------------------- SERVER START --------------------
-const PORT = process.env.PORT || 3000;
-http.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
+// Alle Clips laden
+app.get('/clips', (req, res) => {
+    const clips = JSON.parse(fs.readFileSync(CLIP_DATA));
+    res.json(clips);
+});
 
+// --- SOCKET.IO User Zähler ---
+let userCount = 0;
+io.on('connection', (socket) => {
+    // Client emit Login/Logout
+    socket.on('userLogin', () => {
+        userCount++;
+        io.emit('updateUserCount', userCount);
+    });
+    socket.on('userLogout', () => {
+        userCount = Math.max(0, userCount-1);
+        io.emit('updateUserCount', userCount);
+    });
+
+    socket.on('disconnect', () => {
+        userCount = Math.max(0, userCount-1);
+        io.emit('updateUserCount', userCount);
+    });
+});
+
+// Clips Ordner statisch bereitstellen
+app.use('/clips', express.static(CLIP_DIR));
+
+// Server starten
+http.listen(PORT, () => {
+    console.log(`Server läuft auf Port ${PORT}`);
+});
