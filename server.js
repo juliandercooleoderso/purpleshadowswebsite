@@ -1,16 +1,12 @@
 const express = require('express');
+const path = require('path');
 const http = require('http');
 const { Server } = require('socket.io');
 const multer = require('multer');
-const path = require('path');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-
-// -------------------- Multer Setup (speichert Clips temporär im Speicher) --------------------
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
 
 // -------------------- Middleware --------------------
 app.use(express.static(path.join(__dirname)));
@@ -18,6 +14,11 @@ app.use(express.json());
 
 // -------------------- In-Memory Clips --------------------
 let clips = []; // Clips werden nur im RAM gespeichert
+
+// -------------------- Multer Setup --------------------
+// Dateien werden im Memory gespeichert (Base64) für Deploy-Sicherheit
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 // -------------------- Routen --------------------
 
@@ -35,9 +36,11 @@ app.get('/clips', (req, res) => {
 app.post('/upload-clip', upload.single('clip'), (req, res) => {
     if (!req.file || !req.body.desc) return res.status(400).send('Fehler beim Upload');
 
-    // Datei-Objekt ins Array speichern (im Memory)
+    // Datei als Base64 speichern
+    const clipData = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+
     clips.push({
-        file: `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`,
+        file: clipData,
         desc: req.body.desc
     });
 
@@ -70,5 +73,4 @@ io.on('connection', (socket) => {
 // -------------------- Server starten --------------------
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
-
 
