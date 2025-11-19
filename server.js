@@ -1,86 +1,73 @@
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const multer = require("multer");
-const cors = require("cors");
-const http = require("http");
-const { Server } = require("socket.io");
+const express = require('express');
+const path = require('path');
+const http = require('http');
+const fs = require('fs');
+const { Server } = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(cors());
+app.use(express.static(path.join(__dirname)));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// -------------------- FILE STORAGE --------------------
-const clipsFile = path.join(__dirname, "clips.json");
-if (!fs.existsSync(clipsFile)) fs.writeFileSync(clipsFile, "[]");
-
-const upload = multer({ dest: path.join(__dirname, "uploads/") });
-
-// -------------------- SOCKET.IO --------------------
-let userCount = 0;
-io.on("connection", (socket) => {
-  userCount++;
-  io.emit("updateUserCount", userCount);
-
-  socket.on("disconnect", () => {
-    userCount--;
-    io.emit("updateUserCount", userCount);
-  });
+// Serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// -------------------- SERVE FILES --------------------
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
+// Persistente Clips-Datei
+const clipsFile = path.join(__dirname, 'clips.json');
+if(!fs.existsSync(clipsFile)){
+    fs.writeFileSync(clipsFile, JSON.stringify([]));
+}
+
+// Route zum Speichern eines neuen Clips
+app.post('/saveClip', (req, res) => {
+    const clip = req.body;
+
+    fs.readFile(clipsFile, (err, data) => {
+        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
+
+        let clips = [];
+        try{
+            clips = JSON.parse(data);
+        } catch(e){ clips = []; }
+
+        clips.push(clip);
+
+        fs.writeFile(clipsFile, JSON.stringify(clips, null, 2), err=>{
+            if(err) return res.status(500).send('Fehler beim Speichern');
+            
+            // An alle Clients senden
+            io.emit('newClip', clip);
+            res.sendStatus(200);
+        });
+    });
 });
 
-app.get("/login.json", (req, res) => {
-  res.sendFile(path.join(__dirname, "login.json"));
+// Online User Tracking
+let onlineUsers = 0;
+
+io.on('connection', (socket) => {
+    console.log('Ein Benutzer verbunden');
+
+    socket.on('userLogin', () => {
+        onlineUsers++;
+        io.emit('updateUserCount', onlineUsers);
+    });
+
+    socket.on('userLogout', () => {
+        onlineUsers = Math.max(onlineUsers - 1, 0);
+        io.emit('updateUserCount', onlineUsers);
+    });
+
+    socket.on('disconnect', () => {
+        onlineUsers = Math.max(onlineUsers - 1, 0);
+        io.emit('updateUserCount', onlineUsers);
+        console.log('Ein Benutzer getrennt');
+    });
 });
 
-// -------------------- CLIPS --------------------
-app.get("/clips", (req, res) => {
-  const clips = JSON.parse(fs.readFileSync(clipsFile));
-  res.json(clips);
-});
-
-app.post("/upload-clip", upload.single("clip"), (req, res) => {
-  const { desc, user } = req.body;
-  if (!req.file || !desc || !user) return res.status(400).send("Fehler");
-
-  const filePath = `/uploads/${req.file.filename}`;
-  const clips = JSON.parse(fs.readFileSync(clipsFile));
-  clips.push({ file: filePath, desc, user });
-  fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
-  res.sendStatus(200);
-});
-
-app.post("/delete-clip", (req, res) => {
-  const { file } = req.body;
-  let clips = JSON.parse(fs.readFileSync(clipsFile));
-  clips = clips.filter(c => c.file !== file);
-  fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
-
-  // Optional: delete file from /uploads
-  const fullPath = path.join(__dirname, file);
-  if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
-
-  res.sendStatus(200);
-});
-
-// -------------------- STATIC UPLOADS --------------------
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// -------------------- OTHER SECTIONS --------------------
-// Dummy endpoints for gallery/clothing/vehicles/members if needed
-app.get("/gallery", (req, res) => res.json([]));
-app.get("/clothing", (req, res) => res.json([]));
-app.get("/vehicles", (req, res) => res.json([]));
-app.get("/members", (req, res) => res.json([]));
-
-// -------------------- SERVER --------------------
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
