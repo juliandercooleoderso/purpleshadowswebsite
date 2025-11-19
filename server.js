@@ -11,6 +11,9 @@ const io = new Server(server);
 app.use(express.static(path.join(__dirname)));
 app.use(express.json());
 
+// Statischer Ordner für lokale Clips
+app.use('/videos', express.static(path.join(__dirname, 'videos')));
+
 // Serve index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -22,10 +25,36 @@ if(!fs.existsSync(clipsFile)){
     fs.writeFileSync(clipsFile, JSON.stringify([]));
 }
 
-// ------------------------------
-// Hinweis: Upload / Delete Routen wurden entfernt.
-// Die Seite liest Clips ausschließlich aus clips.json.
-// ------------------------------
+// Route zum Speichern eines neuen Clips (optional, falls wieder aktiviert)
+app.post('/saveClip', (req, res) => {
+    const clip = req.body;
+    fs.readFile(clipsFile, (err, data) => {
+        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
+        let clips = [];
+        try{ clips = JSON.parse(data); } catch(e){ clips = []; }
+        clips.push(clip);
+        fs.writeFile(clipsFile, JSON.stringify(clips, null, 2), err=>{
+            if(err) return res.status(500).send('Fehler beim Speichern');
+            io.emit('newClip', clip);
+            res.sendStatus(200);
+        });
+    });
+});
+
+// Route zum Löschen eines Clips (optional)
+app.post('/deleteClip', (req,res)=>{
+    const {id} = req.body;
+    fs.readFile(clipsFile,(err,data)=>{
+        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
+        let clips = [];
+        try{ clips = JSON.parse(data); } catch(e){ clips=[]; }
+        clips = clips.filter(c=>c.id!==id);
+        fs.writeFile(clipsFile, JSON.stringify(clips,null,2), err=>{
+            if(err) return res.status(500).send('Fehler beim Speichern');
+            res.sendStatus(200);
+        });
+    });
+});
 
 // Online Users Tracking
 let onlineUsers = 0;
@@ -38,5 +67,3 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
-
-
