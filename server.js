@@ -1,107 +1,48 @@
-const express = require("express");
-const fs = require("fs");
-const multer = require("multer");
-const path = require("path");
-const http = require("http");
-const { Server } = require("socket.io");
-
+const express = require('express');
+const fs = require('fs');
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const port = 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// --- Multer Setup ---
-const upload = multer({ dest: "uploads/" });
+// Damit index.html und login.json direkt erreichbar sind
+app.use(express.static(__dirname));
 
-// --- Serve index.html directly ---
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "index.html"));
-});
-
-// --- Serve uploaded clips ---
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// --- Load Clips ---
-function loadClipsData() {
-    if (!fs.existsSync("clips.json")) {
-        fs.writeFileSync("clips.json", JSON.stringify([]));
-    }
-    const data = fs.readFileSync("clips.json", "utf8");
-    return JSON.parse(data);
+// Clips handling
+let clips = [];
+const clipsFile = 'clips.json';
+if (fs.existsSync(clipsFile)) {
+    clips = JSON.parse(fs.readFileSync(clipsFile));
 }
 
-function saveClipsData(clips) {
-    fs.writeFileSync("clips.json", JSON.stringify(clips, null, 2));
-}
-
-// --- Upload Clip ---
-app.post("/upload-clip", upload.single("clip"), (req, res) => {
-    if (!req.file || !req.body.desc || !req.body.user) {
-        return res.status(400).send("Missing data");
-    }
-
-    const clips = loadClipsData();
-
-    const ext = path.extname(req.file.originalname);
-    const newName = `${req.file.filename}${ext}`;
-    const newPath = path.join(__dirname, "uploads", newName);
-
-    fs.renameSync(req.file.path, newPath);
-
-    clips.push({
-        file: `/uploads/${newName}`,
-        desc: req.body.desc,
-        user: req.body.user
-    });
-
-    saveClipsData(clips);
-    res.send("OK");
-});
-
-// --- Get Clips ---
-app.get("/clips", (req, res) => {
-    const clips = loadClipsData();
+// GET /clips
+app.get('/clips', (req, res) => {
     res.json(clips);
 });
 
-// --- Delete Clip ---
-app.post("/delete-clip", (req, res) => {
+// POST /upload-clip
+const multer = require('multer');
+const upload = multer({ dest: 'clips_upload/' });
+
+app.post('/upload-clip', upload.single('clip'), (req, res) => {
+    const { desc, user } = req.body;
+    const file = `/clips_upload/${req.file.filename}`;
+    clips.push({ file, desc, user });
+    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
+    res.sendStatus(200);
+});
+
+// POST /delete-clip
+app.post('/delete-clip', (req, res) => {
     const { file } = req.body;
-    if (!file) return res.status(400).send("No file specified");
-
-    let clips = loadClipsData();
-    const clip = clips.find(c => c.file === file);
-    if (clip) {
-        // Remove file from uploads
-        const filePath = path.join(__dirname, file);
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
-        // Remove from array
-        clips = clips.filter(c => c.file !== file);
-        saveClipsData(clips);
-        res.send("Deleted");
-    } else {
-        res.status(404).send("Clip not found");
-    }
+    clips = clips.filter(c => c.file !== file);
+    fs.writeFileSync(clipsFile, JSON.stringify(clips, null, 2));
+    // Datei löschen
+    fs.unlink(file.substring(1), err => {}); // remove leading '/'
+    res.sendStatus(200);
 });
 
-// --- Socket.io for user count ---
-let userCount = 0;
-io.on("connection", (socket) => {
-    socket.on("userLogin", () => {
-        userCount++;
-        io.emit("updateUserCount", userCount);
-    });
-    socket.on("userLogout", () => {
-        userCount--;
-        if(userCount<0) userCount=0;
-        io.emit("updateUserCount", userCount);
-    });
-});
-
-// --- Start server ---
-const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`Server läuft auf http://localhost:${PORT}`);
+app.listen(port, () => {
+    console.log(`Server läuft auf http://localhost:${port}`);
 });
