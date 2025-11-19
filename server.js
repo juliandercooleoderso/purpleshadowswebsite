@@ -22,36 +22,10 @@ if(!fs.existsSync(clipsFile)){
     fs.writeFileSync(clipsFile, JSON.stringify([]));
 }
 
-// Route zum Speichern eines neuen Clips
-app.post('/saveClip', (req, res) => {
-    const clip = req.body;
-    fs.readFile(clipsFile, (err, data) => {
-        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
-        let clips = [];
-        try{ clips = JSON.parse(data); } catch(e){ clips = []; }
-        clips.push(clip);
-        fs.writeFile(clipsFile, JSON.stringify(clips, null, 2), err=>{
-            if(err) return res.status(500).send('Fehler beim Speichern');
-            io.emit('newClip', clip);
-            res.sendStatus(200);
-        });
-    });
-});
-
-// Route zum Löschen eines Clips
-app.post('/deleteClip', (req,res)=>{
-    const {id} = req.body;
-    fs.readFile(clipsFile,(err,data)=>{
-        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
-        let clips = [];
-        try{ clips = JSON.parse(data); } catch(e){ clips=[]; }
-        clips = clips.filter(c=>c.id!==id);
-        fs.writeFile(clipsFile, JSON.stringify(clips,null,2), err=>{
-            if(err) return res.status(500).send('Fehler beim Speichern');
-            res.sendStatus(200);
-        });
-    });
-});
+// ------------------------------
+// Hinweis: Upload / Delete Routen wurden entfernt.
+// Die Seite liest Clips ausschließlich aus clips.json.
+// ------------------------------
 
 // Online Users Tracking
 let onlineUsers = 0;
@@ -64,3 +38,5 @@ io.on('connection', (socket) => {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server läuft auf Port ${PORT}`));
+
+
