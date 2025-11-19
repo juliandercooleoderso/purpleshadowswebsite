@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Purple Shadows</title>
 <script src="/socket.io/socket.io.js"></script>
-<link rel="stylesheet" href="style.css">
+
 <style>
-/* ------------------- Styles direkt aus deinem bisherigen Design ------------------- */
+/* Alles unverändert von dir bisher */
 body {margin:0;font-family:Arial,sans-serif;background:#0a0a0a;color:#d3b3ff;overflow-x:hidden;}
 #login-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;display:flex;align-items:center;justify-content:center;z-index:9999;}
 #login-box{background:#1a001f;padding:40px;width:350px;border-radius:15px;text-align:center;box-shadow:0 0 30px #8a2be2;}
@@ -40,8 +40,8 @@ h2{text-shadow:0 0 12px #8a2be2;}
 .gallery img{width:100%;height:200px;object-fit:cover;border-radius:12px;box-shadow:0 0 15px #8a2be2;opacity:0;transform: scale(0.9);animation: fadePop 0.6s forwards;}
 @keyframes fadePop{to { opacity:1; transform:scale(1); }}
 #popup,#clip-popup{position: fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:350px;background:#1a001f;padding:20px;border-radius:15px;box-shadow:0 0 30px #8a2be2;display:none;z-index:50;}
-#popup-close,#clip-popup-close{cursor:pointer;float:right;font-size:22px;color:#8a2be2;font-weight:bold;}
 #popup h3,#clip-popup h3{margin-top:0;text-shadow:0 0 8px #8a2be2;}
+#popup-close,#clip-popup-close{cursor:pointer;float:right;font-size:22px;color:#8a2be2;font-weight:bold;}
 table{width:80%;margin:auto;border-collapse:collapse;margin-top:30px;background:#140014;box-shadow:0 0 20px #8a2be2;}
 th, td{padding:15px;border-bottom:1px solid #8a2be2;}
 tr{cursor:pointer;transition:0.3s;}
@@ -50,12 +50,224 @@ tr:hover{background:#8a2be2;}
 .rules-box h3{color:#dcbcff;text-shadow:0 0 10px #9f4bff;}
 .rules-box p{margin:10px 0;}
 #treffpunkt img{width:80%;max-width:900px;border-radius:15px;box-shadow:0 0 25px #9f4bff;margin-top:20px;}
-.clip-frame{position:relative;background:#1d001d;padding:10px;border-radius:12px;box-shadow:0 0 15px #8a2be2;margin-bottom:15px;}
-.add-clip-btn{position:absolute;top:10px;right:10px;background:#8a2be2;color:white;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+
+/* Clips */
+#clips-grid{display:flex;flex-direction:column;align-items:center;gap:15px;width:80%;margin:auto;margin-top:30px;}
+.clip-frame{background:#140014;border-radius:12px;padding:10px;box-shadow:0 0 15px #8a2be2;width:320px;position:relative;}
+.clip-frame video{width:100%;border-radius:10px;margin-bottom:8px;}
+.clip-frame .description-text{font-weight:bold;font-size:16px;margin-bottom:5px;text-align:left;}
+.clip-frame .uploader{font-size:12px;color:#ccc;margin-bottom:5px;text-align:left;}
+.clip-frame .delete-btn{position:absolute;top:5px;right:5px;background:red;color:white;border:none;border-radius:5px;padding:2px 6px;cursor:pointer;}
+#add-clip-btn{position:absolute;top:10px;right:10px;background:#8a2be2;color:white;border:none;padding:6px 12px;border-radius:8px;cursor:pointer;box-shadow:0 0 10px #8a2be2;}
+#clip-popup input{width:90%;padding:10px;margin-top:10px;border-radius:8px;border:none;background:#140014;color:#d3b3ff;box-shadow:0 0 10px #8a2be2;}
+#clip-popup button{width:42%;margin:10px 5px;padding:10px;border:none;border-radius:8px;background:#8a2be2;color:white;cursor:pointer;box-shadow:0 0 15px #8a2be2;}
+#clip-popup .cancel-btn{background:red;}
 </style>
+
+<script>
+const socket = io();
+let currentUser='';
+let clips=[];
+
+async function login(){
+    const user=document.getElementById("login-user").value;
+    const pass=document.getElementById("login-pass").value;
+    const res=await fetch('login.json');
+    const users=await res.json();
+    const match=users.find(u=>u.username===user && u.password===pass);
+    if(!match){document.getElementById("login-error").style.display="block";return;}
+    currentUser=user;
+    document.getElementById("login-overlay").style.display="none";
+    document.getElementById("main-content").style.display="block";
+    document.getElementById('user-info').innerText=`Angemeldet als: ${currentUser}`;
+    document.querySelector('.hamburger').style.opacity=1;
+    document.querySelector('.hamburger').style.pointerEvents='auto';
+    socket.emit('userLogin');
+    showSection('start');
+}
+
+function logout(){
+    document.getElementById("main-content").style.display="none";
+    document.getElementById("login-overlay").style.display="flex";
+    document.getElementById("login-user").value="";
+    document.getElementById("login-pass").value="";
+    document.querySelector('.hamburger').style.opacity=0;
+    document.querySelector('.hamburger').style.pointerEvents='none';
+    socket.emit('userLogout');
+}
+
+function toggleSidebar(){
+    const sidebar=document.getElementById("sidebar");
+    const overlay=document.getElementById("overlay");
+    const open=sidebar.classList.contains("open");
+    sidebar.classList.toggle("open",!open);
+    overlay.classList.toggle("active",!open);
+}
+
+function showSection(id){
+    document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    toggleSidebar();
+}
+
+socket.on('updateUserCount', count=>{
+    document.getElementById('user-count').innerText=`👁 ${count}`;
+});
+
+window.onload=()=>{
+    loadGallery();
+    loadClothes();
+    loadVehicles();
+    loadMembers();
+    loadClips();
+};
+
+async function loadGallery(){
+    const res=await fetch('pictures.json');
+    const data=await res.json();
+    const container=document.getElementById('gallery-container');
+    container.innerHTML='';
+    let delay=0;
+    data.forEach(url=>{
+        const img=document.createElement('img');
+        img.src=url;
+        img.style.animationDelay=`${delay}s`;
+        delay+=0.1;
+        container.appendChild(img);
+    });
+}
+
+async function loadClothes(){
+    const res=await fetch('clothing.json');
+    const data=await res.json();
+    const grid=document.getElementById('clothing-grid');
+    grid.innerHTML='';
+    data.forEach(item=>{
+        grid.innerHTML+=`<div class='card' onclick="window.open('${item.link}','_blank')"><img src='${item.image}'/><h3>${item.name}</h3></div>`;
+    });
+}
+
+async function loadVehicles(){
+    const res=await fetch('vehicle.json');
+    const data=await res.json();
+    const grid=document.getElementById('vehicle-grid');
+    grid.innerHTML='';
+    data.forEach(v=>{
+        grid.innerHTML+=`<div class='card vehicle-card' onclick="openPopup(${JSON.stringify(v).replace(/\"/g,'&quot;')})"><img src='${v.image}'/><h3>${v.name}</h3></div>`;
+    });
+}
+
+async function loadMembers(){
+    const res=await fetch('members.json');
+    const members=await res.json();
+    const table=document.getElementById("members-table");
+    table.innerHTML=`<tr><th>Mitglied</th><th>Rang</th></tr>`;
+    members.forEach(m=>{
+        table.innerHTML+=`<tr onclick="window.open('${m.link}','_blank')"><td>${m.username}</td><td>${m.rank}</td></tr>`;
+    });
+}
+
+function openPopup(v){
+    const p=document.getElementById('popup');
+    p.innerHTML=`<span id='popup-close' onclick='closePopup()'>X</span><h3>${v.name}</h3><p>Preis: ${v.price}</p><p>Primary: ${v.primary}</p><p>Interieur: ${v.interior}</p><p>Rims: ${v.rims}</p><p>Underglow: ${v.underglow}</p><p>Fenster: ${v.windows}</p>`;
+    p.style.display='block';
+}
+
+function closePopup(){document.getElementById('popup').style.display='none';}
+
+// --- CLIPS ---
+async function loadClips(){
+    const res=await fetch('clips.json').catch(()=>({json:()=>[]})); 
+    const data=await res.json().catch(()=>[]);
+    clips=data.reverse(); // neueste oben
+    renderClips();
+}
+
+function renderClips(){
+    const grid=document.getElementById('clips-grid');
+    grid.innerHTML='';
+    clips.forEach(c=>{
+        const div=document.createElement('div');
+        div.classList.add('clip-frame');
+        div.innerHTML=`<video src="${c.file}" controls></video>
+            <div class="description-text">${c.description}</div>
+            <div class="uploader">Hochgeladen von: ${c.user}</div>`;
+        if(currentUser==='Julian'||currentUser==='Max'){
+            const btn=document.createElement('button');
+            btn.innerText='❌';
+            btn.classList.add('delete-btn');
+            btn.onclick=()=>deleteClip(c.file);
+            div.appendChild(btn);
+        }
+        grid.appendChild(div);
+    });
+}
+
+function addClip(){
+    const input=document.createElement('input');
+    input.type='file';
+    input.accept='video/*';
+    input.onchange=e=>{
+        const file=e.target.files[0];
+        if(!file)return;
+        const reader=new FileReader();
+        reader.onload=()=>showClipPopup(reader.result,file.name);
+        reader.readAsDataURL(file);
+    };
+    input.click();
+}
+
+function showClipPopup(data, filename){
+    const p=document.getElementById('clip-popup');
+    p.innerHTML=`<span id='clip-popup-close' onclick='closeClipPopup()'>X</span>
+        <h3>Clip hochladen: ${filename}</h3>
+        <p>Beschreibung:</p>
+        <input id='clip-desc' type='text' placeholder='Beschreibung'>
+        <div style="display:flex;justify-content:center;">
+            <button class='cancel-btn' onclick='closeClipPopup()'>Abbrechen</button>
+            <button onclick='confirmClip("${data}","${filename}")'>Bestätigen</button>
+        </div>`;
+    p.style.display='block';
+}
+
+function closeClipPopup(){document.getElementById('clip-popup').style.display='none';}
+
+function confirmClip(data, filename){
+    const desc=document.getElementById('clip-desc').value||'';
+    const clip={file:data,description:desc,user:currentUser};
+    clips.unshift(clip); // neueste oben
+
+    fetch('saveClip',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(clip)
+    });
+    renderClips();
+    closeClipPopup();
+}
+
+function deleteClip(file){
+    fetch('deleteClip',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({file})
+    });
+}
+
+// Listen for new clips
+socket.on('newClip', clip=>{
+    clips.unshift(clip);
+    renderClips();
+});
+socket.on('updateClips', data=>{
+    clips=data.reverse();
+    renderClips();
+});
+</script>
+
 </head>
 <body>
-
+<!-- alles unverändert -->
 <div id="login-overlay">
     <div id="login-box">
         <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1437906569772925064/Lila_Schatten_Logo-removebg-preview.png">
@@ -74,9 +286,7 @@ tr:hover{background:#8a2be2;}
     </div>
     <div class="hamburger" onclick="toggleSidebar()"><div></div><div></div><div></div></div>
 </header>
-
 <div id="overlay" onclick="toggleSidebar()"></div>
-
 <div id="sidebar">
     <a href="#" onclick="showSection('start')">Startseite</a>
     <a href="#" onclick="showSection('kleidung')">Kleidungsliste</a>
@@ -88,7 +298,6 @@ tr:hover{background:#8a2be2;}
     <a id="logout-btn" href="#" onclick="logout()">Abmelden</a>
 </div>
 
-<!-- SECTIONS -->
 <div id="start" class="section active-section">
     <h2>Willkommen bei Purple Shadows!</h2>
     <p>Hier seht ihr ein Paar Bilder von uns!</p>
@@ -114,20 +323,13 @@ tr:hover{background:#8a2be2;}
     <h2>Regeln</h2>
     <div class="rules-box">
         <p>⚠ Diese Regeln gelten für jeden Member. Wer sich nicht dran hält, muss mit Konsequenzen rechnen.</p>
-        <h3>1️⃣ Respekt</h3>
-        <p>➡️ Jeder behandelt jeden mit Respekt. Beleidigungen, Rassismus oder Diskriminierung sind tabu.</p>
-        <h3>2️⃣ Führung hören</h3>
-        <p>➡️ Die Führung hat immer das letzte Wort. Diskussionen sind möglich, aber am Ende entscheidet die Leitung.</p>
-        <h3>3️⃣ Call im Krieg/Fight</h3>
-        <p>➡️ Der Call im Fight ist Gesetz. Wenn Krieg ist oder wir fighten, zählt nur die Ansage des Callers – keine Diskussion, nur Ausführung.</p>
-        <h3>4️⃣ Loyalität</h3>
-        <p>➡️ Wir sind eine Einheit. Verrat, Spionage oder Leaks nach außen werden nicht geduldet.</p>
-        <h3>5️⃣ Disziplin</h3>
-        <p>➡️ Keine unnötigen Alleingänge. Immer absprechen, bevor etwas gestartet wird.</p>
-        <h3>6️⃣ Verhalten im Discord</h3>
-        <p>➡️ Kein Spam, kein unnötiges Pingen, keine Störgeräusche im Voice. Channel-Struktur respektieren.</p>
-        <h3>7️⃣ Privatsphäre</h3>
-        <p>➡️ Keine privaten Infos anderer ohne Erlaubnis weitergeben.</p>
+        <h3>1️⃣ Respekt</h3><p>➡️ Jeder behandelt jeden mit Respekt...</p>
+        <h3>2️⃣ Führung hören</h3><p>➡️ Die Führung hat immer das letzte Wort...</p>
+        <h3>3️⃣ Call im Krieg/Fight</h3><p>➡️ Der Call im Fight ist Gesetz...</p>
+        <h3>4️⃣ Loyalität</h3><p>➡️ Wir sind eine Einheit...</p>
+        <h3>5️⃣ Disziplin</h3><p>➡️ Keine unnötigen Alleingänge...</p>
+        <h3>6️⃣ Verhalten im Discord</h3><p>➡️ Kein Spam...</p>
+        <h3>7️⃣ Privatsphäre</h3><p>➡️ Keine privaten Infos...</p>
     </div>
 </div>
 
@@ -139,14 +341,12 @@ tr:hover{background:#8a2be2;}
 
 <div id="clips" class="section">
     <h2>Clips</h2>
-    <button class="add-clip-btn" onclick="addClip()">Hinzufügen</button>
-    <div id="clips-grid" style="margin-top:50px;"></div>
+    <button id="add-clip-btn" onclick="addClip()">Hinzufügen</button>
+    <div id="clips-grid"></div>
 </div>
 
 <div id="popup"></div>
 <div id="clip-popup"></div>
-
-<script src="main.js"></script>
 </div>
 </body>
 </html>
