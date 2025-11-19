@@ -335,323 +335,39 @@ tr:hover {
 }
 
 /* Clips */
-#clips-grid {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:25px;
-    width:80%;
-    margin:auto;
-    margin-top:30px;
+#clips-grid-container {
+    position:relative;
 }
-
+#add-clip-btn {
+    position:absolute;
+    top:0;
+    right:0;
+    padding:8px 16px;
+    margin:10px;
+    border:none;
+    border-radius:8px;
+    background:#8a2be2;
+    color:white;
+    cursor:pointer;
+    box-shadow:0 0 12px #8a2be2;
+}
 .clip-frame {
+    position:relative;
     background:#140014;
     border-radius:12px;
-    padding:15px;
-    box-shadow:0 0 20px #8a2be2;
-    width:100%;
-}
-
-.clip-frame video {
-    width:100%;
-    border-radius:10px;
-    margin-bottom:10px;
-}
-
-#add-clip-btn {
-    width:90%;
-    margin-top:20px;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#8a2be2;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    box-shadow:0 0 15px #8a2be2;
-}
-#clip-popup input {
-    width:90%;
     padding:10px;
-    margin-top:10px;
-    border-radius:8px;
-    border:none;
-    background:#140014;
-    color:#d3b3ff;
-    box-shadow:0 0 10px #8a2be2;
-}
-#clip-popup button {
-    width:42%;
-    margin:10px 5px;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    background:#8a2be2;
-    color:white;
-    cursor:pointer;
+    margin:15px auto;
+    max-width:400px;
     box-shadow:0 0 15px #8a2be2;
-}
-#clip-popup .cancel-btn {
-    background:red;
-}
-#clip-popup .uploader {
-    font-size:12px;
-    color:#ccc;
-    margin-top:5px;
-}
-#clip-popup .description-text {
-    font-size:14px;
-    margin-top:8px;
-    text-align:left;
 }
 </style>
-
-<script>
-const socket = io();
-let currentUser = '';
-let clips = [];
-
-async function login(){
-    const user = document.getElementById("login-user").value;
-    const pass = document.getElementById("login-pass").value;
-
-    const res = await fetch('login.json');
-    const users = await res.json();
-
-    const match = users.find(u=>u.username===user && u.password===pass);
-
-    if(!match){
-        document.getElementById("login-error").style.display="block";
-        return;
-    }
-
-    currentUser = user;
-
-    document.getElementById("login-overlay").style.display="none";
-    document.getElementById("main-content").style.display="block";
-
-    document.getElementById('user-info').innerText = `Angemeldet als: ${currentUser}`;
-
-    document.querySelector('.hamburger').style.opacity = 1;
-    document.querySelector('.hamburger').style.pointerEvents = 'auto';
-
-    socket.emit('userLogin');
-    showSection('start');
-}
-
-function logout(){
-    document.getElementById("main-content").style.display="none";
-    document.getElementById("login-overlay").style.display="flex";
-
-    document.getElementById("login-user").value="";
-    document.getElementById("login-pass").value="";
-
-    document.querySelector('.hamburger').style.opacity = 0;
-    document.querySelector('.hamburger').style.pointerEvents = 'none';
-
-    socket.emit('userLogout');
-}
-
-function toggleSidebar(){
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const open = sidebar.classList.contains("open");
-
-    sidebar.classList.toggle("open", !open);
-    overlay.classList.toggle("active", !open);
-}
-
-function showSection(id){
-    document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active-section'));
-    document.getElementById(id).classList.add('active-section');
-    toggleSidebar();
-}
-
-socket.on('updateUserCount', (count)=>{
-    document.getElementById('user-count').innerText=`👁 ${count}`;
-});
-
-window.onload = ()=>{
-    loadGallery();
-    loadClothes();
-    loadVehicles();
-    loadMembers();
-    loadClips();
-};
-
-async function loadGallery(){
-    const res = await fetch('pictures.json');
-    const data = await res.json();
-
-    const container = document.getElementById('gallery-container');
-    container.innerHTML = '';
-
-    let delay = 0;
-    data.forEach(url=>{
-        const img = document.createElement('img');
-        img.src = url;
-        img.style.animationDelay = `${delay}s`;
-        delay += 0.1;
-        container.appendChild(img);
-    });
-}
-
-async function loadClothes(){
-    const res=await fetch('clothing.json');
-    const data=await res.json();
-
-    const grid=document.getElementById('clothing-grid');
-    grid.innerHTML='';
-
-    data.forEach(item=>{
-        grid.innerHTML+=`
-        <div class='card' onclick="window.open('${item.link}','_blank')">
-            <img src='${item.image}'/>
-            <h3>${item.name}</h3>
-        </div>`;
-    });
-}
-
-async function loadVehicles(){
-    const res=await fetch('vehicle.json');
-    const data=await res.json();
-
-    const grid=document.getElementById('vehicle-grid');
-    grid.innerHTML='';
-
-    data.forEach(v=>{
-        grid.innerHTML+=`
-        <div class='card vehicle-card' onclick="openPopup(${JSON.stringify(v).replace(/\"/g,'&quot;')})">
-            <img src='${v.image}'/>
-            <h3>${v.name}</h3>
-        </div>`;
-    });
-}
-
-async function loadMembers(){
-    const res=await fetch('members.json');
-    const members=await res.json();
-
-    const table=document.getElementById("members-table");
-    table.innerHTML=`<tr><th>Mitglied</th><th>Rang</th></tr>`;
-
-    members.forEach(m=>{
-        table.innerHTML+=`
-        <tr onclick="window.open('${m.link}','_blank')">
-            <td>${m.username}</td><td>${m.rank}</td>
-        </tr>`;
-    });
-}
-
-function openPopup(v){
-    const p=document.getElementById('popup');
-
-    p.innerHTML=`
-    <span id='popup-close' onclick='closePopup()'>X</span>
-    <h3>${v.name}</h3>
-    <p>Preis: ${v.price}</p>
-    <p>Primary: ${v.primary}</p>
-    <p>Interieur: ${v.interior}</p>
-    <p>Rims: ${v.rims}</p>
-    <p>Underglow: ${v.underglow}</p>
-    <p>Fenster: ${v.windows}</p>
-    `;
-
-    p.style.display='block';
-}
-
-function closePopup(){
-    document.getElementById('popup').style.display='none';
-}
-
-// --- CLIPS FUNCTIONALITY ---
-async function loadClips(){
-    const res = await fetch('clips.json').catch(()=>({json:()=>[]})); 
-    const data = await res.json().catch(()=>[]);
-    clips = data;
-    renderClips();
-}
-
-function renderClips(){
-    const grid = document.getElementById('clips-grid');
-    grid.innerHTML='';
-    clips.forEach(c=>{
-        const div = document.createElement('div');
-        div.classList.add('clip-frame');
-        div.innerHTML=`
-            <video src="${c.file}" controls></video>
-            <div class="description-text">${c.description}</div>
-            <div class="uploader">Hochgeladen von: ${c.user}</div>
-        `;
-        grid.appendChild(div);
-    });
-}
-
-function addClip(){
-    const input = document.createElement('input');
-    input.type='file';
-    input.accept='video/*';
-    input.onchange = e=>{
-        const file = e.target.files[0];
-        if(!file) return;
-
-        const reader = new FileReader();
-        reader.onload = ()=>{
-            showClipPopup(reader.result, file.name);
-        };
-        reader.readAsDataURL(file);
-    };
-    input.click();
-}
-
-function showClipPopup(data, filename){
-    const p = document.getElementById('clip-popup');
-    p.innerHTML=`
-        <span id='clip-popup-close' onclick='closeClipPopup()'>X</span>
-        <h3>Clip hochladen: ${filename}</h3>
-        <p>Beschreibung:</p>
-        <input id='clip-desc' type='text' placeholder='Beschreibung'>
-        <div>
-            <button class='cancel-btn' onclick='closeClipPopup()'>Abbrechen</button>
-            <button onclick='confirmClip("${data}", "${filename}")'>Bestätigen</button>
-        </div>
-    `;
-    p.style.display='block';
-}
-
-function closeClipPopup(){
-    document.getElementById('clip-popup').style.display='none';
-}
-
-function confirmClip(data, filename){
-    const desc = document.getElementById('clip-desc').value || '';
-    const clip = {file:data, description:desc, user:currentUser};
-    clips.push(clip);
-
-    fetch('saveClip', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(clip)
-    });
-
-    renderClips();
-    closeClipPopup();
-}
-
-// Listen for new clips via socket
-socket.on('newClip', clip=>{
-    clips.push(clip);
-    renderClips();
-});
-</script>
 
 </head>
 <body>
 
 <div id="login-overlay">
     <div id="login-box">
-        <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1437906569772925064/Lila_Schatten_Logo-removebg-preview.png?ex=69179559&is=691643d9&hm=e17958ccb82df86d60dac943eb93e5c9d54f6baf897a9233dcec539c6aa68e64&">
+        <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1437906569772925064/Lila_Schatten_Logo-removebg-preview.png">
         <input id="login-user" type="text" placeholder="Benutzername">
         <input id="login-pass" type="password" placeholder="Passwort">
         <button onclick="login()">Login</button>
@@ -729,20 +445,21 @@ socket.on('newClip', clip=>{
 <div id="treffpunkt" class="section">
     <h2>Treffpunkt</h2>
     <p>Hier findest du unser Treffpunkt, an dem wir uns meistens IMMER Treffen!</p>
-    <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1438732772914233434/414141.png?ex=6917f3cf&is=6916a24f&hm=af427527bfb48156359217304347db921f6c4b14221055a110782f39b58289eb&" alt="Treffpunkt Bild">
+    <img src="https://cdn.discordapp.com/attachments/1231233950089744504/1438732772914233434/414141.png" alt="Treffpunkt Bild">
 </div>
 
 <div id="clips" class="section">
     <h2>Clips</h2>
-    <button id="add-clip-btn" onclick="addClip()">Hinzufügen</button>
-    <div id="clips-grid"></div>
+    <div id="clips-grid-container">
+        <button id="add-clip-btn" onclick="addClip()">Hinzufügen</button>
+        <div id="clips-grid"></div>
+    </div>
 </div>
 
 <div id="popup"></div>
 <div id="clip-popup"></div>
 
-</div>
+<script src="main.js"></script>
 </body>
 </html>
-
 
