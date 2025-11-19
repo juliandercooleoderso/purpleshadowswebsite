@@ -16,37 +16,45 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Persistente Clips-Datei
+// Clips persistent speichern
 const clipsFile = path.join(__dirname, 'clips.json');
 if(!fs.existsSync(clipsFile)){
     fs.writeFileSync(clipsFile, JSON.stringify([]));
 }
 
-// Route zum Speichern eines neuen Clips
+// Save Clip
 app.post('/saveClip', (req, res) => {
     const clip = req.body;
-
     fs.readFile(clipsFile, (err, data) => {
         if(err) return res.status(500).send('Fehler beim Lesen der Datei');
-
         let clips = [];
-        try{
-            clips = JSON.parse(data);
-        } catch(e){ clips = []; }
-
+        try { clips = JSON.parse(data); } catch(e){ clips = []; }
         clips.push(clip);
-
-        fs.writeFile(clipsFile, JSON.stringify(clips, null, 2), err=>{
+        fs.writeFile(clipsFile, JSON.stringify(clips, null,2), err=>{
             if(err) return res.status(500).send('Fehler beim Speichern');
-            
-            // An alle Clients senden
-            io.emit('newClip', clip);
+            io.emit('newClip', clip); // an alle Clients
             res.sendStatus(200);
         });
     });
 });
 
-// Online User Tracking
+// Delete Clip
+app.post('/deleteClip', (req, res) => {
+    const fileToDelete = req.body.file;
+    fs.readFile(clipsFile,(err,data)=>{
+        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
+        let clips = [];
+        try { clips = JSON.parse(data); } catch(e){ clips = []; }
+        clips = clips.filter(c => c.file !== fileToDelete);
+        fs.writeFile(clipsFile, JSON.stringify(clips,null,2), err=>{
+            if(err) return res.status(500).send('Fehler beim Löschen');
+            io.emit('updateClips', clips); // optional: alle Clients aktualisieren
+            res.sendStatus(200);
+        });
+    });
+});
+
+// Online Users
 let onlineUsers = 0;
 
 io.on('connection', (socket) => {
