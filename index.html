@@ -4,483 +4,64 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Purple Shadows</title>
-<script src="/socket.io/socket.io.js"></script>
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #0a0a0a;
-    color: #d3b3ff;
-    overflow-x: hidden;
-}
-
+body { margin:0; font-family:Arial,sans-serif; background:#0a0a0a; color:#d3b3ff; overflow-x:hidden; }
 /* --- Login Overlay --- */
-#login-overlay {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:#0a0a0a;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:9999;
-}
-#login-box {
-    background:#1a001f;
-    padding:40px;
-    width:350px;
-    border-radius:15px;
-    text-align:center;
-    box-shadow:0 0 30px #8a2be2;
-}
-#login-box img {
-    width:150px;
-    margin-bottom:20px;
-    border-radius:12px;
-    box-shadow:0 0 15px #8a2be2;
-}
-#login-box input {
-    width:85%;
-    padding:10px;
-    margin-top:12px;
-    border-radius:8px;
-    border:none;
-    background:#140014;
-    color:#d3b3ff;
-    box-shadow:0 0 10px #8a2be2;
-}
-#login-box button {
-    width:90%;
-    margin-top:20px;
-    padding:12px;
-    border:none;
-    border-radius:8px;
-    background:#8a2be2;
-    color:white;
-    font-size:16px;
-    cursor:pointer;
-    box-shadow:0 0 15px #8a2be2;
-}
-#login-error {
-    color:red;
-    margin-top:10px;
-    display:none;
-}
-
+#login-overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:#0a0a0a; display:flex; align-items:center; justify-content:center; z-index:9999; }
+#login-box { background:#1a001f; padding:40px; width:350px; border-radius:15px; text-align:center; box-shadow:0 0 30px #8a2be2; }
+#login-box img { width:150px; margin-bottom:20px; border-radius:12px; box-shadow:0 0 15px #8a2be2; }
+#login-box input { width:85%; padding:10px; margin-top:12px; border-radius:8px; border:none; background:#140014; color:#d3b3ff; box-shadow:0 0 10px #8a2be2; }
+#login-box button { width:90%; margin-top:20px; padding:12px; border:none; border-radius:8px; background:#8a2be2; color:white; font-size:16px; cursor:pointer; box-shadow:0 0 15px #8a2be2; }
+#login-error { color:red; margin-top:10px; display:none; }
 /* --- Main Content --- */
-#main-content {
-    display:none;
-}
-header {
-    background:#1a001f;
-    padding:20px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 0 20px #8a2be2;
-    position:relative;
-    z-index:20;
-}
+#main-content { display:none; }
+header { background:#1a001f; padding:20px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 0 20px #8a2be2; position:relative; z-index:20; }
 .logo-text { text-align:left; line-height:1.5; }
 .hamburger { width:30px; cursor:pointer; z-index:30; opacity:0; pointer-events:none; }
 .hamburger div { width:100%; height:4px; background:#d3b3ff; margin:6px 0; box-shadow:0 0 8px #8a2be2; transition:0.3s; }
-
-#sidebar {
-    position: fixed;
-    top: 120px;
-    left: -270px;
-    width: 270px;
-    height: calc(100% - 120px);
-    background:#140014;
-    box-shadow:0 0 25px #8a2be2;
-    padding-top:0px;
-    transition:0.45s;
-    z-index:15;
-    display:flex;
-    flex-direction:column;
-    pointer-events:none;
-}
+#sidebar { position: fixed; top: 120px; left: -270px; width: 270px; height: calc(100% - 120px); background:#140014; box-shadow:0 0 25px #8a2be2; padding-top:0px; transition:0.45s; z-index:15; display:flex; flex-direction:column; pointer-events:none; }
 #sidebar.open { left:0; pointer-events:auto; }
-#sidebar a {
-    display:block;
-    padding:18px 25px;
-    color:#d3b3ff;
-    text-decoration:none;
-    font-size:20px;
-    border-bottom:1px solid #8a2be2;
-    transition:0.3s;
-}
+#sidebar a { display:block; padding:18px 25px; color:#d3b3ff; text-decoration:none; font-size:20px; border-bottom:1px solid #8a2be2; transition:0.3s; }
 #sidebar a:hover { background:#8a2be2; box-shadow:0 0 18px #8a2be2; }
 #logout-btn { color:red !important; }
-
-#overlay {
-    position:fixed;
-    width:100%;
-    height:100%;
-    background: rgba(10,0,20,0.6);
-    backdrop-filter: blur(6px);
-    top:0;
-    left:0;
-    opacity:0;
-    visibility:hidden;
-    transition:0.4s;
-    z-index:9;
-}
+#overlay { position:fixed; width:100%; height:100%; background: rgba(10,0,20,0.6); backdrop-filter: blur(6px); top:0; left:0; opacity:0; visibility:hidden; transition:0.4s; z-index:9; }
 #overlay.active { opacity:1; visibility:visible; }
-
 .section { padding:90px 50px 50px 50px; text-align:center; display:none; }
 .active-section { display:block; }
-
 h2 { text-shadow:0 0 12px #8a2be2; }
-
 .card-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(180px,1fr)); gap:15px; width:80%; margin:auto; }
-.card {
-    background:#140014;
-    padding:12px;
-    border-radius:12px;
-    box-shadow:0 0 12px #8a2be2;
-    cursor:pointer;
-    transition:0.3s;
-}
+.card { background:#140014; padding:12px; border-radius:12px; box-shadow:0 0 12px #8a2be2; cursor:pointer; transition:0.3s; }
 .card:hover { transform:scale(1.05); box-shadow:0 0 20px #a855f7; }
 .card img { width:100%; border-radius:10px; margin-bottom:10px; }
-
-.vehicle-card {
-    background:#1d001d;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 0 20px #9f4bff;
-    transition:0.35s;
-}
+.vehicle-card { background:#1d001d; padding:15px; border-radius:15px; box-shadow:0 0 20px #9f4bff; transition:0.35s; }
 .vehicle-card:hover { transform:scale(1.07); box-shadow:0 0 30px #b86cff; }
-
-.gallery {
-    display:grid;
-    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
-    gap:20px;
-    width:85%;
-    margin:auto;
-    margin-top:35px;
-}
-.gallery img {
-    width:100%;
-    height:200px;
-    object-fit:cover;
-    border-radius:12px;
-    box-shadow:0 0 15px #8a2be2;
-    opacity:0;
-    transform: scale(0.9);
-    animation: fadePop 0.6s forwards;
-}
+.gallery { display:grid; grid-template-columns: repeat(auto-fit,minmax(260px,1fr)); gap:20px; width:85%; margin:auto; margin-top:35px; }
+.gallery img { width:100%; height:200px; object-fit:cover; border-radius:12px; box-shadow:0 0 15px #8a2be2; opacity:0; transform: scale(0.9); animation: fadePop 0.6s forwards; }
 @keyframes fadePop { to { opacity:1; transform:scale(1); } }
-
-/* Popup */
-#popup, #clip-popup {
-    position: fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:350px;
-    background:#1a001f;
-    padding:20px;
-    border-radius:15px;
-    box-shadow:0 0 30px #8a2be2;
-    display:none;
-    z-index:50;
-}
+#popup, #clip-popup { position: fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:350px; background:#1a001f; padding:20px; border-radius:15px; box-shadow:0 0 30px #8a2be2; display:none; z-index:50; }
 #popup h3, #clip-popup h3 { margin-top:0; text-shadow:0 0 8px #8a2be2; }
 #popup-close, #clip-popup-close { cursor:pointer; float:right; font-size:22px; color:#8a2be2; font-weight:bold; }
 #popup p, #clip-popup p { margin:5px 0; font-size:14px; }
-
-/* Table */
 table { width:80%; margin:auto; border-collapse:collapse; margin-top:30px; background:#140014; box-shadow:0 0 20px #8a2be2; }
 th, td { padding:15px; border-bottom:1px solid #8a2be2; }
 tr { cursor:pointer; transition:0.3s; }
 tr:hover { background:#8a2be2; }
-
-/* Regeln */
 .rules-box { background:#140014; border-radius:15px; padding:25px; margin:30px auto; width:80%; box-shadow:0 0 25px #8a2be2; text-align:left; line-height:1.6; }
 .rules-box h3 { color:#dcbcff; text-shadow:0 0 10px #9f4bff; }
 .rules-box p { margin:10px 0; }
-
 #treffpunkt img { width:80%; max-width:900px; border-radius:15px; box-shadow:0 0 25px #9f4bff; margin-top:20px; }
-
-/* Clips */
 #clips-grid { display:flex; flex-direction:column; align-items:center; gap:20px; width:80%; margin:auto; margin-top:30px; }
-.clip-frame {
-    background:#140014;
-    border-radius:12px;
-    padding:10px;
-    box-shadow:0 0 20px #8a2be2;
-    width:95%;
-    max-width:500px;
-    position:relative;
-}
+.clip-frame { background:#140014; border-radius:12px; padding:10px; box-shadow:0 0 20px #8a2be2; width:95%; max-width:500px; position:relative; }
 .clip-frame video { width:100%; border-radius:10px; }
 .description-text { font-weight:bold; font-size:16px; margin-top:8px; text-align:left; }
 .uploader { font-size:12px; color:#ccc; margin-top:5px; text-align:left; }
-.delete-btn {
-    position:absolute;
-    top:8px;
-    right:8px;
-    background:red;
-    color:white;
-    border:none;
-    border-radius:6px;
-    padding:2px 6px;
-    cursor:pointer;
-}
-
-#add-clip-btn {
-    width:150px;
-    margin-top:20px;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    background:#8a2be2;
-    color:white;
-    font-size:14px;
-    cursor:pointer;
-    box-shadow:0 0 15px #8a2be2;
-    align-self:flex-end;
-}
-
-/* Clip Popup Inputs */
-#clip-popup input {
-    width:90%;
-    padding:10px;
-    margin-top:10px;
-    border-radius:8px;
-    border:none;
-    background:#140014;
-    color:#d3b3ff;
-    box-shadow:0 0 10px #8a2be2;
-}
-#clip-popup button {
-    width:42%;
-    margin:10px 5px;
-    padding:10px;
-    border:none;
-    border-radius:8px;
-    background:#8a2be2;
-    color:white;
-    cursor:pointer;
-    box-shadow:0 0 15px #8a2be2;
-}
+.delete-btn { position:absolute; top:8px; right:8px; background:red; color:white; border:none; border-radius:6px; padding:2px 6px; cursor:pointer; }
+#add-clip-btn { width:150px; margin-top:20px; padding:10px; border:none; border-radius:8px; background:#8a2be2; color:white; font-size:14px; cursor:pointer; box-shadow:0 0 15px #8a2be2; align-self:flex-end; }
+#clip-popup input { width:90%; padding:10px; margin-top:10px; border-radius:8px; border:none; background:#140014; color:#d3b3ff; box-shadow:0 0 10px #8a2be2; }
+#clip-popup button { width:42%; margin:10px 5px; padding:10px; border:none; border-radius:8px; background:#8a2be2; color:white; cursor:pointer; box-shadow:0 0 15px #8a2be2; }
 #clip-popup .cancel-btn { background:red; }
 </style>
-
-<script>
-const socket = io();
-let currentUser = '';
-let clips = [];
-
-async function login(){
-    const user = document.getElementById("login-user").value;
-    const pass = document.getElementById("login-pass").value;
-
-    const res = await fetch('login.json');
-    const users = await res.json();
-
-    const match = users.find(u=>u.username===user && u.password===pass);
-
-    if(!match){
-        document.getElementById("login-error").style.display="block";
-        return;
-    }
-
-    currentUser = user;
-    document.getElementById("login-overlay").style.display="none";
-    document.getElementById("main-content").style.display="block";
-    document.getElementById('user-info').innerText = `Angemeldet als: ${currentUser}`;
-    document.querySelector('.hamburger').style.opacity = 1;
-    document.querySelector('.hamburger').style.pointerEvents = 'auto';
-    socket.emit('userLogin');
-    showSection('start');
-    loadClips(); // Direkt alle Clips laden beim Login
-}
-
-function logout(){
-    document.getElementById("main-content").style.display="none";
-    document.getElementById("login-overlay").style.display="flex";
-    document.getElementById("login-user").value="";
-    document.getElementById("login-pass").value="";
-    document.querySelector('.hamburger').style.opacity = 0;
-    document.querySelector('.hamburger').style.pointerEvents = 'none';
-    socket.emit('userLogout');
-}
-
-function toggleSidebar(){
-    const sidebar = document.getElementById("sidebar");
-    const overlay = document.getElementById("overlay");
-    const open = sidebar.classList.contains("open");
-    sidebar.classList.toggle("open", !open);
-    overlay.classList.toggle("active", !open);
-}
-
-function showSection(id){
-    document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active-section'));
-    document.getElementById(id).classList.add('active-section');
-    toggleSidebar();
-}
-
-socket.on('updateUserCount', (count)=>{
-    document.getElementById('user-count').innerText=`👁 ${count}`;
-});
-
-window.onload = ()=>{
-    loadGallery();
-    loadClothes();
-    loadVehicles();
-    loadMembers();
-};
-
-// --- Loading functions ---
-async function loadGallery(){
-    const res = await fetch('pictures.json');
-    const data = await res.json();
-    const container = document.getElementById('gallery-container');
-    container.innerHTML='';
-    let delay = 0;
-    data.forEach(url=>{
-        const img = document.createElement('img');
-        img.src = url;
-        img.style.animationDelay = `${delay}s`;
-        delay += 0.1;
-        container.appendChild(img);
-    });
-}
-async function loadClothes(){
-    const res = await fetch('clothing.json');
-    const data = await res.json();
-    const grid=document.getElementById('clothing-grid');
-    grid.innerHTML='';
-    data.forEach(item=>{
-        grid.innerHTML+=`<div class='card' onclick="window.open('${item.link}','_blank')"><img src='${item.image}'/><h3>${item.name}</h3></div>`;
-    });
-}
-async function loadVehicles(){
-    const res=await fetch('vehicle.json');
-    const data=await res.json();
-    const grid=document.getElementById('vehicle-grid');
-    grid.innerHTML='';
-    data.forEach(v=>{
-        grid.innerHTML+=`<div class='card vehicle-card' onclick="openPopup(${JSON.stringify(v).replace(/\"/g,'&quot;')})"><img src='${v.image}'/><h3>${v.name}</h3></div>`;
-    });
-}
-async function loadMembers(){
-    const res=await fetch('members.json');
-    const members=await res.json();
-    const table=document.getElementById("members-table");
-    table.innerHTML=`<tr><th>Mitglied</th><th>Rang</th></tr>`;
-    members.forEach(m=>{
-        table.innerHTML+=`<tr onclick="window.open('${m.link}','_blank')"><td>${m.username}</td><td>${m.rank}</td></tr>`;
-    });
-}
-
-// --- Popup ---
-function openPopup(v){
-    const p=document.getElementById('popup');
-    p.innerHTML=`<span id='popup-close' onclick='closePopup()'>X</span><h3>${v.name}</h3><p>Preis: ${v.price}</p><p>Primary: ${v.primary}</p><p>Interieur: ${v.interior}</p><p>Rims: ${v.rims}</p><p>Underglow: ${v.underglow}</p><p>Fenster: ${v.windows}</p>`;
-    p.style.display='block';
-}
-function closePopup(){ document.getElementById('popup').style.display='none'; }
-
-// --- Clips ---
-async function loadClips(){
-    const res = await fetch('clips.json').catch(()=>({json:()=>[]})); 
-    const data = await res.json().catch(()=>[]);
-    clips = data;
-    renderClips();
-}
-
-function renderClips(){
-    const grid = document.getElementById('clips-grid');
-    grid.innerHTML='';
-    clips.slice().reverse().forEach(c=>{
-        const div = document.createElement('div');
-        div.classList.add('clip-frame');
-        div.innerHTML=`
-            <video src="${c.file}" controls></video>
-            <div class="description-text">${c.description}</div>
-            <div class="uploader">Hochgeladen von: ${c.user}</div>
-        `;
-        if(currentUser==='Julian'||currentUser==='Max'){
-            const delBtn = document.createElement('button');
-            delBtn.classList.add('delete-btn');
-            delBtn.innerText='❌';
-            delBtn.onclick = ()=>deleteClip(c.id);
-            div.appendChild(delBtn);
-        }
-        grid.appendChild(div);
-    });
-}
-
-function addClip(){
-    const input = document.createElement('input');
-    input.type='file';
-    input.accept='video/*';
-    input.onchange = e=>{
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = ()=>{
-            showClipPopup(reader.result, file.name);
-        };
-        reader.readAsDataURL(file);
-    };
-    input.click();
-}
-
-function showClipPopup(data, filename){
-    const p = document.getElementById('clip-popup');
-    p.innerHTML=`
-        <span id='clip-popup-close' onclick='closeClipPopup()'>X</span>
-        <h3>Clip hochladen: ${filename}</h3>
-        <p>Beschreibung:</p>
-        <input id='clip-desc' type='text' placeholder='Beschreibung'>
-        <div>
-            <button class='cancel-btn' onclick='closeClipPopup()'>Abbrechen</button>
-            <button onclick='confirmClip("${data}")'>Bestätigen</button>
-        </div>
-    `;
-    p.style.display='block';
-}
-
-function closeClipPopup(){ document.getElementById('clip-popup').style.display='none'; }
-
-function confirmClip(data){
-    const desc = document.getElementById('clip-desc').value || '';
-    const clip = {id:Date.now(), file:data, description:desc, user:currentUser};
-    clips.push(clip);
-    fetch('saveClip',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify(clip)
-    });
-    renderClips();
-    closeClipPopup();
-}
-
-function deleteClip(id){
-    clips = clips.filter(c=>c.id!==id);
-    fetch('deleteClip',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({id})
-    });
-    renderClips();
-}
-
-// **Socket listener für neue Clips**
-socket.on('newClip', clip=>{
-    clips.push(clip);
-    renderClips();
-});
-</script>
 </head>
 
 <body>
@@ -571,6 +152,126 @@ socket.on('newClip', clip=>{
 
 <div id="popup"></div>
 <div id="clip-popup"></div>
-</div>
+
+<script>
+let currentUser='';
+let clips=[];
+
+function login(){
+    const user=document.getElementById("login-user").value;
+    const pass=document.getElementById("login-pass").value;
+    if(user && pass){ // simple login
+        currentUser=user;
+        document.getElementById("login-overlay").style.display="none";
+        document.getElementById("main-content").style.display="block";
+        document.getElementById('user-info').innerText=`Angemeldet als: ${currentUser}`;
+        document.querySelector('.hamburger').style.opacity=1;
+        document.querySelector('.hamburger').style.pointerEvents='auto';
+        loadClips();
+        showSection('start');
+    } else {
+        document.getElementById("login-error").style.display="block";
+    }
+}
+
+function logout(){
+    document.getElementById("main-content").style.display="none";
+    document.getElementById("login-overlay").style.display="flex";
+    document.getElementById("login-user").value="";
+    document.getElementById("login-pass").value="";
+    document.querySelector('.hamburger').style.opacity=0;
+    document.querySelector('.hamburger').style.pointerEvents='none';
+}
+
+function toggleSidebar(){
+    const sidebar=document.getElementById("sidebar");
+    const overlay=document.getElementById("overlay");
+    const open=sidebar.classList.contains("open");
+    sidebar.classList.toggle("open",!open);
+    overlay.classList.toggle("active",!open);
+}
+
+function showSection(id){
+    document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active-section'));
+    document.getElementById(id).classList.add('active-section');
+    toggleSidebar();
+}
+
+// --- Clips ---
+function loadClips(){
+    clips=JSON.parse(localStorage.getItem('clips')||'[]');
+    renderClips();
+}
+
+function renderClips(){
+    const grid=document.getElementById('clips-grid');
+    grid.innerHTML='';
+    clips.slice().reverse().forEach(c=>{
+        const div=document.createElement('div');
+        div.classList.add('clip-frame');
+        div.innerHTML=`
+            <video src="${c.file}" controls></video>
+            <div class="description-text">${c.description}</div>
+            <div class="uploader">Hochgeladen von: ${c.user}</div>
+        `;
+        if(currentUser==='Julian'||currentUser==='Max'){
+            const delBtn=document.createElement('button');
+            delBtn.classList.add('delete-btn');
+            delBtn.innerText='❌';
+            delBtn.onclick=()=>deleteClip(c.id);
+            div.appendChild(delBtn);
+        }
+        grid.appendChild(div);
+    });
+}
+
+function addClip(){
+    const input=document.createElement('input');
+    input.type='file';
+    input.accept='video/*';
+    input.onchange=e=>{
+        const file=e.target.files[0];
+        if(!file) return;
+        const reader=new FileReader();
+        reader.onload=()=>{
+            showClipPopup(reader.result,file.name);
+        };
+        reader.readAsDataURL(file);
+    };
+    input.click();
+}
+
+function showClipPopup(data,filename){
+    const p=document.getElementById('clip-popup');
+    p.innerHTML=`
+        <span id='clip-popup-close' onclick='closeClipPopup()'>X</span>
+        <h3>Clip hochladen: ${filename}</h3>
+        <p>Beschreibung:</p>
+        <input id='clip-desc' type='text' placeholder='Beschreibung'>
+        <div>
+            <button class='cancel-btn' onclick='closeClipPopup()'>Abbrechen</button>
+            <button onclick='confirmClip("${data}")'>Bestätigen</button>
+        </div>
+    `;
+    p.style.display='block';
+}
+
+function closeClipPopup(){ document.getElementById('clip-popup').style.display='none'; }
+
+function confirmClip(data){
+    const desc=document.getElementById('clip-desc').value||'';
+    const clip={id:Date.now(), file:data, description:desc, user:currentUser};
+    clips.push(clip);
+    localStorage.setItem('clips',JSON.stringify(clips));
+    renderClips();
+    closeClipPopup();
+}
+
+function deleteClip(id){
+    clips=clips.filter(c=>c.id!==id);
+    localStorage.setItem('clips',JSON.stringify(clips));
+    renderClips();
+}
+</script>
 </body>
 </html>
