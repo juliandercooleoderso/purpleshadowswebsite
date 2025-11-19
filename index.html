@@ -300,6 +300,7 @@ async function login(){
     document.querySelector('.hamburger').style.pointerEvents = 'auto';
     socket.emit('userLogin');
     showSection('start');
+    loadClips(); // Direkt alle Clips laden beim Login
 }
 
 function logout(){
@@ -335,7 +336,6 @@ window.onload = ()=>{
     loadClothes();
     loadVehicles();
     loadMembers();
-    loadClips();
 };
 
 // --- Loading functions ---
@@ -456,18 +456,26 @@ function confirmClip(data){
     const desc = document.getElementById('clip-desc').value || '';
     const clip = {id:Date.now(), file:data, description:desc, user:currentUser};
     clips.push(clip);
-    fetch('saveClip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(clip)});
+    fetch('saveClip',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(clip)
+    });
     renderClips();
     closeClipPopup();
 }
 
 function deleteClip(id){
     clips = clips.filter(c=>c.id!==id);
-    fetch('deleteClip',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+    fetch('deleteClip',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({id})
+    });
     renderClips();
 }
 
-// Socket listener for new clips
+// **Socket listener für neue Clips**
 socket.on('newClip', clip=>{
     clips.push(clip);
     renderClips();
