@@ -32,7 +32,7 @@ app.post('/saveClip', (req, res) => {
         clips.push(clip);
         fs.writeFile(clipsFile, JSON.stringify(clips, null,2), err=>{
             if(err) return res.status(500).send('Fehler beim Speichern');
-            io.emit('newClip', clip); // an alle Clients
+            io.emit('newClip', clip);
             res.sendStatus(200);
         });
     });
@@ -48,7 +48,7 @@ app.post('/deleteClip', (req, res) => {
         clips = clips.filter(c => c.file !== fileToDelete);
         fs.writeFile(clipsFile, JSON.stringify(clips,null,2), err=>{
             if(err) return res.status(500).send('Fehler beim Löschen');
-            io.emit('updateClips', clips); // optional: alle Clients aktualisieren
+            io.emit('updateClips', clips);
             res.sendStatus(200);
         });
     });
@@ -56,7 +56,6 @@ app.post('/deleteClip', (req, res) => {
 
 // Online Users
 let onlineUsers = 0;
-
 io.on('connection', (socket) => {
     console.log('Ein Benutzer verbunden');
 
