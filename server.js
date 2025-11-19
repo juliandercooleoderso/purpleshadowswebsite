@@ -32,7 +32,7 @@ app.post('/saveClip', (req, res) => {
         clips.push(clip);
         fs.writeFile(clipsFile, JSON.stringify(clips, null, 2), err=>{
             if(err) return res.status(500).send('Fehler beim Speichern');
-            io.emit('newClip', clip); // Echtzeit-Update an alle User
+            io.emit('newClip', clip);
             res.sendStatus(200);
         });
     });
@@ -50,16 +50,6 @@ app.post('/deleteClip', (req,res)=>{
             if(err) return res.status(500).send('Fehler beim Speichern');
             res.sendStatus(200);
         });
-    });
-});
-
-// Route, um alle Clips beim Laden zu senden
-app.get('/clips.json', (req,res)=>{
-    fs.readFile(clipsFile,(err,data)=>{
-        if(err) return res.status(500).send('Fehler beim Lesen der Datei');
-        let clips = [];
-        try{ clips = JSON.parse(data); } catch(e){ clips = []; }
-        res.json(clips);
     });
 });
 
